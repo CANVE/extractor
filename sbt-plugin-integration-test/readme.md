@@ -14,8 +14,6 @@ Alternatively, you can skip that, and integration test on a different set of pro
 
 ##Running the test 
 
-From the root project in sbt:
-
 Make sure the test will use the latest code with:
 ```
 sbt +publishLocal
@@ -26,4 +24,4 @@ Then:
 sbt integrationTest
 ```
 
-(or, inside this project in sbt, simply `run`)
+(or, inside this project in sbt, simply `run`, but you still have to first `publishLocal`)

@@ -1,1 +1,0 @@
-[![Build Status](https://travis-ci.org/CANVE/simple-graph.svg)](https://travis-ci.org/CANVE/simple-graph)

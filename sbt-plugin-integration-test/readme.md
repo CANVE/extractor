@@ -15,6 +15,13 @@ Alternatively, you can skip that, and integration test on a different set of pro
 ##Running the test 
 
 From the root project in sbt:
+
+Make sure the test will use the latest code with:
+```
+sbt +publishLocal
+```
+
+Then:
 ```
 sbt integrationTest
 ```

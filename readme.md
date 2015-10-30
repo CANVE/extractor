@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/CANVE/extractor.svg?branch=master)](https://travis-ci.org/CANVE/extractor)
 
 Extracts and normalizes the type relationships and call graph of scala sbt projects, through an sbt plugin which injects a compiler plugin and normalizes data across projects. Currently the project only publishes locally and you need to [drop us a line on gitter](https://gitter.im/CANVE/canve?utm_source=share-link&utm_medium=link&utm_campaign=share-link) to get the up-to-date getting started instructions.
+<br>
 
----
 #License: 
 
 ```

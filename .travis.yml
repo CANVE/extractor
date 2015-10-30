@@ -1,0 +1,10 @@
+# we overide the default travis sbt command, as this repo
+# should currently use the cross version settings, in order
+# to correctly avoid irrelevant test runs.
+
+language: scala
+
+jdk:
+  - oraclejdk7
+
+script: sbt +compile +test

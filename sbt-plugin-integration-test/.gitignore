@@ -1,0 +1,12 @@
+out/*
+target/*
+project/target/*
+.idea/*
+.idea_modules/*
+*.iml
+/bin/
+.cache*
+.classpath
+.project
+.settings/
+out/

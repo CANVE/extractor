@@ -1,0 +1,32 @@
+*.class
+*.log
+
+# projects used for integration tests nested repo
+integration-test-projects/
+
+# IntelliJ
+.idea
+.idea_modules
+
+# sbt
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+credentials.sbt
+*.icode
+
+# eclipse / Scala-IDE
+.classpath
+.project
+.settings/
+.cache*
+.scala_dependencies
+.classpath
+*.iml
+/bin/
+
+# project-specific
+out/

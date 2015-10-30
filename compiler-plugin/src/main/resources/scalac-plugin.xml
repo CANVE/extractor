@@ -1,0 +1,4 @@
+<plugin>
+    <name>canveCompilerPlugin</name>
+    <classname>org.canve.compilerPlugin.RuntimePlugin</classname>
+</plugin>

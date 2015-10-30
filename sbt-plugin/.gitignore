@@ -1,0 +1,9 @@
+target
+.idea
+*.iml
+.credentials
+credentials.sbt
+.classpath
+.settings/
+.cache-main
+bin/

@@ -24,4 +24,4 @@ Then:
 sbt integrationTest
 ```
 
-(or, inside this project in sbt, simply `run`, but you still have to first `publishLocal`)
+ (or, if you are in this subproject in sbt, simply `run`, but you still have to first `+publishLocal` one time.. )

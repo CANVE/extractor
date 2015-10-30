@@ -5,13 +5,13 @@
 val integrationTest = taskKey[Unit]("Executes integration tests.")
 
 lazy val root = (project in file("."))
-  .aggregate(simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, sbtPluginTestLib)
+  .aggregate(simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
   .settings(
     scalaVersion := "2.11.7",
     crossScalaVersions := Seq("2.10.4", "2.11.7"),
     publishArtifact := false, // no artifact to publish for the virtual root project
-    integrationTest := (run in Compile in sbtPluginTestLib).toTask("").value
+    integrationTest := (run in Compile in integrationTestProject).toTask("").value
 )
 
 /*
@@ -86,7 +86,7 @@ lazy val canveSbtPlugin = (project in file("sbt-plugin"))
 /*
  * Integration testing module, that runs our sbt module on select projects
  */
-lazy val sbtPluginTestLib = (project in file("sbt-plugin-test-lib"))
+lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"))
   .dependsOn(canveCompilerPlugin) // TODO: This is currently just for a util object - we can do better.
   .enablePlugins(CrossPerProjectPlugin)
   .settings(
@@ -111,11 +111,9 @@ lazy val sbtPluginTestLib = (project in file("sbt-plugin-test-lib"))
       "org.fusesource.jansi" % "jansi" % "1.4"
     ),
     
-    publishArtifact := false,
+    publishArtifact := false
 
-    (run in Compile) <<= (run in Compile)
-      .dependsOn(publishLocal in canveSbtPlugin)
-      .dependsOn(publishLocal in canveCompilerPlugin)
+    //(run in Compile) <<= (run in Compile).dependsOn(publishLocal in canveSbtPlugin).dependsOn(publishLocal in canveCompilerPlugin) // https://github.com/CANVE/extractor/issues/2
   )
 
 /*

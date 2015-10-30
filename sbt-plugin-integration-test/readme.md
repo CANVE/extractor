@@ -1,52 +1,16 @@
-# Integration Testing Project
+# Integration Test Project
 
-Integration testing for the [overall extraction project](https://github.com/CANVE/extractor). Runs the sbt plugin for all sbt projects located in `src/main/resources/test-projects`, reporting their execution.
+Integration testing for the [overall extraction project](https://github.com/CANVE/extractor). Runs the sbt plugin for all sbt projects located in `src/main/resources/integration-test-projects`, reporting execution for them.
 
-All projects present at `src/main/resources/test-projects` are used for the testing. To keep things lightweight, they are managed as [git submodules](https://git-scm.com/docs/git-submodule), which means they are not physically included in this repo, but rather they are pointed at by it. See below how to run the tests.
-
-
-##Running
-
-First off, to physically pull in all [test projects linked by this repo](https://github.com/CANVE/extractor/tree/master/sbt-plugin-test-lib/src/main/resources/test-projects), use the command below before running for the first time, as they are not automatically brought in by virtue of merely cloning this repo.
-```
-git submodule update --init
-```
-Otherwise, simply `sbt run`.
-
-##Updating all test projects to their latest
-Well, say you want to run the integration test on the latest online version of the test projects, not those that you pulled a couple of months ago. Before going on, it might make sense first testing as is, to isolate problems. But then you can ultimately update all the test projects to their latest online version, via:
-```
-git submodule foreach --recursive git pull
-```
-
+##Configuring the test
+All projects locally present at `src/main/resources/integration-test-projects` when the test is run, are used for the test. 
 <br>
 
----
-
+To keep things modular as well as lightweight, a repo containig a recommended assortment of projects to test on, is managed as a separate git repo. so you typically want to pull that repo in to run the test. Simply cd into `src/main/resources/integration-test-projects`, and [follow the specific cloning instructions of the test projects repo](https://github.com/CANVE/integration-test-projects#cloning). 
 <br>
 
-##Maintaining the inventory of test projects
-Okay, so you want to add or remove a test project to the list.
+Alternatively, you can skip that, and integration test on a different set of projects - in that case directly copy those projects to the same location (`src/main/resources/integration-test-projects`).
 
-####Adding a publicly available project as a test project
+##Running the test
 
-1. Make sure the project you are going to add is adequately licensed.
-
-2. `git submodule add <GitLink> src/main/resources/test-projects/<ProjName>`. 
-
-    For example -
-    ```
-    git submodule add git@github.com:allenai/pipeline.git src/main/resources/test-projects/pipeline
-    ```
-
-<br>
-
-####Removing a test project from the repo
-
-TBD
-
-<br>
-####Ad-hoc manipulation
-
-You can add and remove projects as fits your situation - anything you drop into the directory will be treated as a test project. This won't magically update the repo, nor keep the submodule registration in sync! so to avoid trouble, TBD...
-
+```sbt run```

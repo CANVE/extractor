@@ -3,7 +3,7 @@ import utest._
 import utest.ExecutionContext.RunNow
 import scala.util.{Try, Success, Failure}
 
-class Core {
+class CoreRemovals {
   
   case class Entity(id: Int, name: String, kind: String) 
   case class GraphNode(data: Entity)  

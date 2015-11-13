@@ -8,6 +8,7 @@ object TestRunner extends TestSuite {
   val tests = TestSuite {
     "Core" - new Core
     "Algo" - new Algo
+    "CoreRemovals" - new CoreRemovals
   }  
   
   //val results = tests.run()

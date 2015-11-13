@@ -3,14 +3,18 @@ package org.canve.simpleGraph
 /*
  * API definition
  */
-abstract class AbstractGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
-  extends ExtraGraphAPI[ID, Vertex, Edge]
-  with FilterableWalk[ID, Vertex, Edge]{
+abstract class AbstractGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID, EdgeData]]
+  extends ExtraGraphAPI[ID, EdgeData, Vertex, Edge]
+  with FilterableWalk[ID, EdgeData, Vertex, Edge]{
       
-  def += (vertex: Vertex): AbstractGraph[ID, Vertex, Edge] 
+  def += (vertex: Vertex): AbstractGraph[ID, EdgeData, Vertex, Edge] 
   
-  def += (edge: Edge): AbstractGraph[ID, Vertex, Edge] 
+  def += (edge: Edge): AbstractGraph[ID, EdgeData, Vertex, Edge] 
       
+  def -= (vertexId: ID): AbstractGraph[ID, EdgeData, Vertex, Edge] 
+  
+  def -= (edge: Edge): AbstractGraph[ID, EdgeData, Vertex, Edge] 
+    
   def vertex(id: ID): Option[Vertex]
   
   def vertexEdges(id: ID): Set[Edge] 
@@ -19,17 +23,20 @@ abstract class AbstractGraph[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractE
   
   def vertexIterator: Iterator[Vertex] // returns a new iterator every time called
   
-  def += (inputs: Addable*): AbstractGraph[ID, Vertex, Edge] = {
+  /*
+   * Convenience method for bulk addition of both vertices and edges
+   */
+  def += (inputs: Addable*): AbstractGraph[ID, EdgeData, Vertex, Edge] = {
     inputs.foreach(i => i match {
-      case v : AbstractVertex[ID] => += (v.asInstanceOf[Vertex])
-      case e : AbstractEdge[ID]   => += (e.asInstanceOf[Edge])
+      case v : AbstractVertex[ID]         => += (v.asInstanceOf[Vertex])
+      case e : AbstractEdge[ID, EdgeData] => += (e.asInstanceOf[Edge])
     })
     this
   }
 }
 
-abstract trait ExtraGraphAPI[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]] {
-  self: AbstractGraph[ID, Vertex, Edge] => 
+abstract trait ExtraGraphAPI[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID, EdgeData]] {
+  self: AbstractGraph[ID, EdgeData, Vertex, Edge] => 
 
   def vertexEdgePeer(id: ID, edge: Edge): ID 
 
@@ -40,18 +47,22 @@ abstract trait ExtraGraphAPI[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractE
 
 sealed abstract trait Addable
 
-/*
- * trait to be mixed in by user code for making their nodes graph friendly
- */
-abstract trait AbstractVertex[ID] extends Addable {  
-  val id: ID 
+abstract trait AbstractVertex[ID] extends Addable {
+  val data: Any
+  val key: ID  
 } 
 
-/*
- * trait to be mixed in by user code for making their edges graph friendly
-*/
-abstract trait AbstractEdge[ID] extends Addable {
+//TODO: remove the type parameter EdgeData if everything still works when data is defined here as Any
+abstract trait AbstractEdge[ID, EdgeData] extends Addable {
+  
+  val data: EdgeData 
   val id1: ID
   val id2: ID
+  lazy val dataSynonym = data
+  
+  def edgeClone(newId1: ID = id1, newId2: ID = id2) = new AbstractEdge[ID, EdgeData] {
+    val data = dataSynonym
+    val id1 = newId1
+    val id2 = newId2
+  }
 }
-

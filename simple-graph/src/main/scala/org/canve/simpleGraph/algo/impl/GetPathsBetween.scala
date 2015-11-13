@@ -12,8 +12,8 @@ import org.canve.simpleGraph.algo._
  * target vertex in the cache of each vertex being part of such path.
  * 
  */
-case class GetPathsBetween[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
-  (graph: AbstractGraph[ID, Vertex, Edge], 
+case class GetPathsBetween[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID, EdgeData]]
+  (graph: AbstractGraph[ID, EdgeData, Vertex, Edge], 
    filterFunc: FilterFuncArguments[Vertex, Edge] => Boolean, 
    origin: ID,
    target: ID) extends GraphAlgo {
@@ -29,7 +29,7 @@ case class GetPathsBetween[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdg
     } 
   
     private val cache: Map[ID, selfCacheUnit] = 
-      graph.vertexIterator.map(vertex => (vertex.id, new selfCacheUnit)).toMap
+      graph.vertexIterator.map(vertex => (vertex.key, new selfCacheUnit)).toMap
       
     private def traverse(self: ID): Boolean = {
       //println(self)

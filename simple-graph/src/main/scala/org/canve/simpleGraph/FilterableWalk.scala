@@ -3,8 +3,8 @@ package org.canve.simpleGraph
 /*
  * cake-layer trait providing the ability to walk a graph with functional-style filters 
  */
-trait FilterableWalk[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]] {
-  self: AbstractGraph[ID, Vertex, Edge] =>
+trait FilterableWalk[ID, Data, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID, Data]] {
+  self: AbstractGraph[ID, Data, Vertex, Edge] =>
     
  /* 
   * returns a collection of vertex's edge peers, applying a @filter function 
@@ -19,7 +19,7 @@ trait FilterableWalk[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
     
     vertexEdgePeersVerbose(id)
       .filter(filterFunc)
-      .map(_.peer.id)
+      .map(_.peer.key)
       .toSet
   } 
 }

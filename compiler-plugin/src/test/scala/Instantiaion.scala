@@ -1,6 +1,6 @@
-package extractor.test
+package org.canve.compilerPlugin.test
 
-import org.canve.compilerPlugin.{TraversalExtraction, Graph, Node, Edge}
+import org.canve.compilerPlugin._
 import scala.tools.nsc.Global
 import utest._
 import utest.ExecutionContext.RunNow
@@ -24,11 +24,11 @@ class TraversalExtractionTester extends compilerPluginUnitTest.Injectable {
  * TODO: consider moving over to the simple-graph library if this trait grows much
  */
 trait NodeSearch { 
-  def search(graph: NodeGraph, name: String, kind: String): List[Node] = {
-    graph.vertexIterator.filter(node => node.name == name && node.kind == kind).toList
+  def search(graph: ManagedGraph, name: String, kind: String): List[ManagedGraphNode] = {
+    graph.vertexIterator.filter(node => node.data.name == name && node.data.kind == kind).toList
   }
   
- def findUnique(graph: SimpleGraph[Int, Node, Edge], name: String, kind: String): Option[Node] = { 
+ def findUnique(graph: ManagedGraph, name: String, kind: String): Option[ManagedGraphNode] = { 
    val finds = search(graph, name, kind)
    if (finds.size == 1) 
      Some(finds.head)
@@ -36,7 +36,7 @@ trait NodeSearch {
      None
  }
  
- def findUniqueOrThrow(graph: SimpleGraph[Int, Node, Edge], name: String, kind: String): Node = {
+ def findUniqueOrThrow(graph: ManagedGraph, name: String, kind: String): ManagedGraphNode = {
    findUnique(graph, name, kind) match {
      case None => throw new Exception(s"graph $graph has ${search(graph, name, kind)} search results for name=$name, kind=$kind rather than exactly one.") 
      case Some(found) => found
@@ -52,29 +52,31 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
   override def apply(global: Global)(body: global.Tree) = {
     
     val graph: Graph = TraversalExtraction(global)(body) // ; println(graph)
-    val simpleGraph = new NodeGraph(graph.nodes, graph.edges)
+    val simpleGraph = new ManagedGraph(graph.nodes map ManagedGraphNode, graph.edges.map(edge => ManagedGraphEdge(edge.symbolID1, edge.symbolID2, edge.relation)))
     
-    val origin: Node = findUniqueOrThrow(simpleGraph, "Foo", "object")
-    val target: Node = findUniqueOrThrow(simpleGraph, "Bar", "class")
+    val origin: ManagedGraphNode = findUniqueOrThrow(simpleGraph, "Foo", "object")
+    val target: ManagedGraphNode = findUniqueOrThrow(simpleGraph, "Bar", "class")
 
     val targetMethods = simpleGraph.vertexEdgePeersFiltered(
-      target.id, 
-      (filterFuncArgs: FilterFuncArguments[Node, Edge]) => 
-          (filterFuncArgs.direction == Egress && filterFuncArgs.edge.edgeKind == "declares member")) 
+      target.key, 
+      (filterFuncArgs: FilterFuncArguments[ManagedGraphNode, ManagedGraphEdge]) => 
+          (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "declares member")) 
     
-    println(s"Tracing all acceptable paths from node id ${origin.id} to node id ${target.id}")
+    println(s"Tracing all acceptable paths from node id ${origin.key} to node id ${target.key}")
     println(s"origin node: $origin")
     println(s"target node: $target")
     println
     
-    def voidFilter(filterFuncArgs: FilterFuncArguments[Node, Edge]): Boolean = true
-    def walkFilter(filterFuncArgs: FilterFuncArguments[Node, Edge]): Boolean = {      
-      (filterFuncArgs.direction == Egress && filterFuncArgs.edge.edgeKind == "declares member") ||
-      (filterFuncArgs.direction == Egress && filterFuncArgs.edge.edgeKind == "uses") ||
-      (filterFuncArgs.direction == Egress && filterFuncArgs.edge.edgeKind == "is instance of")  
+    def voidFilter(filterFuncArgs: FilterFuncArguments[ManagedGraphNode, ManagedGraphEdge]): Boolean = true
+    def walkFilter(filterFuncArgs: FilterFuncArguments[ManagedGraphNode, ManagedGraphEdge]): Boolean = {      
+      (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "declares member") ||
+      (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "uses") ||
+      (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "is instance of")  
     }
     
-    val allPaths: Set[Option[List[List[Int]]]] = targetMethods.map(target => new GetPathsBetween(simpleGraph, walkFilter, origin.id, target).run)
+    val allPaths: Set[Option[List[List[Int]]]] = targetMethods.map(target => 
+      new GetPathsBetween(simpleGraph, walkFilter, origin.key, target).run)
+      
     val paths: Option[List[List[Int]]] = Some(allPaths.flatten.flatten.toList)
      
     paths match {

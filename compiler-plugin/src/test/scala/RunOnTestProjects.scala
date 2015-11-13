@@ -1,4 +1,4 @@
-package extractor
+package org.canve.compilerPlugin.test
 
 /*
  *  invoke SBT on all projects under test-projects/ - not implemented

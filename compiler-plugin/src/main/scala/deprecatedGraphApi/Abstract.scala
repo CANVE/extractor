@@ -1,5 +1,5 @@
 package deprecatedGraphApi
-import org.canve.compilerPlugin.{Node, Edge}
+import org.canve.compilerPlugin.{ExtractedSymbol, ExtractedSymbolRelation}
 
 /*
  * Any usage should go through this abstract class,

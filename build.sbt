@@ -5,7 +5,7 @@
 val integrationTest = taskKey[Unit]("Executes integration tests.")
 
 lazy val root = (project in file("."))
-  .aggregate(simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
+  .aggregate(scalaPlus, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
   .settings(
     scalaVersion := "2.11.7",
@@ -30,6 +30,7 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
     version := "0.0.1",
     isSnapshot := true, // to enable overwriting the existing artifact version
     scalaVersion := "2.11.7",
+    //scalacOptions ++= Seq("-Ymacro-debug-lite"),
     crossScalaVersions := Seq("2.10.4", "2.11.7"),
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
 
@@ -120,4 +121,5 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
  * And these depenency projects are developed as mostly generic libraries
  */
 lazy val simpleGraph = (project in file("simple-graph"))
+lazy val scalaPlus = (project in file("scala-plus"))
 lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib"))

@@ -1,20 +1,34 @@
 package org.canve.compilerPlugin
 
 /*
+ * Serializable QualiferID
+ */
+case class KindAndName(kind: String, name: String)
+case class QualifiedID(value: List[KindAndName]) {  
+  def pickle = value.map(qualifiedId => "(" + qualifiedId.kind + "|" + qualifiedId.name + ")").mkString(".")
+}
+object QualifiedID {
+  def unpickle(s: String) = 
+    QualifiedID(s.split('.').toList.map(pair => KindAndName(pair.takeWhile(_!='|').drop(1), pair.dropWhile(_!='|').drop(1).dropRight(1))))
+}
+
+/*
  * helper for writing node data to csv 
  */
-trait NodeSerialization {
+trait SymbolSerialization {
   self: ExtractedSymbol =>
   
   def toCsvRow: String = {
-    List(definingProject match {
-          case ProjectDefined    => "project"
-          case ExternallyDefined => "external" },
-         notSynthetic,
-         id, 
-         name, 
-         kind,
-         qualifiedId).mkString(",")
+    List(
+      definingProject match {
+        case ProjectDefined    => "project"
+        case ExternallyDefined => "external" },
+       notSynthetic,
+       id, 
+       name, 
+       kind,
+       qualifiedId.pickle
+    ).mkString(",")
   }
 }
 
@@ -27,7 +41,7 @@ object SymbolFromCsvRow {
           name = rowMap("name"),
           kind = rowMap("kind"),
           notSynthetic = rowMap("notSynthetic").toBoolean,
-          qualifiedId = rowMap("qualifiedId"),
+          qualifiedId = QualifiedID.unpickle(rowMap("qualifiedId")),
           definingProject = rowMap("definition") match {
             case "project" => ProjectDefined
             case "external" => ExternallyDefined

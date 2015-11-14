@@ -3,21 +3,22 @@ import scala.tools.nsc.Global
 import Logging.Utility._
 
 object TraversalExtractionWriter {
-  def apply(global: Global)(unit: global.CompilationUnit)(projectName: String) = {
-    val graph: Graph = TraversalExtraction(global)(unit.body)
+  def apply(global: Global)(unit: global.CompilationUnit)(projectName: String, graph: ExtractedGraph) = {
+    
+    TraversalExtraction(global)(unit.body)(graph)
+    
+    Log(graph.extractedSymbols.size + " symbols so far extracted for project " + projectName)
+    Log(graph.extractedSymbolRelations.size + " symbol relations so far extracted for project " + projectName)
+    
+    Output.write(graph)
 
-    Log(graph.nodes.size + " entities so far in project " + projectName)
-    Log(graph.edges.size + " edges so far for project " + projectName)
-    Output.write
-    Log("done examining source file" + unit.source.path + "...")
-
-    Unit // Must (?) return Unit    
+    Unit    
   }
 }
 
 object TraversalExtraction {
 
-  def apply(global: Global)(body: global.Tree) : Graph = {
+  def apply(global: Global)(body: global.Tree)(graph: ExtractedGraph) : ExtractedGraph = {
     import global._ // for having access to typed symbol methods
 
     /*
@@ -35,8 +36,8 @@ object TraversalExtraction {
         if (!node.ownersTraversed) {
           if (symbol.nameString != "<root>") {
             val ownerSymbol = symbol.owner
-            val ownerNode = ExtractedSymbols(global)(ownerSymbol)
-            ExtractedSymbolRelations(symbol.owner.id, "declares member", symbol.id)
+            val ownerNode = graph.extractedSymbols(global)(ownerSymbol)
+            graph.extractedSymbolRelations(symbol.owner.id, "declares member", symbol.id)
             recordOwnerChainImpl(ownerNode, ownerSymbol)
             node.ownersTraversed = true 
           }
@@ -44,20 +45,6 @@ object TraversalExtraction {
       }
       
       recordOwnerChainImpl(node, symbol)
-    }
-
-    // Exploration function to trace a tree
-    class TraceTree extends Traverser {
-      override def traverse(tree: Tree): Unit = {
-        tree match {
-          case _ =>
-            Log(Console.GREEN + Console.BOLD + tree.getClass.getSimpleName + " " + Option(tree.symbol).fold("")(_.kindString) + " " + tree.id)
-            if (tree.isType) Log("type " + tree.symbol + " (" + tree.symbol.id + ")")
-            if (tree.isTerm) Log("term " + tree.symbol + " " + Option(tree.symbol).fold("")(_.id.toString))
-            Log(Console.RESET)
-            super.traverse(tree)
-        }
-      }
     }
 
     class ExtractionTraversal(defParent: Option[global.Symbol]) extends Traverser {
@@ -73,9 +60,9 @@ object TraversalExtraction {
               case "method" | "constructor" =>
                 if (defParent.isEmpty) Warning.logMemberParentLacking(global)(select.symbol)
 
-                if (defParent.isDefined) ExtractedSymbolRelations(defParent.get.id, "uses", select.symbol.id)
+                if (defParent.isDefined) graph.extractedSymbolRelations(defParent.get.id, "uses", select.symbol.id)
                
-                val node = ExtractedSymbols(global)(select.symbol)
+                val node =  graph.extractedSymbols(global)(select.symbol)
 
                 // record the source code location where the symbol is being used by the user 
                 // this is a proof of concept, that only doesn't propagate its information
@@ -99,9 +86,9 @@ object TraversalExtraction {
 
                 //Log("Processing select of kind " + select.symbol.kindString + " symbol: " + showRaw(select))
 
-                if (defParent.isDefined) ExtractedSymbolRelations(defParent.get.id, "uses", select.symbol.id)
+                if (defParent.isDefined) graph.extractedSymbolRelations(defParent.get.id, "uses", select.symbol.id)
 
-                val node = ExtractedSymbols(global)(select.symbol)
+                val node = graph.extractedSymbols(global)(select.symbol)
 
                 recordOwnerChain(node, select.symbol)
             }
@@ -118,15 +105,15 @@ object TraversalExtraction {
 
             val symbol = tree.symbol
 
-            ExtractedSymbols(global)(symbol)
-            ExtractedSymbolRelations(defParent.get.id, "declares member", symbol.id)
+            graph.extractedSymbols(global)(symbol)
+            graph.extractedSymbolRelations(defParent.get.id, "declares member", symbol.id)
 
             // Capturing the defined val's type (not kind) while at it
             val valueType = symbol.tpe.typeSymbol // the type that this val instantiates.
-            val node = ExtractedSymbols(global)(valueType)
+            val node = graph.extractedSymbols(global)(valueType)
             recordOwnerChain(node, valueType)
 
-            ExtractedSymbolRelations(symbol.id, "is of type", valueType.id)
+            graph.extractedSymbolRelations(symbol.id, "is of type", valueType.id)
 
           // Capture defs of methods.
           // Note this will also capture default constructors synthesized by the compiler
@@ -134,8 +121,8 @@ object TraversalExtraction {
           case DefDef(mods, name, tparams, vparamss, tpt, rhs) =>
             val symbol = tree.symbol
 
-            ExtractedSymbols(global)(symbol)
-            ExtractedSymbolRelations(defParent.get.id, "declares member", symbol.id)
+            graph.extractedSymbols(global)(symbol)
+            graph.extractedSymbolRelations(defParent.get.id, "declares member", symbol.id)
 
             val traverser = new ExtractionTraversal(Some(tree.symbol))
             if (symbol.nameString == "get") {
@@ -151,12 +138,12 @@ object TraversalExtraction {
 
             val typeSymbol = tree.tpe.typeSymbol
 
-            val node = ExtractedSymbols(global)(typeSymbol)
+            val node = graph.extractedSymbols(global)(typeSymbol)
             recordOwnerChain(node, typeSymbol)
 
             val parentTypeSymbols = parents.map(parent => parent.tpe.typeSymbol).toSet
             parentTypeSymbols.foreach { s =>
-              val parentNode = ExtractedSymbols(global)(s)
+              val parentNode = graph.extractedSymbols(global)(s)
               recordOwnerChain(parentNode, s)
             }
 
@@ -166,7 +153,7 @@ object TraversalExtraction {
                 Warning.logParentNotOwner(global)(defParent.get, typeSymbol.owner)
                 
             parentTypeSymbols.foreach(s =>
-              ExtractedSymbolRelations(typeSymbol.id, "extends", s.id))
+              graph.extractedSymbolRelations(typeSymbol.id, "extends", s.id))
 
             val traverser = new ExtractionTraversal(Some(tree.tpe.typeSymbol))
             body foreach { tree => traverser.traverse(tree) }
@@ -178,10 +165,25 @@ object TraversalExtraction {
       }
     }
 
+    // Exploration function to trace a tree
+    class TraceTree extends Traverser {
+      override def traverse(tree: Tree): Unit = {
+        tree match {
+          case _ =>
+            Log(Console.GREEN + Console.BOLD + tree.getClass.getSimpleName + " " + Option(tree.symbol).fold("")(_.kindString) + " " + tree.id)
+            if (tree.isType) Log("type " + tree.symbol + " (" + tree.symbol.id + ")")
+            if (tree.isTerm) Log("term " + tree.symbol + " " + Option(tree.symbol).fold("")(_.id.toString))
+            Log(Console.RESET)
+            super.traverse(tree)
+        }
+      }
+    }
+    
     val traverser = new ExtractionTraversal(None)
     traverser.traverse(body)
 
-    performance.Counters.report((report: String) => Log(report))
-    Graph(ExtractedSymbols.map.map(_._2).toSet, ExtractedSymbolRelations.set)    
+    performance.Counters.report((report: String) => Log(report)) // TODO: fix it
+    
+    graph  
   }
 }

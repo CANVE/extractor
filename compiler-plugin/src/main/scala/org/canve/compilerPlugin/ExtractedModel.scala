@@ -4,14 +4,23 @@ import performance.Counters
 import org.canve.simpleGraph.{AbstractVertex, AbstractEdge}
 
 /*
- * the extracted symbols collection (singleton as we run once per project)
+ * a class representing a single and complete model extracted for the project being compiled, 
+ * comprising symbol details and symbol relations 
  */
-object ExtractedSymbols {
+class ExtractedGraph {
+  val extractedSymbols = new ExtractedSymbols
+  val extractedSymbolRelations = new ExtractedSymbolRelations
+}
+
+/*
+ * an extracted symbols collection (singleton as we run once per project)
+ */
+class ExtractedSymbols {
   
   val existingCalls = Counters("existing node calls")
   
-  var map: Map[Int, ExtractedSymbol] = Map()
-
+  private var map: Map[Int, ExtractedSymbol] = Map()
+  
   def apply(global: Global)(s: global.Symbol): ExtractedSymbol = {
     
     if (map.contains(s.id)) {
@@ -20,7 +29,10 @@ object ExtractedSymbols {
     }
     else
     {
-      val qualifiedId = s.ownerChain.map(_.nameString).mkString(".") + "." + s.kindString
+      val kindNameList: List[KindAndName] = s.ownerChain.reverse.map(owner => KindAndName(owner.kindString, owner.nameString))
+      assert(kindNameList.head.kind == "package")
+      assert(kindNameList.head.name == "<root>")
+      val qualifiedId = QualifiedID(kindNameList.drop(1))
       
       val newNode = s.sourceFile match {
         case null => // no source file included in this project for this entity 
@@ -34,16 +46,20 @@ object ExtractedSymbols {
     }
   }
   
+  def size = map.size
+
+  def get = map.map(_._2)
+  
 }
 
 /*
- * the objects collection (singleton as we run once per project)
+ * an objects collection (singleton as we run once per project)
  */
-object ExtractedSymbolRelations {
+class ExtractedSymbolRelations {
   
   val existingCalls = Counters("existing edge calls")
   
-  var set: Set[ExtractedSymbolRelation] = Set()
+  private var set: Set[ExtractedSymbolRelation] = Set()
   
   def apply(id1: Int, edgeKind: String, id2: Int): Unit = {
     
@@ -52,40 +68,10 @@ object ExtractedSymbolRelations {
       existingCalls.increment
     else
       set = set + edge
-      
-  } 
+
+  }
+  
+  def get = set
+  
+  def size = set.size
 }
-
-/*
- * the edge class
- */
-case class ExtractedSymbolRelation
-  (symbolID1: Int,
-   relation: String,
-   symbolID2: Int) 
-
-/*
- * types signifying whether a symbol is defined in 
- * the current project, or is an external one
- */
-abstract class DefiningProject
-object ProjectDefined extends DefiningProject
-object ExternallyDefined extends DefiningProject
-
-/*
- * The node class
- */
-case class ExtractedSymbol 
-  (id: Int,
-  name: String,
-  kind: String,
-  notSynthetic: Boolean,
-  qualifiedId: String,
-  definingProject: DefiningProject,
-  definingFileName: Option[String],
-  sourceCode: Option[String]) 
-  extends NodeSerialization {
-    var ownersTraversed = false 
-}
-
-case class Graph(nodes: Set[ExtractedSymbol], edges: Set[ExtractedSymbolRelation])

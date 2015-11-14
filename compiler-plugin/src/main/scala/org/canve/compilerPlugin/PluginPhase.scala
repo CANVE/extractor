@@ -24,6 +24,8 @@ class PluginPhase(val global: Global)
     override def run() {
       
       val projectName = PluginArgs.projectName
+
+      val projectGraph: ExtractedGraph = new ExtractedGraph
       
       Log("extraction starting for project " + projectName + " (" + units.length + " compilation units)")
       
@@ -31,10 +33,12 @@ class PluginPhase(val global: Global)
       
       units.foreach { unit =>
         if (unit.source.path.endsWith(".scala")) {
+          
           Log("examining source file" + unit.source.path + "...")
-          TraversalExtractionWriter(t.global)(unit)(projectName)
-        } else
-            Log("skipping non-scala source file: " + unit.source.path)
+          TraversalExtractionWriter(t.global)(unit)(projectName, projectGraph)
+          Log("done examining source file" + unit.source.path + "...")
+          
+        } else Log("skipping non-scala source file: " + unit.source.path)
       }
     }
 

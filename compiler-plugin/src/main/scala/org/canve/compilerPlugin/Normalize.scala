@@ -8,15 +8,14 @@ class Normalize {
     
   type ProjectName = String
   type RelationKind = String
-  type QualifiedId = String
   
-  case class IndexableNode(data: ExtractedSymbol) extends AbstractVertex[QualifiedId] { 
+  case class IndexableNode(data: ExtractedSymbol) extends AbstractVertex[QualifiedID] { 
     val key = data.qualifiedId 
   }    
   
-  case class Edge(id1: Int, id2: Int, data:RelationKind) extends AbstractEdge[QualifiedId, RelationKind]
+  case class GraphEdge(id1: QualifiedID, id2: QualifiedID, data:RelationKind) extends AbstractEdge[QualifiedID, RelationKind]
   
-  type ConvergedGraph = org.canve.simpleGraph.SimpleGraph[QualifiedId, RelationKind, IndexableNode, Edge]
+  type ConvergedGraph = org.canve.simpleGraph.SimpleGraph[QualifiedID, RelationKind, IndexableNode, GraphEdge]
   
   private def normalizeEdges(graph: ManagedGraph, from: Int, to: Int) {
   
@@ -44,7 +43,7 @@ class Normalize {
   }
   
   val projectsRawData: Iterator[(String, List[ExtractedSymbol], List[ExtractedSymbolRelation])] = getSubDirectories(canveRoot).toIterator.map(readCanveDirData)
-  
+  /*
   projectsRawData.reduce { (graphA, graphB) =>
     
     val R = new Graph(Set(), Set())
@@ -102,6 +101,6 @@ class Normalize {
     //rawGraph(R.result, graphB.edges)  
   }
   
-
+	*/
     //val merged = groupedByQualifiedId map { _._2.     
 }

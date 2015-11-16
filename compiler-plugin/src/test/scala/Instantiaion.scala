@@ -50,6 +50,7 @@ trait NodeSearch {
  * does some testing with its output
  */
 object InstantiationTester extends TraversalExtractionTester with NodeSearch {
+  
   override def apply(global: Global)(body: global.Tree) = {
     
     val graph: ExtractedGraph = TraversalExtraction(global)(body)(new ExtractedGraph)
@@ -66,10 +67,7 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
       (filterFuncArgs: FilterFuncArguments[ManagedGraphNode, ManagedGraphEdge]) => 
           (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "declares member")) 
     
-    println(s"Tracing all acceptable paths from node id ${origin.key} to node id ${target.key}")
-    println(s"origin node: $origin")
-    println(s"target node: $target")
-    println
+    print(s"Tracing all acceptable paths from ${shortDescription(origin)} to ${shortDescription(target)}...")
     
     def voidFilter(filterFuncArgs: FilterFuncArguments[ManagedGraphNode, ManagedGraphEdge]): Boolean = true
     def walkFilter(filterFuncArgs: FilterFuncArguments[ManagedGraphNode, ManagedGraphEdge]): Boolean = {      
@@ -86,15 +84,29 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
     paths match {
       case None => throw new Exception("relationsnip not found")
       case Some(paths) => { 
-        println(s"${paths.size} paths found:")
+        println(s" ${paths.size} paths found:")
         paths.foreach { path => 
-          println 
-          path.map(id => println(simpleGraph.vertex(id).get))
-          println(target)
+          println("Path:")
+          path.map(id => println("  " + shortDescription(simpleGraph.vertex(id).get)))
+          println("  " + shortDescription(target))
         }
       }
     }
-  }  
+  }
+  
+  /* 
+   * utility function for compact printing of symbols qualified id
+   */
+  def shortDescription(node: ManagedGraphNode) = {
+    val symbol: ExtractedSymbol = node.data
+    val shortenedQualifiedId = (symbol.qualifiedId.value.head.name match {
+      case "<empty>" => symbol.qualifiedId.value.drop(1)
+      case _ => symbol.qualifiedId.value
+    }).map(_.name).mkString(".")
+    
+    s"${symbol.kind} $shortenedQualifiedId (${symbol.id})"      
+  }
+  
 }
 
 object MyTestSuite extends TestSuite {

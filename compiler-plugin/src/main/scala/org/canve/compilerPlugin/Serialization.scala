@@ -1,18 +1,6 @@
 package org.canve.compilerPlugin
 
 /*
- * Serializable QualiferID
- */
-case class KindAndName(kind: String, name: String)
-case class QualifiedID(value: List[KindAndName]) {  
-  def pickle = value.map(qualifiedId => "(" + qualifiedId.kind + "|" + qualifiedId.name + ")").mkString(".")
-}
-object QualifiedID {
-  def unpickle(s: String) = 
-    QualifiedID(s.split('.').toList.map(pair => KindAndName(pair.takeWhile(_!='|').drop(1), pair.dropWhile(_!='|').drop(1).dropRight(1))))
-}
-
-/*
  * helper for writing node data to csv 
  */
 trait SymbolSerialization {

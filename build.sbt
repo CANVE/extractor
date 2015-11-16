@@ -121,5 +121,5 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
  * And these depenency projects are developed as mostly generic libraries
  */
 lazy val simpleGraph = (project in file("simple-graph"))
-lazy val scalaPlus = (project in file("scala-plus"))
+lazy val scalaPlus = (project in file("scala-plus")).settings(publishArtifact := false)
 lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib"))

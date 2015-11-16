@@ -64,15 +64,23 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
   /*
    * public methods
    */
-
+  
   def += (vertex: Vertex): SimpleGraph[ID, EdgeData, Vertex, Edge] = {    
-    vertexIndex.get(vertex.key) match {      
+      vertexIndex.get(vertex.key) match {      
       case Some(vertex) => throw SimpleGraphDuplicate("node with id $id already exists in the graph") 
+      case None => vertexIndex += ((vertex.key, vertex)) // TODO: switch to put? 
+      }
+      this
+  }
+
+  def addIfNew(vertex: Vertex): SimpleGraph[ID, EdgeData, Vertex, Edge] = {    
+    vertexIndex.get(vertex.key) match {
+      case Some(vertex) =>  
       case None => vertexIndex += ((vertex.key, vertex)) // TODO: switch to put? 
     }
     this
   }
-    
+  
   def += (edge: Edge): SimpleGraph[ID, EdgeData, Vertex, Edge] = {
     List(edge.id1, edge.id2).foreach(id => 
       if (vertex(id).isEmpty) throw SimpleGraphInvalidEdge(s"will not add edge $edge because there is no vertex with id $id"))  
@@ -106,8 +114,8 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
     this -= edge
     
     /* 
-     * utility function for switching a vertex the edge is connected to, if required -
-     * only switch if the vertex pointed at is the one that needs replacing
+     * utility function for switching a vertex the edge is connected to if required -
+     * only if the vertex pointed at is the one that needs replacing
      */
     def maybeReplace(id: ID) = {
       (id == from) match { 

@@ -4,25 +4,22 @@ import com.github.tototoshi.csv._
 import java.io.File
 import org.canve.simpleGraph._
 
-class Normalize {
-    
-  type ProjectName = String
+abstract class QualifiedGraphTypes {
+  type QualifiedGraph = org.canve.simpleGraph.SimpleGraph[QualifiedID, RelationKind, GraphNode, GraphEdge]
+
   type RelationKind = String
-  
-  case class IndexableNode(data: ExtractedSymbol) extends AbstractVertex[QualifiedID] { 
-    val key = data.qualifiedId 
-  }    
-  
   case class GraphEdge(id1: QualifiedID, id2: QualifiedID, data:RelationKind) extends AbstractEdge[QualifiedID, RelationKind]
+  case class GraphNode(data: ExtractedSymbol) extends AbstractVertex[QualifiedID] { 
+    val key = data.qualifiedId 
+  }      
+}
+
+trait dataReader {
   
-  type ConvergedGraph = org.canve.simpleGraph.SimpleGraph[QualifiedID, RelationKind, IndexableNode, GraphEdge]
-  
-  private def normalizeEdges(graph: ManagedGraph, from: Int, to: Int) {
-  
-  }
+  case class ReadProjectData(projectName: String, nodeList: List[ExtractedSymbol], edgeList: List[ExtractedSymbolRelation])
   
   /*
-   * read canve nodes and edges from a directory
+   * builds canve nodes and edges from a canve data directory
    */
   def readCanveDirData(dir: File) = {
      
@@ -37,70 +34,70 @@ class Normalize {
     val edges: List[ExtractedSymbolRelation] = 
       CSVReader.open(new File(dir + File.separator + "relations")).allWithHeaders
       .map(rowMap => SymbolRelationFromCsvRow(rowMap))
-    
-    (projectName, nodes, edges)
-    //new Graph(nodes.map(GraphNode().toSet, edges.map(edge => GraphEdge(edge.symbolID1, edge.symbolID2, edge.edgeKind)).toSet)
+      
+    ReadProjectData(projectName, nodes, edges)
+  }
+}
+
+case class DataNormalizationException(errorText: String) extends Exception 
+
+class Normalize extends QualifiedGraphTypes with dataReader {
+  
+  def assertSimilarity(s1: ExtractedSymbol, s2: ExtractedSymbol) {
+    if (s1.name == s2.name) 
+    if (s1.kind == s2.kind) 
+    if (s1.notSynthetic == s2.notSynthetic) 
+    if (s1.qualifiedId == s2.qualifiedId) 
+    return
+     
+    throw DataNormalizationException(
+      "Two symbols having the same Qualified ID are different:" +
+      s"\n$s1" +  
+      s"\n$s2" +  
+      "This is likely a data normalization internal error") 
   }
   
-  val projectsRawData: Iterator[(String, List[ExtractedSymbol], List[ExtractedSymbolRelation])] = getSubDirectories(canveRoot).toIterator.map(readCanveDirData)
-  /*
-  projectsRawData.reduce { (graphA, graphB) =>
+  def apply: QualifiedGraph = {
     
-    val R = new Graph(Set(), Set())
+    val projectsRawData: Iterator[ReadProjectData] = 
+      getSubDirectories(canveRoot).toIterator.map(readCanveDirData)
+      
+    val normalizedGraphBuilder = new QualifiedGraph
     
-    val MergedNodeList = List.newBuilder[ExtractedSymbol]
-    
-    val AggregateNodesList: List[ManagedGraphNode] = graphA.vertexIterator.toList ++ graphB.vertexIterator.toList 
-    val groupedBy = AggregateNodesList.groupBy(_.data.qualifiedId)
-    groupedBy map { case(qualifiedId, nodes) => 
-      (nodes.size == 1) match {
+    projectsRawData.foreach { projectRawData =>
+      projectRawData.nodeList.foreach { symbol => 
         
-        /*
-         * no overlap for this qualified id,
-         * so just add the only node that has it 
-         */
-        case true => 
-          R += nodes.head
+        lazy val newVertex  = GraphNode(symbol)
+        val sameKeyedVertex = normalizedGraphBuilder.vertex(symbol.qualifiedId) 
         
-        /*  
-         * dealing with the various cases where the two projects 
-         * both have the same node, the qualified id being
-         * the criteria for sameness.
-         */
-        case false => 
-          assert(nodes.size == 2)
-          val nodeA = nodes.head 
-          val nodeB = nodes.tail.head
-        
-          /*
-           * if one of the couple having the same qualified id 
-           * is project-defined and the other externally-defined,
-           * normalize to the project-defined one. 
-           */
-          (nodeA.data.definingProject, nodeB.data.definingProject) match {
+        sameKeyedVertex match {
+          
+          case None => normalizedGraphBuilder += newVertex
+          
+          case Some(sameKeyedVertex: GraphNode) =>
             
-            case (ProjectDefined, ExternallyDefined) =>
-              R += nodeA
-              // normalizeEdges(in = graphB, to = nodeA.id, from = nodeB.id)
+            assertSimilarity(sameKeyedVertex.data, symbol)
+            
+            (sameKeyedVertex.data.definingProject, symbol.definingProject) match {
+            
+            case (ExternallyDefined, ProjectDefined) => 
+              normalizedGraphBuilder -= sameKeyedVertex.key += newVertex
               
-            case (ExternallyDefined, ProjectDefined) =>
-              R += nodeB
-              // normalizeEdges(in = graphA, to = nodeB.id, from = nodeA.id)
+            case (ProjectDefined, ExternallyDefined) => // do nothing
               
-            case (ExternallyDefined, ExternallyDefined)  =>
-              R += nodeA // and no need to normalize edges
+            case (ExternallyDefined, ExternallyDefined) => // do nothing
               
-            case (ProjectDefined, ProjectDefined) =>
-              assert(false) 
-
+            case (ProjectDefined, ProjectDefined) => 
+              // TODO: this exception message doesn't help zoom on the project names
+              throw DataNormalizationException(
+                "Encountered an ambiguous qualified symbol id - two projects define the same qualified id:" +
+                s"\n$sameKeyedVertex and" +
+                s"\n$newVertex") 
           }
+        }
       }
     }
-      
-    R
-    //rawGraph(R.result, graphB.edges)  
+    
+    normalizedGraphBuilder
   }
-  
-	*/
-    //val merged = groupedByQualifiedId map { _._2.     
 }

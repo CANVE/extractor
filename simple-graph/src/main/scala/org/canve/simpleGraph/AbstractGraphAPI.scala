@@ -10,10 +10,12 @@ abstract class AbstractGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <:
   def += (vertex: Vertex): AbstractGraph[ID, EdgeData, Vertex, Edge] 
   
   def += (edge: Edge): AbstractGraph[ID, EdgeData, Vertex, Edge] 
-      
+  
   def -= (vertexId: ID): AbstractGraph[ID, EdgeData, Vertex, Edge] 
   
   def -= (edge: Edge): AbstractGraph[ID, EdgeData, Vertex, Edge] 
+  
+  def addIfNew (vertex: Vertex): AbstractGraph[ID, EdgeData, Vertex, Edge]
     
   def vertex(id: ID): Option[Vertex]
   

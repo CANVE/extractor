@@ -26,17 +26,16 @@ trait Injectable {
  */
 object InjectingCompilerFactory {
 
-  private lazy val runTimeScalaVersion: Option[String] = {
-    val matcher = """version (\d+\.\d+\.\d+).*""".r
-    scala.util.Properties.versionString match {
-      case matcher(vsn) => Some(vsn)
-      case _ => None
+  private lazy val runTimeScalaVersion: String = {
+    val versionString = scala.util.Properties.versionString 
+    
+    versionString.take("version ".length) match {
+      case "version " => versionString.drop("version ".length) 
+      case _ => throw new Exception("Could not obtain scala runtime version. Are you running scala 2.9 or older?")
     }
   }
     
-  if (runTimeScalaVersion.isEmpty) throw new Exception("Could not obtain scala runtime version. Are you running scala 2.9 or older?")
-  
-  private val ShortScalaVersion = runTimeScalaVersion.get.dropRight(2)
+  private val ShortScalaVersion = runTimeScalaVersion.dropRight(2)
 
   private def classPath = getScalaJars.map(_.getAbsolutePath) // :+ sbtCompileDir.getAbsolutePath // :+ runtimeClasses.getAbsolutePath
 
@@ -54,7 +53,7 @@ object InjectingCompilerFactory {
 
   // private def runtimeClasses: File = new File("./scalac-scoverage-runtime/target/scala-2.11/classes")
 
-  private def findScalaJar(artifactId: String): File = findIvyJar("org.scala-lang", artifactId, runTimeScalaVersion.get)
+  private def findScalaJar(artifactId: String): File = findIvyJar("org.scala-lang", artifactId, runTimeScalaVersion)
 
   private def findIvyJar(groupId: String, artifactId: String, version: String): File = {
     val userHome = System.getProperty("user.home")

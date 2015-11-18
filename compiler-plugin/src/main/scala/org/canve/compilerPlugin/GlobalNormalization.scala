@@ -39,9 +39,9 @@ trait dataReader {
   }
 }
 
-case class DataNormalizationException(errorText: String) extends Exception 
+case class DataNormalizationException(errorText: String) extends Exception(errorText)
 
-class Normalize extends QualifiedGraphTypes with dataReader {
+class NormalizedData extends QualifiedGraphTypes with dataReader {
   
   def assertSimilarity(s1: ExtractedSymbol, s2: ExtractedSymbol) {
     if (s1.name == s2.name) 
@@ -50,21 +50,22 @@ class Normalize extends QualifiedGraphTypes with dataReader {
     if (s1.qualifiedId == s2.qualifiedId) 
     return
      
-    throw DataNormalizationException(
+    println(DataNormalizationException(
       "Two symbols having the same Qualified ID are different:" +
       s"\n$s1" +  
       s"\n$s2" +  
-      "This is likely a data normalization internal error") 
+      "\nThis is likely a canve data normalization internal error.")) 
   }
   
-  def apply: QualifiedGraph = {
+  private def normalize: QualifiedGraph = {
     
     val projectsRawData: Iterator[ReadProjectData] = 
       getSubDirectories(canveRoot).toIterator.map(readCanveDirData)
-      
+
     val normalizedGraphBuilder = new QualifiedGraph
     
     projectsRawData.foreach { projectRawData =>
+      
       projectRawData.nodeList.foreach { symbol => 
         
         lazy val newVertex  = GraphNode(symbol)
@@ -82,6 +83,7 @@ class Normalize extends QualifiedGraphTypes with dataReader {
             
             case (ExternallyDefined, ProjectDefined) => 
               normalizedGraphBuilder -= sameKeyedVertex.key += newVertex
+              println("deduplicated one node")
               
             case (ProjectDefined, ExternallyDefined) => // do nothing
               
@@ -89,10 +91,10 @@ class Normalize extends QualifiedGraphTypes with dataReader {
               
             case (ProjectDefined, ProjectDefined) => 
               // TODO: this exception message doesn't help zoom on the project names
-              throw DataNormalizationException(
-                "Encountered an ambiguous qualified symbol id - two projects define the same qualified id:" +
+              println(DataNormalizationException(
+                "Encountered an ambiguous qualified symbol id - two symbols share the same qualified id:" +
                 s"\n$sameKeyedVertex and" +
-                s"\n$newVertex") 
+                s"\n$newVertex"))
           }
         }
       }
@@ -100,4 +102,6 @@ class Normalize extends QualifiedGraphTypes with dataReader {
     
     normalizedGraphBuilder
   }
+ 
+  normalize
 }

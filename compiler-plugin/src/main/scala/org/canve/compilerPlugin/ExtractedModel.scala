@@ -28,7 +28,7 @@ class ExtractedSymbols {
       map.get(s.id).get      
     }
     else
-    {
+    {  
       val kindNameList: List[KindAndName] = s.ownerChain.reverse.map(owner => KindAndName(owner.kindString, owner.nameString))
       assert(kindNameList.head.kind == "package")
       assert(kindNameList.head.name == "<root>")
@@ -38,7 +38,8 @@ class ExtractedSymbols {
         case null => // no source file included in this project for this entity 
           ExtractedSymbol(s.id, s.nameString, s.kindString, !(s.isSynthetic), qualifiedId, ExternallyDefined, None, None)
         case _    => 
-          ExtractedSymbol(s.id, s.nameString, s.kindString, !(s.isSynthetic), qualifiedId, ProjectDefined, Some(s.sourceFile.toString), SourceExtract(global)(s))
+          ExtractedSymbol(s.id, s.nameString, s.kindString, !(s.isSynthetic), qualifiedId, ProjectDefined, 
+                          Some(s.sourceFile.toString), SourceExtract(global)(s))
       }
       
       map += (s.id -> newNode)

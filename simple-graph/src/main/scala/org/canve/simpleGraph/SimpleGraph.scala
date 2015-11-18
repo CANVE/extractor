@@ -73,6 +73,7 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
       this
   }
 
+  // TODO: this is just a convenience wrapper, should probably not be part of the abstract api but rather an extra optional api trait
   def addIfNew(vertex: Vertex): SimpleGraph[ID, EdgeData, Vertex, Edge] = {    
     vertexIndex.get(vertex.key) match {
       case Some(vertex) =>  

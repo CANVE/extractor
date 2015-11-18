@@ -22,7 +22,8 @@ case class ExtractedSymbol
   qualifiedId: QualifiedID,
   definingProject: DefiningProject,
   definingFileName: Option[String],
-  sourceCode: Option[String]) 
+  sourceCode: Option[String],
+  merged: Boolean = false) 
   extends SymbolSerialization {
     var ownersTraversed = false 
 }

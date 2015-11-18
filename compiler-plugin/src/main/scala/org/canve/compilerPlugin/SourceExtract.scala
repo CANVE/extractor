@@ -71,30 +71,40 @@ object SourceExtract {
   
   def apply(global: Global)(symbol: global.Symbol): Option[String] = {
     
+    def CantDetermine(reason: String) = {
+      println(s"Could not determine source definition for symbol ${symbol.nameString} (${symbol.id}) because $reason") 
+      None
+    }
+    
     symbol.sourceFile match {
-      case null => None
+      case null => return CantDetermine("sourceFile property is null")
       case _    =>
         
         // a lot of guard statements which are all necessary given all kinds of special cases
         
         if (symbol.isSynthetic) return None                   
 
-        if (symbol.pos.toString == "NoPosition") return None // can happen for Scala 2.10 projects, 
-                                                             // or just when macros are involved.
+        if (symbol.pos.toString == "NoPosition") 
+          // the above can be the case for Scala 2.10 projects, 
+          // or just when macros are involved.
+          return CantDetermine("pos property is NoPosition") 
+
         val source = symbol.sourceFile.toString
         val line   = symbol.pos.line
         val column = symbol.pos.column
         val start  = symbol.pos.startOrPoint // plain start may crash for scala 2.10 projects
         val end    = symbol.pos.endOrPoint   // plain end may crash for scala 2.10 projects
 
-        if (line == 0) return None  // the compiler provides a line position 0 sometimes,
-                                    // whereas line numbers are confirmed to start from 1. 
-                                    // Hence we can't extract source here.         
+        if (line == 0)
+          // the compiler provides a line position 0 sometimes,
+          // whereas line numbers are confirmed to start from 1. 
+          // Hence we can't extract source here.         
+          return CantDetermine("line=0")
         
-        if (start == end) return None // this also means it is effectively a synthetic definition
-                                      // even though .isSynthethic == false (!), which is the case
-                                      // with a body-less case class in scala 2.11.        
-
+        if (start == end) {
+          println(scala.io.Source.fromFile(source).mkString.slice(start, start + 20) + "[in ..." + source.takeRight(30) + "]")
+          return CantDetermine(s"start=end ($start)")
+        }
 
         /*
          * heuristic based extraction - may be necessary for supporting scala 2.10 so keep it alive

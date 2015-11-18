@@ -1,6 +1,26 @@
 /*
  * Master build definition for CANVE data extraction.
+ * 
+ * Note: 
+ *
+ *   The default is not to build for 2.12, as some dependencies 
+ *   are not yet published for 2.12 milestone releases. To cross build 
+ *   also for 2.12, run sbt like so: sbt -Dscala12=true.
+ *
+ *   Ask us for a hacked 2.12 compilation of the external dependencies if
+ *   you'd like to use this option.
+ *   
  */
+
+val scala12release = "2.12.0-M2" // pre-release scala 2.12 version to use
+
+lazy val scala12 = sys.props.getOrElse("scala12", "false")
+
+lazy val commonCrossScalaVersions = scala12 match {
+  case "false" => Seq("2.10.4", "2.11.7")
+  case "true"  => Seq("2.10.4", "2.11.7", scala12release)
+  case _ => throw new Exception("invalid argument value supplied for scala12 (can only be \"true\", or unspecified altogether)")
+}
 
 val integrationTest = taskKey[Unit]("Executes integration tests.")
 
@@ -9,7 +29,7 @@ lazy val root = (project in file("."))
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
   .settings(
     scalaVersion := "2.11.7",
-    crossScalaVersions := Seq("2.10.4", "2.11.7"),
+    crossScalaVersions := commonCrossScalaVersions,
     publishArtifact := false, // no artifact to publish for the virtual root project
     integrationTest := (run in Compile in integrationTestProject).toTask("").value
 )
@@ -31,14 +51,14 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
     isSnapshot := true, // to enable overwriting the existing artifact version
     scalaVersion := "2.11.7",
     //scalacOptions ++= Seq("-Ymacro-debug-lite"),
-    crossScalaVersions := Seq("2.10.4", "2.11.7"),
+    crossScalaVersions := commonCrossScalaVersions,
     resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
 
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
       "org.scala-lang" % "scala-library" % scalaVersion.value % "provided",
-      "com.github.tototoshi" %% "scala-csv" % "1.2.2",
-      //"com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT", // snapshot version might be causing sbt/ivy going crazy
+      //"com.github.tototoshi" %% "scala-csv" % "1.2.2",
+      "com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT", // snapshot version might be causing sbt/ivy going crazy
       //"org.apache.tinkerpop" % "tinkergraph-gremlin" % "3.0.1-incubating",
       //"canve" %% "simple-graph" % "0.0.1",
       //"canve" %% "compiler-plugin-unit-test-lib" % "0.0.1" % "test",
@@ -120,6 +140,34 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
 /*
  * And these depenency projects are developed as mostly generic libraries
  */
-lazy val simpleGraph = (project in file("simple-graph"))
-lazy val scalaPlus = (project in file("scala-plus")).settings(publishArtifact := false)
-lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib"))
+lazy val simpleGraph: Project = (project in file("simple-graph")).settings(
+  name := "simple-graph",
+  organization := "canve",
+  version := "0.0.1",
+  isSnapshot := true, // to enable overwriting the existing artifact version
+  scalaVersion := "2.11.7",
+  crossScalaVersions := commonCrossScalaVersions,
+  resolvers += Resolver.sonatypeRepo("snapshots"),
+  resolvers += Resolver.sonatypeRepo("releases"),
+  libraryDependencies ++= Seq("com.lihaoyi" %% "utest" % "0.3.1" % "test"),
+  testFrameworks += new TestFramework("utest.runner.Framework")
+)
+
+lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib")).settings(
+  organization := "canve",
+  name := "compiler-plugin-unit-test-lib",
+  isSnapshot := true, // to enable overwriting the existing artifact version
+  scalaVersion := "2.11.7",
+  crossScalaVersions := commonCrossScalaVersions,
+  libraryDependencies ++= Seq(
+    "org.scala-lang" % "scala-reflect" % scalaVersion.value % "provided",
+    "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided"
+))
+
+/*
+ * Not really a dependency, for now
+ */
+lazy val scalaPlus = (project in file("scala-plus")).settings(
+  scalaVersion := "2.11.7",
+  publishArtifact := false
+)

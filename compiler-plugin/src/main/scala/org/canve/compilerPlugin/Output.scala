@@ -20,7 +20,7 @@ object Output {
           
     graph.extractedSymbols.get.foreach(extractedSymbol =>
       if (extractedSymbol.sourceCode.isDefined)
-        writeOutputFile(PluginArgs.projectName, extractedSymbol.qualifiedId.pickle, 
+        writeOutputFile(PluginArgs.projectName, extractedSymbol.id.toString() /* extractedSymbol.qualifiedId.pickle */, 
                         "< definition from source file: " + extractedSymbol.definingFileName.get + " >\n\n" + extractedSymbol.sourceCode.get.mkString + "\n"))
   }
   

@@ -27,4 +27,4 @@ sbt integrationTest
  (or, if you are on this subproject in sbt, simply `run`, but in that case you still have to first `+publishLocal` from the root project one time.. )
 
 ##A small note
-This integration test is using the "resources" api. This means that the test projects directory is copied to the `target` directory by the runtime  - and served to the test code from there. 
+This integration test is using the "resources" api. This means that the test projects directory is copied to the `target` directory by the runtime  - and served to the test code from there. The exact location of this automatic copy would be: `target/scala-x.xx/classes/`.

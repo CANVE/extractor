@@ -27,6 +27,6 @@ sbt integrationTest
  (or, if you are on this subproject in sbt, simply `run`, but in that case you still have to first `+publishLocal` from the root project one time.. )
 
 ##A small note
-This integration test is using the resources api. So the test projects directory will get automatically copied by the runtime, from `src/main/resources` to the `target` directory - and served to the test code from there. 
+This integration test is using the resources api. So the test projects directory will get automatically copied by the runtime, from `src/main/resources` to the `target` directory - and served to the test code from the latter. 
 
-The exact location of this automatic copy would be: `target/scala-x.xx/classes/`; You would look there for any files created during the canve run elicited by this integration test (not in `src`, which is only the "source" from which the resources are copied). 
+The exact location of this automatic copy would be: `target/scala-x.xx/classes/`; You would look there for any files created during the canve run elicited by this integration test (not in `src`, which is only the "source"). 

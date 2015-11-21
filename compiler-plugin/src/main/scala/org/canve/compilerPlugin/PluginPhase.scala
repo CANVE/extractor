@@ -40,6 +40,8 @@ class PluginPhase(val global: Global)
           
         } else Log("skipping non-scala source file: " + unit.source.path)
       }
+      
+      Output.write(projectGraph)
     }
 
     def name: String = "canve" 

@@ -8,3 +8,7 @@ jdk:
   - oraclejdk7
 
 script: sbt +compile +test
+
+branches:
+  except:
+    - feature/normalization

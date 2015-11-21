@@ -9,8 +9,6 @@ object TraversalExtractionWriter {
     
     Log(graph.symbols.size + " symbols so far extracted for project " + projectName)
     Log(graph.symbolRelations.size + " symbol relations so far extracted for project " + projectName)
-    
-    Output.write(graph)
 
     Unit    
   }

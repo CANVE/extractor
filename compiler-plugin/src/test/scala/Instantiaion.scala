@@ -13,7 +13,7 @@ import org.canve.simpleGraph.algo.impl._
  */
 class TraversalExtractionTester extends compilerPluginUnitTest.Injectable {
   def apply(global: Global)(body: global.Tree) = {
-    val graph: ExtractedGraph = new ExtractedGraph
+    val graph: ExtractedModel = new ExtractedModel
     TraversalExtraction(global)(body)(graph)
   }   
 }
@@ -53,10 +53,10 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
   
   override def apply(global: Global)(body: global.Tree) = {
     
-    val graph: ExtractedGraph = TraversalExtraction(global)(body)(new ExtractedGraph)
+    val graph: ExtractedModel = TraversalExtraction(global)(body)(new ExtractedModel)
     val simpleGraph = new ManagedGraph(
-      graph.extractedSymbols.get.map(ManagedGraphNode).toSet, 
-      graph.extractedSymbolRelations.get.map(edge => ManagedGraphEdge(edge.symbolID1, edge.symbolID2, edge.relation))
+      graph.symbols.get.map(ManagedGraphNode).toSet, 
+      graph.symbolRelations.get.map(edge => ManagedGraphEdge(edge.symbolID1, edge.symbolID2, edge.relation))
     )
     
     val origin: ManagedGraphNode = findUniqueOrThrow(simpleGraph, "Foo", "object")

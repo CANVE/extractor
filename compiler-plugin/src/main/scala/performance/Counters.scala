@@ -15,7 +15,7 @@ object Counters {
   
   // invokes a supplied reporter function with the counts of all counters 
   def report(func: String => Unit) = {
-    val counts = counters.map(counter => (counter.name, counter))
+    val counts = counters.map(counter => (counter.name, counter.get))
     func(counts.mkString(": ")) 
   }
 }
@@ -26,5 +26,5 @@ object Counters {
 class Counter(val name: String) {
   private var count: Long = 0
   def increment = count += 1
-  def apply = count
+  def get = count
 }

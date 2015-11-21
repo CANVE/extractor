@@ -5,11 +5,31 @@ import Logging.Utility._
 // TODO: capture leading comment lines, as a separate `comments` property.
 //       surely the user will appreciate them, if they can be optionally showed to them.
 
-object SourceExtract {
+object CodeExtract {
 
+  /*
+   * Extract the source code of the symbol using compiler supplied ranges 
+   *
+   * In the obvious case it just mirrors the original indentation in the source code,  
+   * which is not included in the range given by the compiler, so it is here "added it back". 
+   * 
+   * In the less obvious case a definition may not start on a line of its own in the source
+   * code (think anonymous definitions). In that case unrelated preceding text will be removed and 
+   * replaced by leading spaces rather than only removed. Not optimal for anonymous classes
+   * defined with the `new` keyword, but that's a compiler story... 
+   */      
+  private def grabSymbolCode(global: Global)(symbol: global.Symbol, span: Span) = {
+    val sourceFile = symbol.sourceFile.toString
+    val sourceFileContents = scala.io.Source.fromFile(sourceFile).mkString
+    val firstLineIdentLength = sourceFileContents.slice(0, span.start).reverse.takeWhile(_ != '\n').length   
+    
+    " " * firstLineIdentLength + sourceFileContents.slice(span.start, span.end)
+  }
+
+  
   @deprecated("the heuristics are not needed, as long as -Yrangepos is used",
               "but since -Yrangepos may crash on scala 2.10 code that uses macros, this might come back") 
-  private def getSourceBlockHeuristic(global: Global)(symbol: global.Symbol): List[String] = {
+  private def getSymbolCodeHeuristically(global: Global)(symbol: global.Symbol): List[String] = {
     
     def getStartCol(s: String) = s.indexWhere(c => c !=' ')
 
@@ -69,67 +89,54 @@ object SourceExtract {
     
   }
   
-  def apply(global: Global)(symbol: global.Symbol): Option[String] = {
+  def apply(global: Global)(symbol: global.Symbol): ExtractedCode = {
     
-    def CantDetermine(reason: String) = {
+    def logCantDetermine(reason: String) = {
       println(s"Could not determine source definition for symbol ${symbol.nameString} (${symbol.id}) because $reason") 
-      None
     }
     
-    symbol.sourceFile match {
-      case null => return CantDetermine("sourceFile property is null")
-      case _    =>
+    assert (symbol.sourceFile!=null)
         
-        // a lot of guard statements which are all necessary given all kinds of special cases
-        
-        if (symbol.isSynthetic) return None                   
+    // guard statements necessary given all kinds of special cases
+    
+    if (symbol.isSynthetic) 
+      return ExtractedCode(symbol.sourceFile.toString, NoLocationInfo, None)                   
 
-        if (symbol.pos.toString == "NoPosition") 
-          // the above can be the case for Scala 2.10 projects, 
-          // or just when macros are involved.
-          return CantDetermine("pos property is NoPosition") 
+    if (symbol.pos.toString == "NoPosition") { 
+      // the above can be the case for Scala 2.10 projects, 
+      // or just when macros are involved.
+      logCantDetermine("pos property is NoPosition") 
+      return ExtractedCode(symbol.sourceFile.toString, NoLocationInfo, None)
+    }
 
-        val source = symbol.sourceFile.toString
-        val line   = symbol.pos.line
-        val column = symbol.pos.column
-        val start  = symbol.pos.startOrPoint // plain start may crash for scala 2.10 projects
-        val end    = symbol.pos.endOrPoint   // plain end may crash for scala 2.10 projects
+    val sourceFilePath = symbol.sourceFile.toString
+    val line   = symbol.pos.line
+    val column = symbol.pos.column
+    val start  = symbol.pos.startOrPoint // plain start may crash for scala 2.10 projects
+    val end    = symbol.pos.endOrPoint   // plain end may crash for scala 2.10 projects
 
-        if (line == 0)
-          // the compiler provides a line position 0 sometimes,
-          // whereas line numbers are confirmed to start from 1. 
-          // Hence we can't extract source here.         
-          return CantDetermine("line=0")
-        
-        if (start == end) {
-          println(scala.io.Source.fromFile(source).mkString.slice(start, start + 20) + "[in ..." + source.takeRight(30) + "]")
-          return CantDetermine(s"start=end ($start)")
-        }
+    if (line == 0) {
+      // the compiler provides a line position 0 sometimes,
+      // whereas line numbers are confirmed to start from 1. 
+      // Hence we can't extract source here.         
+      logCantDetermine("line=0")
+      return ExtractedCode(sourceFilePath, NoLocationInfo, None)
+    }
+    
+    if (start == end) {
+      logCantDetermine(s"start=end ($start)")
+      println(scala.io.Source.fromFile(sourceFilePath).mkString.slice(start, start + 20) + "[in ..." + sourceFilePath.takeRight(30) + "]")
+      return ExtractedCode(sourceFilePath, NoLocationInfo, None)
+    }
 
-        /*
-         * heuristic based extraction - may be necessary for supporting scala 2.10 so keep it alive
-         * (c.f. https://github.com/scoverage/scalac-scoverage-plugin/blob/5d0c92479dff0055f2cf7164439f838b803fe44a/2.10.md)
-         */        
-        val blockFromHeuristic = getSourceBlockHeuristic(global)(symbol)
-        
-        /*
-         * Extract the source code of the symbol using compiler supplied ranges 
-         *
-         * In the obvious case it just mirrors the original indentation in the source code,  
-         * which is not included in the range given by the compiler, so it is here "added it back". 
-         * 
-         * In the less obvious case a definition may not start on a line of its own in the source
-         * code (think anonymous definitions). In that case unrelated preceding text will be removed and 
-         * replaced by leading spaces rather than only removed. Not optimal for anonymous classes
-         * defined with the `new` keyword, but that's a compiler story... 
-         */      
-        val block = {
-          val sourceCode  = scala.io.Source.fromFile(source).mkString
-          val firstLineIdentLength = sourceCode.slice(0, start).reverse.takeWhile(_ != '\n').length   
-          " " * firstLineIdentLength + sourceCode.slice(start, end)
-        }
-        
-        Some(block)
-    } 
+    /*
+     * heuristic based extraction - may be necessary for supporting scala 2.10 so keep it alive in compilation
+     * (c.f. https://github.com/scoverage/scalac-scoverage-plugin/blob/5d0c92479dff0055f2cf7164439f838b803fe44a/2.10.md)
+     */        
+    val blockFromHeuristic = getSymbolCodeHeuristically(global)(symbol)
+
+    ExtractedCode(sourcePath = sourceFilePath, 
+                  location = Span(start, end), 
+                  code = Some(grabSymbolCode(global)(symbol, Span(start, end))))
   }
 }

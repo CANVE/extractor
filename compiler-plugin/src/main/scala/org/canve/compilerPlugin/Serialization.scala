@@ -33,9 +33,7 @@ object SymbolFromCsvRow {
           definingProject = rowMap("definition") match {
             case "project" => ProjectDefined
             case "external" => ExternallyDefined
-          },
-          definingFileName = None,
-          sourceCode = None)
+          })
   }
 }
 

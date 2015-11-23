@@ -25,7 +25,7 @@ class PluginPhase(val global: Global)
       
       val projectName = PluginArgs.projectName
 
-      val projectGraph: ExtractedModel = new ExtractedModel
+      val projectGraph: ExtractedModel = new ExtractedModel(t.global)
       
       Log("extraction starting for project " + projectName + " (" + units.length + " compilation units)")
       
@@ -35,8 +35,12 @@ class PluginPhase(val global: Global)
         if (unit.source.path.endsWith(".scala")) {
           
           Log("examining source file" + unit.source.path + "...")
-          TraversalExtractionWriter(t.global)(unit)(projectName, projectGraph)
+          projectGraph += TraversalExtractionWriter(t.global)(unit, projectName)
           Log("done examining source file" + unit.source.path + "...")
+          
+          Log(projectGraph.graph.vertexCount + " symbols so far extracted for project " + projectName)
+          Log(projectGraph.graph.edgeCount + " symbol relations so far extracted for project " + projectName)
+
           
         } else Log("skipping non-scala source file: " + unit.source.path)
       }

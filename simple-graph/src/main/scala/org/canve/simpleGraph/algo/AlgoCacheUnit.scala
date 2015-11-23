@@ -5,14 +5,14 @@ import org.canve.simpleGraph._
  * a cache using type @VertexCache, 
  * for an algorithm to use against the given @graph
  */
-case class AlgoCacheUnit[ID, EdgeData, VertexCacheUnit <: AbstractVertexCacheUnit, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID, EdgeData]]
+case class AlgoCacheUnit[VertexID, EdgeData, VertexCacheUnit <: AbstractVertexCacheUnit, Vertex <: AbstractVertex[VertexID], Edge <: AbstractEdge[VertexID, EdgeData]]
   (cacheUnit: VertexCacheUnit, 
-   graph: AbstractGraph[ID, EdgeData, Vertex, Edge]) { 
+   graph: AbstractGraph[VertexID, EdgeData, Vertex, Edge]) { 
    
-  private val vertexCacheIndex: Map[ID, AbstractVertexCacheUnit] = 
+  private val vertexCacheIndex: Map[VertexID, AbstractVertexCacheUnit] = 
     graph.vertexIterator.map(vertex => (vertex.key, cacheUnit.apply)).toMap
   
-  def apply(id: ID) = vertexCacheIndex.get(id)
+  def apply(id: VertexID) = vertexCacheIndex.get(id)
 }
 
 abstract trait AbstractVertexCacheUnit {

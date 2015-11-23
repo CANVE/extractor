@@ -12,11 +12,11 @@ import org.canve.simpleGraph.algo._
  * target vertex in the cache of each vertex being part of such path.
  * 
  */
-case class GetPathsBetween[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID, EdgeData]]
-  (graph: AbstractGraph[ID, EdgeData, Vertex, Edge], 
+case class GetPathsBetween[VertexID, EdgeData, Vertex <: AbstractVertex[VertexID], Edge <: AbstractEdge[VertexID, EdgeData]]
+  (graph: AbstractGraph[VertexID, EdgeData, Vertex, Edge], 
    filterFunc: FilterFuncArguments[Vertex, Edge] => Boolean, 
-   origin: ID,
-   target: ID) extends GraphAlgo {
+   origin: VertexID,
+   target: VertexID) extends GraphAlgo {
     
     var neverRun = true
   
@@ -25,13 +25,13 @@ case class GetPathsBetween[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: A
      */
     protected class selfCacheUnit {
       var visited: Boolean = false
-      var successPath: List[List[ID]] = List() 
+      var successPath: List[List[VertexID]] = List() 
     } 
   
-    private val cache: Map[ID, selfCacheUnit] = 
+    private val cache: Map[VertexID, selfCacheUnit] = 
       graph.vertexIterator.map(vertex => (vertex.key, new selfCacheUnit)).toMap
       
-    private def traverse(self: ID): Boolean = {
+    private def traverse(self: VertexID): Boolean = {
       //println(self)
       val selfCache = cache(self)
       
@@ -58,7 +58,7 @@ case class GetPathsBetween[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: A
       selfCache.successPath.filter(_.nonEmpty).nonEmpty
     }
     
-    def run: Option[List[List[ID]]] = {
+    def run: Option[List[List[VertexID]]] = {
       
       if (!neverRun) throw SimpleGraphAlgoException("GraphAlgo object $this already run")  
       

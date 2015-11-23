@@ -12,7 +12,7 @@ class CoreRemovals {
   }    
 
   case class Relation(kind: String)
-  case class GraphEdge(id1: Int, data: Relation, id2: Int) extends AbstractEdge[Int, Relation]
+  case class GraphEdge(node1: Int, data: Relation, node2: Int) extends AbstractEdge[Int, Relation]
   
   val graph = new SimpleGraph[Int, Relation, GraphNode, GraphEdge]
   

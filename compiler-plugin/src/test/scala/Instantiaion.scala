@@ -13,7 +13,7 @@ import org.canve.simpleGraph.algo.impl._
  */
 class TraversalExtractionTester extends compilerPluginUnitTest.Injectable {
   def apply(global: Global)(body: global.Tree) = {
-    val graph: ExtractedModel = new ExtractedModel
+    val graph: ExtractedModel = new ExtractedModel(global)
     TraversalExtraction(global)(body)(graph)
   }   
 }
@@ -25,11 +25,11 @@ class TraversalExtractionTester extends compilerPluginUnitTest.Injectable {
  * TODO: consider moving over to the simple-graph library if this trait grows much
  */
 trait NodeSearch { 
-  def search(graph: ManagedGraph, name: String, kind: String): List[ManagedGraphNode] = {
+  def search(graph: ManagedExtractedGraph, name: String, kind: String) = {
     graph.vertexIterator.filter(node => node.data.name == name && node.data.kind == kind).toList
   }
   
- def findUnique(graph: ManagedGraph, name: String, kind: String): Option[ManagedGraphNode] = { 
+ def findUnique(graph: ManagedExtractedGraph, name: String, kind: String) = { 
    val finds = search(graph, name, kind)
    if (finds.size == 1) 
      Some(finds.head)
@@ -37,7 +37,7 @@ trait NodeSearch {
      None
  }
  
- def findUniqueOrThrow(graph: ManagedGraph, name: String, kind: String): ManagedGraphNode = {
+ def findUniqueOrThrow(graph: ManagedExtractedGraph, name: String, kind: String) = {
    findUnique(graph, name, kind) match {
      case None => throw new Exception(s"graph $graph has ${search(graph, name, kind)} search results for name=$name, kind=$kind rather than exactly one.") 
      case Some(found) => found
@@ -53,10 +53,10 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
   
   override def apply(global: Global)(body: global.Tree) = {
     
-    val graph: ExtractedModel = TraversalExtraction(global)(body)(new ExtractedModel)
-    val simpleGraph = new ManagedGraph(
+    val graph: ExtractedModel = TraversalExtraction(global)(body)(new ExtractedModel(global))
+    val simpleGraph = new ManagedExtractedGraph(
       graph.symbols.get.map(ManagedGraphNode).toSet, 
-      graph.symbolRelations.get.map(edge => ManagedGraphEdge(edge.symbolID1, edge.symbolID2, edge.relation))
+      graph.symbolRelations.get.map(edge => ManagedGraphEdge(edge.symbolId1, edge.symbolId2, edge.relation))
     )
     
     val origin: ManagedGraphNode = findUniqueOrThrow(simpleGraph, "Foo", "object")
@@ -104,7 +104,7 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
       case _ => symbol.qualifiedId.value
     }).map(_.name).mkString(".")
     
-    s"${symbol.kind} $shortenedQualifiedId (${symbol.id})"      
+    s"${symbol.kind} $shortenedQualifiedId (${symbol.symbolCompilerId})"      
   }
   
 }

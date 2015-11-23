@@ -1,3 +1,5 @@
+/*
+
 package org.canve.compilerPlugin
 import org.canve.util.CanveDataIO._
 import com.github.tototoshi.csv._
@@ -104,3 +106,5 @@ class NormalizeOld {
 	*/
     //val merged = groupedByQualifiedId map { _._2.     
 }
+
+*/

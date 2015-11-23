@@ -100,13 +100,13 @@ object CodeExtract {
     // guard statements necessary given all kinds of special cases
     
     if (symbol.isSynthetic) 
-      return ExtractedCode(symbol.sourceFile.toString, NoLocationInfo, None)                   
+      return ExtractedCode(symbol.id, symbol.sourceFile.toString, NoLocationInfo, None)                   
 
     if (symbol.pos.toString == "NoPosition") { 
       // the above can be the case for Scala 2.10 projects, 
       // or just when macros are involved.
       logCantDetermine("pos property is NoPosition") 
-      return ExtractedCode(symbol.sourceFile.toString, NoLocationInfo, None)
+      return ExtractedCode(symbol.id, symbol.sourceFile.toString, NoLocationInfo, None)
     }
 
     val sourceFilePath = symbol.sourceFile.toString
@@ -120,13 +120,13 @@ object CodeExtract {
       // whereas line numbers are confirmed to start from 1. 
       // Hence we can't extract source here.         
       logCantDetermine("line=0")
-      return ExtractedCode(sourceFilePath, NoLocationInfo, None)
+      return ExtractedCode(symbol.id, sourceFilePath, NoLocationInfo, None)
     }
     
     if (start == end) {
       logCantDetermine(s"start=end ($start)")
       println(scala.io.Source.fromFile(sourceFilePath).mkString.slice(start, start + 20) + "[in ..." + sourceFilePath.takeRight(30) + "]")
-      return ExtractedCode(sourceFilePath, NoLocationInfo, None)
+      return ExtractedCode(symbol.id, sourceFilePath, NoLocationInfo, None)
     }
 
     /*
@@ -135,8 +135,10 @@ object CodeExtract {
      */        
     val blockFromHeuristic = getSymbolCodeHeuristically(global)(symbol)
 
-    ExtractedCode(sourcePath = sourceFilePath, 
-                  location = Span(start, end), 
-                  code = Some(grabSymbolCode(global)(symbol, Span(start, end))))
+    ExtractedCode(
+      id = symbol.id,
+      sourcePath = sourceFilePath, 
+      location = Span(start, end), 
+      code = Some(grabSymbolCode(global)(symbol, Span(start, end))))
   }
 }

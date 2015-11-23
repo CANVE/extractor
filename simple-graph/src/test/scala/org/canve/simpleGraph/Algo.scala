@@ -13,7 +13,7 @@ class Algo {
   }                     
   
   object Relation 
-  case class GraphEdge(id1: Int, id2: Int, data: Any = Relation) extends AbstractEdge[Int, Any]
+  case class GraphEdge(node1: Int, node2: Int, data: Any = Relation) extends AbstractEdge[Int, Any]
                   
   val graph = new SimpleGraph[Int, Any, GraphNode, GraphEdge]
 

@@ -16,7 +16,7 @@ object Output {
     writeOutputFile(PluginArgs.projectName, "relations", 
         "id1,relation,id2\n" +
         graph.symbolRelations.get.map { extractedEdge =>
-          List(extractedEdge.symbolID1, extractedEdge.relation, extractedEdge.symbolID2).mkString(",")}.mkString("\n"))
+          List(extractedEdge.symbolId1, extractedEdge.relation, extractedEdge.symbolId2).mkString(",")}.mkString("\n"))
           
     graph.codes.get.foreach { keyVal => 
       val extractedCode = keyVal._2

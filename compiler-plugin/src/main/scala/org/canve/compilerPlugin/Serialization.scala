@@ -12,7 +12,7 @@ trait SymbolSerialization {
         case ProjectDefined    => "project"
         case ExternallyDefined => "external" },
        notSynthetic,
-       id, 
+       symbolCompilerId, 
        name, 
        kind,
        qualifiedId.pickle
@@ -25,7 +25,7 @@ trait SymbolSerialization {
  */
 object SymbolFromCsvRow {
   def apply(projectName: String, rowMap: Map[String, String]): ExtractedSymbol = { 
-     ExtractedSymbol(id = rowMap("id").toInt,
+     ExtractedSymbol(symbolCompilerId = rowMap("id").toInt,
           name = rowMap("name"),
           kind = rowMap("kind"),
           notSynthetic = rowMap("notSynthetic").toBoolean,
@@ -41,9 +41,9 @@ object SymbolFromCsvRow {
  * Symbol relation from CANVE CSV data row
  */
 object SymbolRelationFromCsvRow {
-  def apply(rowMap: Map[String, String]): ExtractedSymbolRelation = {
-    ExtractedSymbolRelation(symbolID1 = rowMap("id1").toInt,
-         relation = rowMap("relation"),
-         symbolID2 = rowMap("id2").toInt)
-  }
+  def apply(rowMap: Map[String, String]): ManagedExtractedEdge = 
+    ManagedExtractedEdge(
+      rowMap("id1").toInt,
+      rowMap("relation"),
+      rowMap("id2").toInt)
 }

@@ -9,8 +9,8 @@ import collection.mutable.HashMap
  * the other by the second, so that all edges touching a node can be retrieved in O(1).
  */
 
-class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID, EdgeData]] 
-  extends AbstractGraph[ID, EdgeData, Vertex, Edge] {
+class SimpleGraph[VertexID, EdgeData, Vertex <: AbstractVertex[VertexID], Edge <: AbstractEdge[VertexID, EdgeData]] 
+  extends AbstractGraph[VertexID, EdgeData, Vertex, Edge] {
 
   /*
    *  a custom constructor (because a companion object won't work 
@@ -22,7 +22,7 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
     edges.foreach(this +=)
   }
   
-  private val vertexIndex        = new HashMap[ID, Vertex]   
+  private val vertexIndex        = new HashMap[VertexID, Vertex]   
   protected val edgeIndex        = new EdgeIndex
   protected val reverseEdgeIndex = new EdgeIndex 
   
@@ -31,11 +31,11 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
    */
   protected class EdgeIndex {
     
-    private[SimpleGraph] val index = new HashMap[ID, Set[Edge]]
+    private[SimpleGraph] val index = new HashMap[VertexID, Set[Edge]]
     
-    def vertexEdges(id: ID): Option[Set[Edge]] = index.get(id)
+    def vertexEdges(id: VertexID): Option[Set[Edge]] = index.get(id)
     
-    def add(key: ID, edge: Edge) = {
+    def add(key: VertexID, edge: Edge) = {
       index.get(key) match {
         case Some(set) => 
           set.contains(edge) match {
@@ -47,7 +47,7 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
     }
     
     // TODO: needs test code or switch to scala multimap
-    def remove(key: ID, edge: Edge) = {
+    def remove(key: VertexID, edge: Edge) = {
       index.get(key) match {
         case Some(set) => 
           set.contains(edge) match {
@@ -59,13 +59,15 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
         case None => throw SimpleGraphDuplicate("edge $edge cannot be removed from edge index $this - it is not found in it")
       }
     }   
+    
+    def size = index.size
   }
 
   /*
    * public methods
    */
   
-  def += (vertex: Vertex): SimpleGraph[ID, EdgeData, Vertex, Edge] = {    
+  def += (vertex: Vertex): SimpleGraph[VertexID, EdgeData, Vertex, Edge] = {    
       vertexIndex.get(vertex.key) match {      
       case Some(vertex) => throw SimpleGraphDuplicate("node with id $id already exists in the graph") 
       case None => vertexIndex += ((vertex.key, vertex)) // TODO: switch to put? 
@@ -74,7 +76,7 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
   }
 
   // TODO: this is just a convenience wrapper, should probably not be part of the abstract api but rather an extra optional api trait
-  def addIfNew(vertex: Vertex): SimpleGraph[ID, EdgeData, Vertex, Edge] = {    
+  def addIfNew(vertex: Vertex): SimpleGraph[VertexID, EdgeData, Vertex, Edge] = {    
     vertexIndex.get(vertex.key) match {
       case Some(vertex) =>  
       case None => vertexIndex += ((vertex.key, vertex)) // TODO: switch to put? 
@@ -82,17 +84,17 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
     this
   }
   
-  def += (edge: Edge): SimpleGraph[ID, EdgeData, Vertex, Edge] = {
-    List(edge.id1, edge.id2).foreach(id => 
+  def += (edge: Edge): SimpleGraph[VertexID, EdgeData, Vertex, Edge] = {
+    List(edge.node1, edge.node2).foreach(id => 
       if (vertex(id).isEmpty) throw SimpleGraphInvalidEdge(s"will not add edge $edge because there is no vertex with id $id"))  
     
-    edgeIndex.add(edge.id1, edge)
-    reverseEdgeIndex.add(edge.id2, edge)  
+    edgeIndex.add(edge.node1, edge)
+    reverseEdgeIndex.add(edge.node2, edge)  
     this
   }
   
   // TODO: test code coverage
-  def -= (vertexId: ID): SimpleGraph[ID, EdgeData, Vertex, Edge] = {   
+  def -= (vertexId: VertexID): SimpleGraph[VertexID, EdgeData, Vertex, Edge] = {   
     if (vertexEdges(vertexId).size < 0) throw SimpleGraphApiException(s"cannot remove vertex $vertexId as it still has one or more edges connected to it") 
     vertexIndex.get(vertexId) match {      
       case None => throw SimpleGraphInvalidVertex(s"node with id $vertexId cannot be removed from the graph - as it is not part of it")
@@ -102,14 +104,14 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
   }
 
   // TODO: test code coverage
-  def -= (edge: Edge): SimpleGraph[ID, EdgeData, Vertex, Edge] = {
-    edgeIndex.remove(edge.id1, edge)
-    reverseEdgeIndex.remove(edge.id2, edge)
+  def -= (edge: Edge): SimpleGraph[VertexID, EdgeData, Vertex, Edge] = {
+    edgeIndex.remove(edge.node1, edge)
+    reverseEdgeIndex.remove(edge.node2, edge)
     this
   }
   
   // TODO: test code coverage
-  def edgeReWire(edge: Edge, from: ID, to:ID): SimpleGraph[ID, EdgeData, Vertex, Edge] = {
+  def edgeReWire(edge: Edge, from: VertexID, to:VertexID): SimpleGraph[VertexID, EdgeData, Vertex, Edge] = {
 
     // remove
     this -= edge
@@ -118,7 +120,7 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
      * utility function for switching a vertex the edge is connected to if required -
      * only if the vertex pointed at is the one that needs replacing
      */
-    def maybeReplace(id: ID) = {
+    def maybeReplace(id: VertexID) = {
       (id == from) match { 
         case true  => to  
         case false => id
@@ -126,39 +128,42 @@ class SimpleGraph[ID, EdgeData, Vertex <: AbstractVertex[ID], Edge <: AbstractEd
     }
     
     // add back - now connected to new vertex as needed
-    this += edge.edgeClone(newId1 = maybeReplace(edge.id1), 
-                           newId2 = maybeReplace(edge.id2))
+    this += edge.edgeClone(newId1 = maybeReplace(edge.node1), 
+                           newId2 = maybeReplace(edge.node2))
     this
   }
   
-  def vertex(id: ID): Option[Vertex] = vertexIndex.get(id)
+  def vertex(id: VertexID): Option[Vertex] = vertexIndex.get(id)
   
-  def vertexEdges(id: ID): Set[Edge] = {
+  def vertexEdges(id: VertexID): Set[Edge] = {
     edgeIndex.vertexEdges(id).getOrElse(Set()) ++ 
     reverseEdgeIndex.vertexEdges(id).getOrElse(Set())
   } 
 
+  def vertexCount = vertexIndex.size
+  def edgeCount = edgeIndex.size
+  
   // TODO: test cases, add to abstract class
-  def vertexEdgePeer(id: ID, edge: Edge): ID = {
-    if (id == edge.id1) return edge.id2
-    if (id == edge.id2) return edge.id1
+  def vertexEdgePeer(id: VertexID, edge: Edge): VertexID = {
+    if (id == edge.node1) return edge.node2
+    if (id == edge.node2) return edge.node1
     throw SimpleGraphApiException(s"vertex with id $id is not part of the edge supplied")
   }
   
   // TODO: test cases, add to abstract class, then create efficient version
-  def vertexEdgePeers(id: ID): Set[ID] = {
+  def vertexEdgePeers(id: VertexID): Set[VertexID] = {
     vertexEdges(id).map(edge => vertexEdgePeer(id, edge))
   }
   
   def vertexIterator: Iterator[Vertex] = vertexIndex.iterator.map(_._2)
   
-  def vertexEdgePeersVerbose(id: ID): List[FilterFuncArguments[Vertex, Edge]] = { 
+  def vertexEdgePeersVerbose(id: VertexID): List[FilterFuncArguments[Vertex, Edge]] = { 
     edgeIndex
       .vertexEdges(id).getOrElse(Set()).toList
-      .map(edge => FilterFuncArguments(Egress, edge, vertex(edge.id2).get)) ++
+      .map(edge => FilterFuncArguments(Egress, edge, vertex(edge.node2).get)) ++
     reverseEdgeIndex     
       .vertexEdges(id).getOrElse(Set()).toList
-      .map(edge => FilterFuncArguments(Ingress, edge, vertex(edge.id1).get))
+      .map(edge => FilterFuncArguments(Ingress, edge, vertex(edge.node1).get))
   }
 }
 

@@ -3,14 +3,46 @@ import scala.tools.nsc.Global
 import Logging.Utility._
 
 object TraversalExtractionWriter {
-  def apply(global: Global)(unit: global.CompilationUnit)(projectName: String, graph: ExtractedModel) = {
+  def apply(global: Global)(unit: global.CompilationUnit, projectName: String): ExtractedModel = {
+    
+    val graph: ExtractedModel = new ExtractedModel(global)
     
     TraversalExtraction(global)(unit.body)(graph)
     
-    Log(graph.symbols.size + " symbols so far extracted for project " + projectName)
-    Log(graph.symbolRelations.size + " symbol relations so far extracted for project " + projectName)
-
-    Unit    
+    def MergeSameSpanSymbols(extractedModel: ExtractedModel) = {
+      
+      def pointOrStart(location: Location): Option[Int] = location match {
+        case Span(start, end) => Some(start)
+        case Point(loc)       => Some(loc)
+        case NoLocationInfo   => None
+      }
+      
+      def getLocation(e: ExtractedSymbol) = graph.codes.get(e.symbolCompilerId).location
+      
+      /*
+       * group extracted code elements by their start position or singular location property
+       */
+      val symbolsByQualifiedId = extractedModel.graph.vertexIterator.toList.groupBy(m => m.data.qualifiedId)
+      .foreach { e => val list = e._2
+        if (list.size > 2) 
+          throw DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: $e")
+        
+        if (list.size == 2) {
+          val location1 = getLocation(list.head.data)
+          val location2 = getLocation(list.last.data)
+          if (pointOrStart(location1) == pointOrStart(location2))
+          (location1, location2) match {
+            case (Span(_,_), Point(_))  => println("delete duplicate span symbol") 
+            case (Point(_), Span(_,_))  => println("delete duplicate span symbol")
+            case (Span(_,_), Span(_,_)) => throw DataNormalizationException(s"attempt at normalizing two spans is invalid")
+            case (Point(_), Point(_))   => throw DataNormalizationException(s"attempt at normalizing two spans is invalid")
+          }
+        }
+      }
+    }
+    
+    MergeSameSpanSymbols(graph)
+    graph
   }
 }
 
@@ -32,9 +64,9 @@ object TraversalExtraction {
               case "method" | "constructor" =>
                 if (defParent.isEmpty) Warning.logMemberParentLacking(global)(select.symbol)
 
-                if (defParent.isDefined) extractedModel.add(defParent.get.id, "uses", select.symbol.id)
-               
                 extractedModel.add(global)(select.symbol)
+                
+                if (defParent.isDefined) extractedModel.add(defParent.get.id, "uses", select.symbol.id)
 
                 // record the source code location where the symbol is being used by the user 
                 // this is a proof of concept, that only doesn't propagate its information
@@ -56,9 +88,10 @@ object TraversalExtraction {
 
                 //Log("Processing select of kind " + select.symbol.kindString + " symbol: " + showRaw(select))
 
+                extractedModel.add(global)(select.symbol)
+                
                 if (defParent.isDefined) extractedModel.add(defParent.get.id, "uses", select.symbol.id)
 
-                extractedModel.add(global)(select.symbol)
             }
 
           /*

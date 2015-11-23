@@ -1,3 +1,5 @@
+/*
+
 package org.canve.compilerPlugin
 import org.canve.util.CanveDataIO._
 import com.github.tototoshi.csv._
@@ -38,8 +40,6 @@ trait dataReader {
     ReadProjectData(projectName, nodes, edges)
   }
 }
-
-case class DataNormalizationException(errorText: String) extends Exception(errorText)
 
 class NormalizedData extends QualifiedGraphTypes with dataReader {
   
@@ -105,3 +105,5 @@ class NormalizedData extends QualifiedGraphTypes with dataReader {
  
   normalize
 }
+
+*/

@@ -38,20 +38,26 @@ class ExtractedModel(global: Global) {
           case _    => ProjectDefined
         }
   
-        val extractedSymbol = ExtractedSymbol(s.id, s.nameString, s.kindString, !(s.isSynthetic), qualifiedId, definingProject)
-        val managedExtractedSymbol = ManagedExtractedSymbol(extractedSymbol) 
+
+        /*
+         * add the symbol to the extracted model
+         */
+        val managedExtractedSymbol = {
+          val extractedSymbol = ExtractedSymbol(s.id, s.nameString, s.kindString, !(s.isSynthetic), qualifiedId, definingProject)
+          ManagedExtractedSymbol(extractedSymbol) 
+        }
+
         graph += managedExtractedSymbol
               
         /*
          * extract the symbol's source code, if possible 
          */
-        
         s.sourceFile match {
           case null => // no source file included in this project for this entity
           case _    => codes(global)(s, CodeExtract(global)(s))
         }
         
-        normalization.OwnerChainNormalize(global)(managedExtractedSymbol, s, this)
+        normalization.CompleteOwnerChain(global)(managedExtractedSymbol, s, this)
         managedExtractedSymbol
     }
   }

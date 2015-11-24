@@ -3,44 +3,13 @@ import scala.tools.nsc.Global
 import Logging.Utility._
 
 object TraversalExtractionWriter {
-  def apply(global: Global)(unit: global.CompilationUnit, projectName: String, graph: ExtractedModel): ExtractedModel = {
+  def apply(global: Global)(unit: global.CompilationUnit, projectName: String, extractedModel: ExtractedModel): ExtractedModel = {
     
-    TraversalExtraction(global)(unit.body)(graph)
+    TraversalExtraction(global)(unit.body)(extractedModel)
     
-    def MergeSameSpanSymbols(extractedModel: ExtractedModel) = {
-      
-      def pointOrStart(location: Location): Option[Int] = location match {
-        case Span(start, end) => Some(start)
-        case Point(loc)       => Some(loc)
-        case NoLocationInfo   => None
-      }
-      
-      def getLocation(e: ExtractedSymbol) = graph.codes.get(e.symbolCompilerId).location
-      
-      /*
-       * group extracted code elements by their start position or singular location property
-       */
-      val symbolsByQualifiedId = extractedModel.graph.vertexIterator.toList.groupBy(m => m.data.qualifiedId)
-      .foreach { e => val list = e._2
-        if (list.size > 2) 
-          throw DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: $e")
-        
-        if (list.size == 2) {
-          val location1 = getLocation(list.head.data)
-          val location2 = getLocation(list.last.data)
-          if (pointOrStart(location1) == pointOrStart(location2))
-          (location1, location2) match {
-            case (Span(_,_), Point(_))  => println("delete duplicate span symbol") 
-            case (Point(_), Span(_,_))  => println("delete duplicate span symbol")
-            case (Span(_,_), Span(_,_)) => throw DataNormalizationException(s"attempt at normalizing two spans is invalid")
-            case (Point(_), Point(_))   => throw DataNormalizationException(s"attempt at normalizing two spans is invalid")
-          }
-        }
-      }
-    }
+    normalization.MergeSameSpanSymbols(extractedModel)
     
-    MergeSameSpanSymbols(graph)
-    graph
+    extractedModel
   }
 }
 

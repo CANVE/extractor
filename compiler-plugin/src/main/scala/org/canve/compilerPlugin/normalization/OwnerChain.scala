@@ -2,7 +2,7 @@ package org.canve.compilerPlugin.normalization
 import org.canve.compilerPlugin._
 import scala.tools.nsc.Global
 
-object OwnerChainNormalize {
+object CompleteOwnerChain {
   /*
    * Assure that the symbol's hierarchy chain has been captured -  
    * this is needed for the case that the node is a library symbol, 

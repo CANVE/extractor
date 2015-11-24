@@ -35,7 +35,7 @@ class PluginPhase(val global: Global)
         if (unit.source.path.endsWith(".scala")) {
           
           Log("examining source file" + unit.source.path + "...")
-          projectGraph += TraversalExtractionWriter(t.global)(unit, projectName)
+          TraversalExtractionWriter(t.global)(unit, projectName, projectGraph)
           Log("done examining source file" + unit.source.path + "...")
           
           Log(projectGraph.graph.vertexCount + " symbols so far extracted for project " + projectName)

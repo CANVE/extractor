@@ -3,9 +3,7 @@ import scala.tools.nsc.Global
 import Logging.Utility._
 
 object TraversalExtractionWriter {
-  def apply(global: Global)(unit: global.CompilationUnit, projectName: String): ExtractedModel = {
-    
-    val graph: ExtractedModel = new ExtractedModel(global)
+  def apply(global: Global)(unit: global.CompilationUnit, projectName: String, graph: ExtractedModel): ExtractedModel = {
     
     TraversalExtraction(global)(unit.body)(graph)
     
@@ -178,7 +176,7 @@ object TraversalExtraction {
     val traverser = new ExtractionTraversal(None)
     traverser.traverse(body)
 
-    performance.Counters.report((report: String) => Log(report))
+    performance.Counter.report((report: String) => Log(report))
     
     extractedModel  
   }

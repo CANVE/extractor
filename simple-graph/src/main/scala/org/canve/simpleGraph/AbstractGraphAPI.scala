@@ -45,9 +45,11 @@ abstract trait ExtraGraphAPI[VertexID, EdgeData, Vertex <: AbstractVertex[Vertex
 
   def vertexEdgePeer(id: VertexID, edge: Edge): VertexID 
 
-  def vertexEdgePeers(id: VertexID): Set[VertexID]
+  def vertexEdgePeers(id: VertexID): Set[VertexID] // TODO: is this superfluous?!
   
   def vertexEdgePeersVerbose(id: VertexID): List[FilterFuncArguments[Vertex, Edge]]
+  
+  def edgeIterator: Iterator[Edge]
 }
 
 sealed abstract trait Addable

@@ -12,6 +12,17 @@
  *   
  */
 
+/*
+ * Import for https://github.com/agemooij/sbt-prompt, providing an informative multi-project sbt prompt. 
+ * You will need to follow the instructions there for setting up the fancy unicode symbols which it 
+ * uses for display. In particular you'll also need to configure your terminal preferences to use 
+ * one of the fonts from https://github.com/powerline/fonts. 
+ */
+import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
+
+/*
+ * Optional 2.12 milestone building
+ */
 val scala12release = "2.12.0-M2" // pre-release scala 2.12 version to use
 
 lazy val scala12 = sys.props.getOrElse("scala12", "false")
@@ -22,12 +33,19 @@ lazy val commonCrossScalaVersions = scala12 match {
   case _ => throw new Exception("invalid argument value supplied for scala12 (can only be \"true\", or unspecified altogether)")
 }
 
+/*
+ * the integration test custom task
+ */
 val integrationTest = taskKey[Unit]("Executes integration tests.")
 
+/*
+ * the root project definition
+ */
 lazy val root = (project in file("."))
   .aggregate(scalaPlus, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
   .settings(
+    promptTheme := Scalapenos, 
     scalaVersion := "2.11.7",
     crossScalaVersions := commonCrossScalaVersions,
     publishArtifact := false, // no artifact to publish for the virtual root project
@@ -48,6 +66,7 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
     name := "compiler-plugin",
     organization := "canve",
     version := "0.0.1",
+    promptTheme := Scalapenos,
     isSnapshot := true, // to enable overwriting the existing artifact version
     scalaVersion := "2.11.7",
     //scalacOptions ++= Seq("-Ymacro-debug-lite"),
@@ -97,6 +116,7 @@ lazy val canveSbtPlugin = (project in file("sbt-plugin"))
     organization := "canve",
     name := "sbt-plugin",
     isSnapshot := true, // to enable overwriting the existing artifact version
+    promptTheme := Scalapenos,
     scalaVersion := "2.10.4",
     crossScalaVersions := Seq("2.10.4"),
     sbtPlugin := true
@@ -114,6 +134,7 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
     name := "sbt-plugin-test-lib",
     organization := "canve",
     version := "0.0.1",
+    promptTheme := Scalapenos,
 
     /*
      * this project is purely running sbt as an OS process, so it can use latest scala version not sbt's scala version,
@@ -138,12 +159,13 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
   )
 
 /*
- * And these depenency projects are developed as mostly generic libraries
+ * And these depenency projects are developed (generally speaking) as generic libraries
  */
 lazy val simpleGraph: Project = (project in file("simple-graph")).settings(
   name := "simple-graph",
   organization := "canve",
   version := "0.0.1",
+  promptTheme := Scalapenos,
   isSnapshot := true, // to enable overwriting the existing artifact version
   scalaVersion := "2.11.7",
   crossScalaVersions := commonCrossScalaVersions,
@@ -156,6 +178,7 @@ lazy val simpleGraph: Project = (project in file("simple-graph")).settings(
 lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib")).settings(
   organization := "canve",
   name := "compiler-plugin-unit-test-lib",
+  promptTheme := Scalapenos,
   isSnapshot := true, // to enable overwriting the existing artifact version
   scalaVersion := "2.11.7",
   crossScalaVersions := commonCrossScalaVersions,
@@ -168,6 +191,7 @@ lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test
  * Not really a dependency, for now
  */
 lazy val scalaPlus = (project in file("scala-plus")).settings(
+  promptTheme := Scalapenos,
   scalaVersion := "2.11.7",
   publishArtifact := false
 )

@@ -39,7 +39,9 @@ class SimpleGraph[VertexID, EdgeData, Vertex <: AbstractVertex[VertexID], Edge <
       index.get(key) match {
         case Some(set) => 
           set.contains(edge) match {
-            case true  => throw SimpleGraphDuplicate(s"edge $edge already exists in edge index $this")
+            case true  => 
+              // throw SimpleGraphDuplicate(s"edge $edge already exists in edge index $this")
+              println(SimpleGraphDuplicate(s"edge $edge already exists in edge index $this"))
             case false => index.put(key, set + edge)
         }
         case None => index.put(key, Set(edge))
@@ -59,6 +61,8 @@ class SimpleGraph[VertexID, EdgeData, Vertex <: AbstractVertex[VertexID], Edge <
         case None => throw SimpleGraphDuplicate("edge $edge cannot be removed from edge index $this - it is not found in it")
       }
     }   
+    
+    def iterator = index.iterator
     
     def size = index.size
   }
@@ -156,6 +160,8 @@ class SimpleGraph[VertexID, EdgeData, Vertex <: AbstractVertex[VertexID], Edge <
   }
   
   def vertexIterator: Iterator[Vertex] = vertexIndex.iterator.map(_._2)
+  
+  def edgeIterator: Iterator[Edge] = edgeIndex.iterator.flatMap(_._2)
   
   def vertexEdgePeersVerbose(id: VertexID): List[FilterFuncArguments[Vertex, Edge]] = { 
     edgeIndex

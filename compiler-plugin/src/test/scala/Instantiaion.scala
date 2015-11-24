@@ -53,24 +53,21 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
   
   override def apply(global: Global)(body: global.Tree) = {
     
-    val graph: ExtractedModel = TraversalExtraction(global)(body)(new ExtractedModel(global))
-    val simpleGraph = new ManagedExtractedGraph(
-      graph.symbols.get.map(ManagedGraphNode).toSet, 
-      graph.symbolRelations.get.map(edge => ManagedGraphEdge(edge.symbolId1, edge.symbolId2, edge.relation))
-    )
+    val model: ExtractedModel = TraversalExtraction(global)(body)(new ExtractedModel(global))
+    val simpleGraph = model.graph
     
-    val origin: ManagedGraphNode = findUniqueOrThrow(simpleGraph, "Foo", "object")
-    val target: ManagedGraphNode = findUniqueOrThrow(simpleGraph, "Bar", "class")
+    val origin: ManagedExtractedSymbol = findUniqueOrThrow(simpleGraph, "Foo", "object")
+    val target: ManagedExtractedSymbol = findUniqueOrThrow(simpleGraph, "Bar", "class")
 
     val targetMethods = simpleGraph.vertexEdgePeersFiltered(
       target.key, 
-      (filterFuncArgs: FilterFuncArguments[ManagedGraphNode, ManagedGraphEdge]) => 
+      (filterFuncArgs: FilterFuncArguments[ManagedExtractedSymbol, ManagedExtractedEdge]) => 
           (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "declares member")) 
     
     print(s"Tracing all acceptable paths from ${shortDescription(origin)} to ${shortDescription(target)}...")
     
-    def voidFilter(filterFuncArgs: FilterFuncArguments[ManagedGraphNode, ManagedGraphEdge]): Boolean = true
-    def walkFilter(filterFuncArgs: FilterFuncArguments[ManagedGraphNode, ManagedGraphEdge]): Boolean = {      
+    def voidFilter(filterFuncArgs: FilterFuncArguments[ManagedExtractedSymbol, ManagedExtractedEdge]): Boolean = true
+    def walkFilter(filterFuncArgs: FilterFuncArguments[ManagedExtractedSymbol, ManagedExtractedEdge]): Boolean = {      
       (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "declares member") ||
       (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "uses") ||
       (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "is instance of")  
@@ -97,7 +94,7 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
   /* 
    * utility function for compact printing of symbols qualified id
    */
-  def shortDescription(node: ManagedGraphNode) = {
+  def shortDescription(node: ManagedExtractedSymbol) = {
     val symbol: ExtractedSymbol = node.data
     val shortenedQualifiedId = (symbol.qualifiedId.value.head.name match {
       case "<empty>" => symbol.qualifiedId.value.drop(1)

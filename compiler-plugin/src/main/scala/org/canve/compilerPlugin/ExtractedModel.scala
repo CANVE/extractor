@@ -1,6 +1,6 @@
 package org.canve.compilerPlugin
 import tools.nsc.Global
-import performance.Counters
+import performance._
 import org.canve.simpleGraph.{AbstractVertex, AbstractEdge}
 
 /*
@@ -8,31 +8,8 @@ import org.canve.simpleGraph.{AbstractVertex, AbstractEdge}
  * comprising symbol details and symbol relations 
  */
 class ExtractedModel(global: Global) {
-  
-  /*
-   * Captures the node's hierarchy chain -  
-   * this is needed for the case that the node is a library symbol, 
-   * so we won't (necessarily) bump into its parents while compiling
-   * the project being compiled. And also for ultimately merging symbols
-   * from different projects
-   */
-  private def assureOwnerChain(global: Global)(managedExtractedSymbol: ManagedExtractedSymbol, s: global.Symbol): Unit = {
-    import global._ // for access to typed symbol methods
-    
-    def impl(node: ManagedExtractedSymbol, s: global.Symbol): Unit = {
-      if (!managedExtractedSymbol.data.ownersTraversed) {
-        if (s.nameString != "<root>") {
-          val ownerSymbol = s.owner
-          val ownerNode = addOrGet(global)(ownerSymbol)
-          add(s.owner.id, "declares member", s.id)
-          impl(ownerNode, ownerSymbol)
-          managedExtractedSymbol.data.ownersTraversed = true 
-        }
-      }
-    }
-    
-    impl(managedExtractedSymbol, s)
-  }
+ 
+  val TraversalSymbolRevisit = Counter("TraversalSymbolRevisit")
   
   val graph = new ManagedExtractedGraph
   val codes = new ExtractedCodes
@@ -46,7 +23,10 @@ class ExtractedModel(global: Global) {
   
   def add(global: Global)(s: global.Symbol): ManagedExtractedSymbol = {
     graph.vertex(s.id) match {
-      case Some(__) => throw ExtractionException(s"graph already has symbol with id ${s.id}")
+      case Some(managedExtractedSymbol: ManagedExtractedSymbol) =>
+        //throw ExtractionException(s"graph already has symbol with id ${s.id}")
+        TraversalSymbolRevisit.increment
+        managedExtractedSymbol
       case None =>
         val qualifiedId = QualifiedID.compute(global)(s)
   
@@ -71,7 +51,7 @@ class ExtractedModel(global: Global) {
           case _    => codes(global)(s, CodeExtract(global)(s))
         }
         
-        assureOwnerChain(global)(managedExtractedSymbol, s)
+        normalization.OwnerChainNormalize(global)(managedExtractedSymbol, s, this)
         managedExtractedSymbol
     }
   }

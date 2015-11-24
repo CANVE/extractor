@@ -3,7 +3,7 @@ package performance
 /*
  * counters factory & manager that can provide the status of all counters
  */
-object Counters {
+object Counter {
   private var counters: List[Counter] = List()
   
   // factory method

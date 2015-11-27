@@ -1,45 +1,94 @@
 package org.canve.compilerPlugin.normalization
 import org.canve.compilerPlugin._
 import scala.tools.nsc.Global
+//import pprint._, pprint.Config.Colors._ 
 
 object MergeSameSpanSymbols {
   def apply(extractedModel: ExtractedModel) = {
     
-    def pointOrStart(location: Location): Option[Int] = location match {
+    def pointOrStart(location: MaybePosition): Option[Int] = location match {
       case Span(start, end) => Some(start)
       case Point(loc)       => Some(loc)
-      case NoLocationInfo   => None
+      case NoPosition   => None
     }
     
-    def getLocation(e: ExtractedCode) = e.location
+    def getLocation(e: ExtractedCode) = e.codeLocation.position
     
-    def code(e: ExtractedSymbol): Option[ExtractedCode] = extractedModel.codes.get.get(e.symbolCompilerId)
+    def extractedCode(e: ExtractedSymbol): Option[ExtractedCode] = extractedModel.codes.get.get(e.symbolCompilerId)
     
-    /*
-     * group extracted code elements by their start position or singular location property
+    def logDeduplication(
+      extractedSymbols: (ExtractedSymbol, ExtractedSymbol),
+      extractedCodes: (ExtractedCode, ExtractedCode)) = {
+        val message = 
+          "deduplicating symbol pair:\n" +
+          List(extractedSymbols._1, extractedSymbols._2).zip(List(extractedCodes._1, extractedCodes._2)).mkString("\n")
+        
+        println(message)
+    }
+    
+    /* 
+     * group extracted symbols by their qualified ID    
      */
-    val symbolsByQualifiedId = extractedModel.graph.vertexIterator.filter(_.data.notSynthetic).toList.groupBy(m => m.data.qualifiedId)
-    .foreach { e => val list: List[ManagedExtractedSymbol] = e._2
-      if (list.size > 2) 
-        throw DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: $e")
-      
-      if (list.size == 2) {
-        val extractedSymbol1 = list.head.data
-        val extractedSymbol2 = list.last.data
-        (code(extractedSymbol1), code(extractedSymbol2)) match {
-          case (Some(code1), Some(code2)) =>
-            val location1 = getLocation(code1)
-            val location2 = getLocation(code2)
-            if (pointOrStart(location1) == pointOrStart(location2))
-              (location1, location2) match {
-              case (Span(_,_), Point(_))  => println("delete duplicate span symbol") 
-              case (Point(_), Span(_,_))  => println("delete duplicate span symbol")
-              case (Span(_,_), Span(_,_)) => throw DataNormalizationException(s"attempt at normalizing two spans is invalid")
-              case (Point(_), Point(_))   => throw DataNormalizationException(s"attempt at normalizing two spans is invalid")
-            }
-          case _ =>
+    val symbolsByQualifiedId = 
+      extractedModel.graph.vertexIterator
+      .filter(v => v.data.notSynthetic && v.data.definingProject == ProjectDefined)
+      .toList.groupBy(m => m.data.qualifiedId)
+      .foreach { groupedByQualifiedId => val group: List[ManagedExtractedSymbol] = groupedByQualifiedId._2
+        
+        if (group.size > 2) {
+          println(group.size)
+          group.foreach { x =>
+            println(x.data)
+            println(extractedCode(x.data))
+          }
+          throw DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: $groupedByQualifiedId")
+        }
+        
+        if (group.size == 2) {
+          
+          val extractedSymbols: (ExtractedSymbol, ExtractedSymbol) = 
+            (group.head.data, group.last.data)
+            
+          val extractedCodes: (Option[ExtractedCode], Option[ExtractedCode]) = 
+            (extractedCode(extractedSymbols._1), extractedCode(extractedSymbols._2)) 
+          
+          /*
+           * do the symbols sharing the same qualified ID come from the exact same source code 
+           * definition? we check that by comparing their start position in the source file, 
+           * treating the case of a singular position as a start position.
+           */
+          extractedCodes match {
+            case (Some(code1), Some(code2)) =>
+              val positions = (getLocation(code1), getLocation(code2))
+              
+              if (pointOrStart(positions._1) == pointOrStart(positions._2)) {
+                logDeduplication(extractedSymbols, (code1, code2))
+                
+                /* 
+                 * Merges a list of vertices to its head vertex, collapsing all their
+                 * edges to the head vertex. 
+                 * 
+                 * Specifically the following steps are taken in order:
+                 * 
+                 * - remove all edges connecting between them
+                 * - re-wire all their edges to the head vertex
+                 * - remove them all, leaving only the head vertex 
+                 */
+                def mergeVertices(group: List[ManagedExtractedSymbol]) = 
+                  group.reduce { (s1, s2) => 
+                    extractedModel.graph -= extractedModel.graph.edgesBetween(s1, s2)
+                    extractedModel.graph.vertexEdges(s2.key) foreach (e => 
+                      extractedModel.graph.edgeReWire(e, from = s1.key, to = s2.key)
+                    )
+                    extractedModel.graph -= s2
+                    s1
+                  }
+                
+                mergeVertices(group)
+              }
+            case _ =>
+          }
         }
       }
-    }
   }
 }

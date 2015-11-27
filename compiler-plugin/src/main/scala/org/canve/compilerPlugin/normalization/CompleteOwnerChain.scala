@@ -20,8 +20,9 @@ object CompleteOwnerChain {
         if (s.nameString != "<root>") {
           val ownerSymbol = s.owner
           val ownerNode = model.addOrGet(global)(ownerSymbol)
-          model.add(s.owner.id, "declares member", s.id)
+          model.addIfUnique(s.owner.id, "declares member", s.id)
           impl(ownerNode, ownerSymbol)
+          
           managedExtractedSymbol.data.ownersTraversed = true 
         }
       }

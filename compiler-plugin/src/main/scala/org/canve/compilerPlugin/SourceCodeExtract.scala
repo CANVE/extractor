@@ -5,7 +5,7 @@ import Logging.Utility._
 // TODO: capture leading comment lines, as a separate `comments` property.
 //       surely the user will appreciate them, if they can be optionally showed to them.
 
-object CodeExtract {
+object AttemptCodeExtract {
 
   /*
    * Extract the source code of the symbol using compiler supplied ranges 
@@ -100,13 +100,13 @@ object CodeExtract {
     // guard statements necessary given all kinds of special cases
     
     if (symbol.isSynthetic) 
-      return ExtractedCode(symbol.id, symbol.sourceFile.toString, NoLocationInfo, None)                   
+      return ExtractedCode(symbol.id, SourceCodeLocation(symbol.sourceFile.toString, NoPosition), None)                   
 
     if (symbol.pos.toString == "NoPosition") { 
       // the above can be the case for Scala 2.10 projects, 
       // or just when macros are involved.
       logCantDetermine("pos property is NoPosition") 
-      return ExtractedCode(symbol.id, symbol.sourceFile.toString, NoLocationInfo, None)
+      return ExtractedCode(symbol.id, SourceCodeLocation(symbol.sourceFile.toString, NoPosition), None)
     }
 
     val sourceFilePath = symbol.sourceFile.toString
@@ -120,13 +120,13 @@ object CodeExtract {
       // whereas line numbers are confirmed to start from 1. 
       // Hence we can't extract source here.         
       logCantDetermine("line=0")
-      return ExtractedCode(symbol.id, sourceFilePath, NoLocationInfo, None)
+      return ExtractedCode(symbol.id, SourceCodeLocation(sourceFilePath, NoPosition), None)
     }
     
     if (start == end) {
       logCantDetermine(s"start=end ($start)")
       println(scala.io.Source.fromFile(sourceFilePath).mkString.slice(start, start + 20) + "[in ..." + sourceFilePath.takeRight(30) + "]")
-      return ExtractedCode(symbol.id, sourceFilePath, NoLocationInfo, None)
+      return ExtractedCode(symbol.id, SourceCodeLocation(sourceFilePath, NoPosition), None)
     }
 
     /*
@@ -136,9 +136,8 @@ object CodeExtract {
     val blockFromHeuristic = getSymbolCodeHeuristically(global)(symbol)
 
     ExtractedCode(
-      id = symbol.id,
-      sourcePath = sourceFilePath, 
-      location = Span(start, end), 
+      symbolCompilerId = symbol.id,
+      SourceCodeLocation(sourceFilePath, Span(start, end)), 
       code = Some(grabSymbolCode(global)(symbol, Span(start, end))))
   }
 }

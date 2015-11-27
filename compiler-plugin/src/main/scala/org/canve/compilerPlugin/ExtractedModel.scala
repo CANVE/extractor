@@ -50,11 +50,12 @@ class ExtractedModel(global: Global) {
         graph += managedExtractedSymbol
               
         /*
-         * extract the symbol's source code, if possible 
+         * pass on to attempt to extract the symbol's source code, 
+         * if it is defined in the current project 
          */
-        s.sourceFile match {
-          case null => // no source file included in this project for this entity
-          case _    => codes(global)(s, CodeExtract(global)(s))
+        definingProject match {
+          case ProjectDefined    => codes(global)(s, AttemptCodeExtract(global)(s))
+          case ExternallyDefined => // no source file included in this project for this entity
         }
         
         normalization.CompleteOwnerChain(global)(managedExtractedSymbol, s, this)
@@ -63,7 +64,11 @@ class ExtractedModel(global: Global) {
   }
   
   def add(symbolCompilerId1: SymbolCompilerId, edgeKind: ExtractedSymbolRelation, symbolCompilerId2: SymbolCompilerId) = {
-    graph += ManagedExtractedEdge(symbolCompilerId1,edgeKind,symbolCompilerId2)
+    graph addIfUnique ManagedExtractedEdge(symbolCompilerId1,edgeKind,symbolCompilerId2)
+  }
+  
+  def addIfUnique(symbolCompilerId1: SymbolCompilerId, relation: ExtractedSymbolRelation, symbolCompilerId2: SymbolCompilerId) = {
+    graph addIfUnique ManagedExtractedEdge(symbolCompilerId1, relation, symbolCompilerId2)
   }
 }
 

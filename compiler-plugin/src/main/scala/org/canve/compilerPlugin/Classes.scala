@@ -25,15 +25,19 @@ case class ExtractedSymbol
  * symbol's extracted source code
  */
 
-abstract class Location
-object NoLocationInfo extends Location
-case class Span(start: Int, end: Int) extends Location
-case class Point(init: Int) extends Location { def apply = init }
+abstract class MaybePosition
+object NoPosition extends MaybePosition // TODO: this no longer belongs in here maybe
+case class Span(start: Int, end: Int) extends MaybePosition
+case class Point(init: Int) extends MaybePosition { def apply = init }
+
+case class SourceCodeLocation(
+  path: String,           // the source (file) path  
+  position: MaybePosition // the location within that source
+) 
 
 case class ExtractedCode
-  (id: Int,
-   sourcePath: String,   // the source path code was extracted from
-   location: Location,   // the location within that source
+  (symbolCompilerId: Int,
+   codeLocation: SourceCodeLocation,
    code: Option[String]) // the code extracted
    
    

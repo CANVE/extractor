@@ -16,7 +16,7 @@ object Output {
     writeOutputFile(PluginArgs.projectName, "relations", 
         "id1,relation,id2\n" +
         model.graph.edgeIterator.map { extractedEdge =>
-          List(extractedEdge.node1, extractedEdge.data, extractedEdge.node2).mkString(",")}.mkString("\n"))
+          List(extractedEdge.v1, extractedEdge.data, extractedEdge.v2).mkString(",")}.mkString("\n"))
           
     model.codes.get.foreach { keyVal => 
       val extractedCode = keyVal._2
@@ -24,7 +24,7 @@ object Output {
         writeOutputFile(
           PluginArgs.projectName, 
           keyVal._1.toString() /* extractedSymbol.qualifiedId.pickle */, 
-          "< definition from source file: " + extractedCode.sourcePath + " >\n\n" + extractedCode.code.mkString + "\n"
+          "< definition from source file: " + extractedCode.codeLocation.path + " >\n\n" + extractedCode.code.mkString + "\n"
         )
     }
   }

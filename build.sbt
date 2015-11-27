@@ -81,6 +81,7 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
       //"org.apache.tinkerpop" % "tinkergraph-gremlin" % "3.0.1-incubating",
       //"canve" %% "simple-graph" % "0.0.1",
       //"canve" %% "compiler-plugin-unit-test-lib" % "0.0.1" % "test",
+      //"com.lihaoyi" %% "pprint" % "0.3.6", 
       "com.lihaoyi" %% "utest" % "0.3.1" % "test"
     ),
     
@@ -195,3 +196,10 @@ lazy val scalaPlus = (project in file("scala-plus")).settings(
   scalaVersion := "2.11.7",
   publishArtifact := false
 )
+
+/*
+ * Sound notification for the patient
+ */
+ sound.play(compile in Compile, Sounds.Blow, Sounds.Tink)
+ sound.play(test in Test, Sounds.Blow, Sounds.Ping)
+ sound.play(publishLocal, Sounds.Blow, Sounds.Ping)

@@ -14,6 +14,14 @@ package object compilerPlugin {
   /*
    * extracted graph type
    */
+
+  type ManagedExtractedGraph = 
+  org.canve.simpleGraph.SimpleGraph[
+    SymbolCompilerId, 
+    ExtractedSymbolRelation, 
+    ManagedExtractedSymbol, 
+    ManagedExtractedEdge
+  ]
   
   case class ManagedExtractedSymbol(private val extractedSymbol: ExtractedSymbol) extends AbstractVertex[SymbolCompilerId] { 
     val key: SymbolCompilerId = extractedSymbol.symbolCompilerId
@@ -21,16 +29,9 @@ package object compilerPlugin {
   }
 
   case class ManagedExtractedEdge(
-    node1: SymbolCompilerId,
+    v1: SymbolCompilerId,
     data: ExtractedSymbolRelation,
-    node2: SymbolCompilerId) 
+    v2: SymbolCompilerId) 
       extends AbstractEdge[SymbolCompilerId, ExtractedSymbolRelation]
   
-  type ManagedExtractedGraph = 
-    org.canve.simpleGraph.SimpleGraph[
-      SymbolCompilerId, 
-      ExtractedSymbolRelation, 
-      ManagedExtractedSymbol, 
-      ManagedExtractedEdge
-    ]
 }

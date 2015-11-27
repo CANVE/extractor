@@ -74,7 +74,7 @@ object TraversalExtraction {
             val symbol = tree.symbol
 
             extractedModel.add(global)(symbol)
-            extractedModel.add(defParent.get.id, "declares member", symbol.id)
+            extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
 
             // Capturing the defined val's type (not kind) while at it
             val valueType = symbol.tpe.typeSymbol // the type that this val instantiates.
@@ -89,7 +89,7 @@ object TraversalExtraction {
             val symbol = tree.symbol
 
             extractedModel.add(global)(symbol)
-            extractedModel.add(defParent.get.id, "declares member", symbol.id)
+            extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
 
             val traverser = new ExtractionTraversal(Some(tree.symbol))
             if (symbol.nameString == "get") {

@@ -26,7 +26,7 @@ trait GetPathsBetween[VertexID, VertexData, EdgeData] {
   def getPathsBetween(
     origin: VertexID,
     target: VertexID,
-    filterFunc: FilterFunc[VertexID, graph.Edge]): Option[List[List[VertexID]]] = {
+    filterFunc: WalkStepFilter[VertexID, graph.Edge]): Option[List[List[VertexID]]] = {
 
     // a cache unit per vertex
     val cache: Map[VertexID, selfCacheUnit] = 

@@ -2,16 +2,16 @@ package org.canve.compilerPlugin
 import tools.nsc.Global
 import performance._
 import org.canve.simpleGraph._
+import org.canve.simpleGraph.algo.impl.GetPathsBetween
 
 /*
  * a class representing a single and complete model extracted for the project being compiled, 
  * comprising symbol details and symbol relations 
  */
-class ExtractedModel(global: Global) {
+class ExtractedModel(global: Global) extends ContainsExtractedGraph {
  
   val TraversalSymbolRevisit = Counter("TraversalSymbolRevisit")
   
-  val graph = new ManagedExtractedGraph
   val codes = new ExtractedCodes
   
   def addOrGet(global: Global)(s: global.Symbol): ExtractedSymbol = {

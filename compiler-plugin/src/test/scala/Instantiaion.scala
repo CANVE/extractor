@@ -13,8 +13,8 @@ import org.canve.simpleGraph.algo.impl._
  */
 class TraversalExtractionTester extends compilerPluginUnitTest.Injectable {
   def apply(global: Global)(body: global.Tree) = {
-    val graph: ExtractedModel = new ExtractedModel(global)
-    TraversalExtraction(global)(body)(graph)
+    val model: ExtractedModel = new ExtractedModel(global)
+    TraversalExtraction(global)(body)(model)
   }   
 }
 
@@ -54,27 +54,33 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
   override def apply(global: Global)(body: global.Tree) = {
     
     val model: ExtractedModel = TraversalExtraction(global)(body)(new ExtractedModel(global))
-    val simpleGraph = model.graph
+    val graph = model.graph 
     
-    val origin: ManagedExtractedSymbol = findUniqueOrThrow(simpleGraph, "Foo", "object")
-    val target: ManagedExtractedSymbol = findUniqueOrThrow(simpleGraph, "Bar", "class")
+    val origin = findUniqueOrThrow(graph, "Foo", "object")
+    val target = findUniqueOrThrow(graph, "Bar", "class")
 
-    val targetMethods = simpleGraph.vertexEdgePeersFiltered(
-      target.key, 
-      (filterFuncArgs: FilterFuncArguments[ManagedExtractedSymbol, ManagedExtractedEdge]) => 
-          (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "declares member")) 
+    print(s"Tracing all acceptable paths from ${shortDescription(origin.data)} to ${shortDescription(target.data)}...")
     
-    print(s"Tracing all acceptable paths from ${shortDescription(origin)} to ${shortDescription(target)}...")
+    /* 
+     * Get all members declared by the target class
+     */
+    val targetMethods = 
+      graph.vertexEdges(target.key)
+      .filter(edge => graph.direction(target.key, edge) == Egress && edge.data == "declares member")
+      .map(edge => graph.vertexEdgePeer(target.key, edge))
     
-    def voidFilter(filterFuncArgs: FilterFuncArguments[ManagedExtractedSymbol, ManagedExtractedEdge]): Boolean = true
-    def walkFilter(filterFuncArgs: FilterFuncArguments[ManagedExtractedSymbol, ManagedExtractedEdge]): Boolean = {      
-      (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "declares member") ||
-      (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "uses") ||
-      (filterFuncArgs.direction == Egress && filterFuncArgs.edge.data == "is instance of")  
+    def voidFilter: graph.WalkStepFilter[Int, graph.Edge] = (v, e) => true
+    def walkFilter: graph.WalkStepFilter[Int, graph.Edge] = (v, e) => {
+      graph.direction(v, e) == Egress && (e.data match {
+        case "declares member" => true
+        case "uses" => true
+        case "is instance of" => true
+        case _ => false
+      })
     }
     
     val allPaths: Set[Option[List[List[Int]]]] = targetMethods.map(target => 
-      new GetPathsBetween(simpleGraph, walkFilter, origin.key, target).run)
+      graph.getPathsBetween(origin.key, target, walkFilter))
       
     val paths: Option[List[List[Int]]] = Some(allPaths.flatten.flatten.toList)
      
@@ -84,18 +90,17 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
         println(s" ${paths.size} paths found:")
         paths.foreach { path => 
           println("Path:")
-          path.map(id => println("  " + shortDescription(simpleGraph.vertex(id).get)))
-          println("  " + shortDescription(target))
+          path.map(id => println("  " + shortDescription(graph.vertex(id).get.data)))
+          println("  " + shortDescription(target.data))
         }
       }
     }
   }
   
   /* 
-   * utility function for compact printing of symbols qualified id
+   * utility function for compact printing of symbols' qualified id
    */
-  def shortDescription(node: ManagedExtractedSymbol) = {
-    val symbol: ExtractedSymbol = node.data
+  def shortDescription(symbol: ExtractedSymbol) = {
     val shortenedQualifiedId = (symbol.qualifiedId.value.head.name match {
       case "<empty>" => symbol.qualifiedId.value.drop(1)
       case _ => symbol.qualifiedId.value

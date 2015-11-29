@@ -19,7 +19,11 @@ trait GraphEntities[VertexID, VertexData, EdgeData] {
         new Edge(v1, v2, data)
   }
   
-  type FilterFunc[VertexID, Edge] = (VertexID, Edge) => Boolean
+  /*
+   * a type for a function that filters an edge walk step  
+   * according to the edge and start vertex 
+   */
+  type WalkStepFilter[VertexID, Edge] = (VertexID, Edge) => Boolean
 }
 
 
@@ -68,6 +72,15 @@ abstract class AbstractGraph[VertexID, VertexData, EdgeData]
   
   def -- (inputs: Addable*): This = this -= (inputs.toIterable)
   def ++ (inputs: Addable*): This = this ++ (inputs.toIterable)
+  
+  def direction(id: VertexID, edge: Edge): EdgeDirection = { 
+    (id == edge.v1, id == edge.v2) match {
+      case (true, true)   => SelfLoop
+      case (true, false)  => Egress
+      case (false, true)  => Ingress
+      case (false, false) => throw SimpleGraphApiException(s"vertex id $id is not part of edge supplied to function direction ($edge)")
+    }
+  }
   
   def vertexCount: Int
   def edgeCount: Int

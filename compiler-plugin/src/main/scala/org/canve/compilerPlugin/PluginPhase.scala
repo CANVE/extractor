@@ -25,7 +25,7 @@ class PluginPhase(val global: Global)
       
       val projectName = PluginArgs.projectName
 
-      val projectGraph: ExtractedModel = new ExtractedModel(t.global)
+      val projectGraph: ExtractedModel = new ExtractedModel(t.global) 
       
       Log("extraction starting for project " + projectName + " (" + units.length + " compilation units)")
       

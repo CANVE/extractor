@@ -1,6 +1,7 @@
 package org.canve
 
 import org.canve.simpleGraph._
+import org.canve.simpleGraph.algo.impl.GetPathsBetween
 
 package object compilerPlugin {
   
@@ -14,10 +15,11 @@ package object compilerPlugin {
    * extracted graph type
    */
 
-  type ManagedExtractedGraph = 
-    SimpleGraph[
-      SymbolCompilerId, 
-      ExtractedSymbol,
-      ExtractedSymbolRelation
-    ]
+  type ManagedExtractedGraph = SimpleGraph[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation]
+  
+  trait ContainsExtractedGraph { 
+    val graph = 
+      new ManagedExtractedGraph
+        with GetPathsBetween[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation] 
+  } 
 }

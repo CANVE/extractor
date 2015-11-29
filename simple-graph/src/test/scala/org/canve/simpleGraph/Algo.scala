@@ -6,32 +6,35 @@ import scala.util.{Try, Success, Failure}
 import org.canve.simpleGraph.algo.impl.GetPathsBetween
 
 class Algo {
+
+  /*
   case class Node(id: Int) // data-less node for this test class 
   case class GraphNode(data: Node)  
      extends AbstractVertex[Int] {
        val key = data.id
-  }                     
+  } 
+  */
   
   object Relation 
-  case class GraphEdge(v1: Int, v2: Int, data: Any = Relation) extends AbstractEdge[Int, Any]
+  //type GraphEdge = AbstractEdge[Int, Any]
                   
-  val graph = new SimpleGraph[Int, Any, GraphNode, GraphEdge]
+  val graph = new SimpleGraph[Int, Unit, Unit] with GetPathsBetween[Int, Unit, Unit]
 
-  graph += (GraphNode(Node(1)), GraphNode(Node(2)), GraphNode(Node(3)), GraphNode(Node(4))) 
-  graph += (GraphEdge(1, 2), GraphEdge(2, 3), GraphEdge(3,1), GraphEdge(1,4), GraphEdge(1,1), GraphEdge(2,2), GraphEdge(3,3))
+  graph ++ (graph.Vertex(1, Unit), graph.Vertex(2, Unit), graph.Vertex(3, Unit), graph.Vertex(4, Unit)) 
+  graph ++ (graph.Edge(1, 2, Unit), graph.Edge(2, 3,Unit), graph.Edge(3,1,Unit), graph.Edge(1,4,Unit), graph.Edge(1,1,Unit), graph.Edge(2,2,Unit), graph.Edge(3,3,Unit))
   
-  def voidFilter(filterFunc: FilterFuncArguments[GraphNode, GraphEdge]): Boolean = true
-  def walkFilter(filterFunc: FilterFuncArguments[GraphNode, GraphEdge]): Boolean = {
-    filterFunc.direction == Egress
-  }
+  def voidFilter: graph.FilterFunc[Int, graph.Edge] = (v, direction) => true
+  def walkFilter: graph.FilterFunc[Int, graph.Edge] = (v, direction) => direction == Egress
   
-  val allPaths: Option[List[List[Int]]] = new GetPathsBetween(graph, walkFilter, 1, 3).run
+  println("graph vertices number: " + graph.vertexIterator.size)
+  
+  val allPaths: Option[List[List[Int]]] = graph.getPathsBetween(1, 3, walkFilter)
   assert (allPaths.nonEmpty)
   println(allPaths)
   
   println
   
-  val allPaths1: Option[List[List[Int]]] = new GetPathsBetween(graph, walkFilter, 1, 1).run
+  val allPaths1: Option[List[List[Int]]] = graph.getPathsBetween(1, 1, walkFilter)
   assert (allPaths1.nonEmpty)
   println(allPaths1)  
 }

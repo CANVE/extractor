@@ -12,22 +12,22 @@ object CompleteOwnerChain {
    */
   def apply
     (global: Global)
-    (managedExtractedSymbol: ManagedExtractedSymbol, s: global.Symbol, model: ExtractedModel): Unit = {
+    (extractedSymbol: ExtractedSymbol, s: global.Symbol, model: ExtractedModel): Unit = {
     import global._ // for access to typed symbol methods
     
-    def impl(node: ManagedExtractedSymbol, s: global.Symbol): Unit = {
-      if (!managedExtractedSymbol.data.ownersTraversed) {
+    def impl(node: ExtractedSymbol, s: global.Symbol): Unit = {
+      if (!extractedSymbol.ownersTraversed) {
         if (s.nameString != "<root>") {
           val ownerSymbol = s.owner
           val ownerNode = model.addOrGet(global)(ownerSymbol)
           model.addIfUnique(s.owner.id, "declares member", s.id)
           impl(ownerNode, ownerSymbol)
           
-          managedExtractedSymbol.data.ownersTraversed = true 
+          extractedSymbol.ownersTraversed = true 
         }
       }
     }
     
-    impl(managedExtractedSymbol, s)
+    impl(extractedSymbol, s)
   }
 }

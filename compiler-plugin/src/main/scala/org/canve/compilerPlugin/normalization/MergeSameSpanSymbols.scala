@@ -6,6 +6,8 @@ import scala.tools.nsc.Global
 object MergeSameSpanSymbols {
   def apply(extractedModel: ExtractedModel) = {
     
+    println("merging same span symbols...")
+    
     def pointOrStart(location: MaybePosition): Option[Int] = location match {
       case Span(start, end) => Some(start)
       case Point(loc)       => Some(loc)
@@ -33,7 +35,7 @@ object MergeSameSpanSymbols {
       extractedModel.graph.vertexIterator
       .filter(v => v.data.notSynthetic && v.data.definingProject == ProjectDefined)
       .toList.groupBy(m => m.data.qualifiedId)
-      .foreach { groupedByQualifiedId => val group: List[ManagedExtractedSymbol] = groupedByQualifiedId._2
+      .foreach { groupedByQualifiedId => val group: List[extractedModel.graph.Vertex] = groupedByQualifiedId._2
         
         if (group.size > 2) {
           println(group.size)
@@ -74,13 +76,17 @@ object MergeSameSpanSymbols {
                  * - re-wire all their edges to the head vertex
                  * - remove them all, leaving only the head vertex 
                  */
-                def mergeVertices(group: List[ManagedExtractedSymbol]) = 
+                def mergeVertices(group: List[extractedModel.graph.Vertex]) = 
                   group.reduce { (s1, s2) => 
-                    extractedModel.graph -= extractedModel.graph.edgesBetween(s1, s2)
-                    extractedModel.graph.vertexEdges(s2.key) foreach (e => 
-                      extractedModel.graph.edgeReWire(e, from = s1.key, to = s2.key)
+                    
+                    val ids = (s1.data.symbolCompilerId, s2.data.symbolCompilerId)
+                    
+                    extractedModel.graph -= extractedModel.graph edgesBetween(ids._1, ids._2)
+                    extractedModel.graph.vertexEdges(ids._2) foreach (e => 
+                      extractedModel.graph.edgeReWire(e, to = ids._1, from = ids._2)
                     )
-                    extractedModel.graph -= s2
+                    extractedModel.graph -= ids._2
+                    
                     s1
                   }
                 

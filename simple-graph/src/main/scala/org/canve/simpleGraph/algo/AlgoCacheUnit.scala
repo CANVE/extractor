@@ -5,9 +5,9 @@ import org.canve.simpleGraph._
  * a cache using type @VertexCache, 
  * for an algorithm to use against the given @graph
  */
-case class AlgoCacheUnit[VertexID, EdgeData, VertexCacheUnit <: AbstractVertexCacheUnit, Vertex <: AbstractVertex[VertexID], Edge <: AbstractEdge[VertexID, EdgeData]]
+case class AlgoCacheUnit[VertexID, VertexData, EdgeData, VertexCacheUnit <: AbstractVertexCacheUnit]
   (cacheUnit: VertexCacheUnit, 
-   graph: AbstractGraph[VertexID, EdgeData, Vertex, Edge]) { 
+   graph: AbstractGraph[VertexID, VertexData, EdgeData]) { 
    
   private val vertexCacheIndex: Map[VertexID, AbstractVertexCacheUnit] = 
     graph.vertexIterator.map(vertex => (vertex.key, cacheUnit.apply)).toMap

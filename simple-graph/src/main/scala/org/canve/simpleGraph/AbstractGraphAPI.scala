@@ -3,21 +3,42 @@ package org.canve.simpleGraph
 /*
  * API definition
  */
-abstract class AbstractGraph[VertexID, EdgeData, Vertex <: AbstractVertex[VertexID], Edge <: AbstractEdge[VertexID, EdgeData]]
-  extends ExtraGraphAPI[VertexID, EdgeData, Vertex, Edge]
-  with FilterableWalk[VertexID, EdgeData, Vertex, Edge]{
 
+trait GraphEntities[VertexID, VertexData, EdgeData] {
+  
+  sealed abstract trait Addable
+  
+  case class Vertex(key: VertexID, data: VertexData) extends Addable 
+  
+  case class Edge(
+    var v1: VertexID,
+    var v2: VertexID,  
+    val data: EdgeData) extends Addable {
+    
+    def apply(v1: VertexID, data: EdgeData, v2: VertexID) = 
+        new Edge(v1, v2, data)
+  }
+  
+  type FilterFunc[VertexID, Edge] = (VertexID, Edge) => Boolean
+}
+
+
+
+abstract class AbstractGraph[VertexID, VertexData, EdgeData]
+  extends GraphEntities[VertexID, VertexData, EdgeData]
+  with ExtraGraphAPI[VertexID, VertexData, EdgeData] {
+  
   /* Abstract methods required by an implementation */  
   
-  def ++ (vertex: Vertex): AbstractGraph[VertexID, EdgeData, Vertex, Edge] 
+  def ++ (vertex: Vertex): This
   
-  def ++ (edge: Edge): AbstractGraph[VertexID, EdgeData, Vertex, Edge] 
+  def ++ (edge: Edge): This
   
-  def -= (vertex: Vertex): AbstractGraph[VertexID, EdgeData, Vertex, Edge] 
+  def -= (vertexId: VertexID): This 
   
-  def -= (edge: Edge): AbstractGraph[VertexID, EdgeData, Vertex, Edge] 
+  def -= (edge: Edge): This 
   
-  def addIfNew (vertex: Vertex): AbstractGraph[VertexID, EdgeData, Vertex, Edge]
+  def addIfNew (vertex: Vertex): This
     
   def vertex(id: VertexID): Option[Vertex]
   
@@ -29,24 +50,24 @@ abstract class AbstractGraph[VertexID, EdgeData, Vertex <: AbstractVertex[Vertex
   
   /* Concrete convenience methods for bulk addition and removal of vertices and edges */
 
-  def ++ (input: Iterable[Addable]): AbstractGraph[VertexID, EdgeData, Vertex, Edge] = {
+  def ++ (input: Iterable[Addable]): This = {
     input foreach {
-      case v : AbstractVertex[VertexID]         => ++ (v.asInstanceOf[Vertex])
-      case e : AbstractEdge[VertexID, EdgeData] => ++ (e.asInstanceOf[Edge])
+      case v : Vertex => ++ (v.asInstanceOf[Vertex])
+      case e : Edge   => ++ (e.asInstanceOf[Edge])
     }
     this
   }
  
-  def -= (inputs: Iterable[Addable]): AbstractGraph[VertexID, EdgeData, Vertex, Edge] = {
+  def -= (inputs: Iterable[Addable]): This = {
     inputs foreach {
-      case v : AbstractVertex[VertexID]         => -= (v.asInstanceOf[Vertex])
-      case e : AbstractEdge[VertexID, EdgeData] => -= (e.asInstanceOf[Edge])
+      case v : Vertex => -= (v.key)
+      case e : Edge   => -= (e.asInstanceOf[Edge])
     }
     this
   }
   
-  def -= (inputs: Addable*): AbstractGraph[VertexID, EdgeData, Vertex, Edge] = this -= (inputs.toIterable)
-  def += (inputs: Addable*): AbstractGraph[VertexID, EdgeData, Vertex, Edge] = this ++ (inputs.toIterable)
+  def -- (inputs: Addable*): This = this -= (inputs.toIterable)
+  def ++ (inputs: Addable*): This = this ++ (inputs.toIterable)
   
   def vertexCount: Int
   def edgeCount: Int
@@ -56,40 +77,25 @@ abstract class AbstractGraph[VertexID, EdgeData, Vertex <: AbstractVertex[Vertex
  * A separate layer of graph API, that can be made optional to implement,
  * as the implementations mostly builds upon the pure api.
  */
-abstract trait ExtraGraphAPI[VertexID, EdgeData, Vertex <: AbstractVertex[VertexID], Edge <: AbstractEdge[VertexID, EdgeData]] {
-  self: AbstractGraph[VertexID, EdgeData, Vertex, Edge] => 
+abstract trait ExtraGraphAPI[VertexID, VertexData, EdgeData] {
+  self: AbstractGraph[VertexID, VertexData, EdgeData] => 
 
+  type This = AbstractGraph[VertexID, VertexData, EdgeData]    
+    
   def vertexEdgePeer(id: VertexID, edge: Edge): VertexID 
 
   def vertexEdgePeers(id: VertexID): Set[VertexID] // TODO: is this superfluous?!
   
-  def vertexEdgePeersVerbose(id: VertexID): List[FilterFuncArguments[Vertex, Edge]]
+  //def vertexEdgePeersVerbose(id: VertexID): List[FilterFuncArguments[Vertex, Edge]]
   
   def edgeIterator: Iterator[Edge]
   
-  def edgesBetween(v1: Vertex, v2:Vertex): Set[Edge]
+  def edgesBetween(v1: VertexID, v2:VertexID): Set[Edge]
   
-  def edgeReWire(edge: Edge, from: VertexID, to:VertexID): SimpleGraph[VertexID, EdgeData, Vertex, Edge]
+  def edgeReWire(edge: Edge, from: VertexID, to:VertexID): This
 }
 
-sealed abstract trait Addable
-
-abstract trait AbstractVertex[VertexID] extends Addable {
-  val data: Any // TODO: remove this member as superfluous in api usage?
-  val key: VertexID  
-} 
-
-//TODO: remove the type parameter EdgeData if everything still works when data is defined here as Any
-abstract trait AbstractEdge[VertexID, EdgeData] extends Addable {
-  
-  val data: EdgeData 
-  val v1: VertexID
-  val v2: VertexID
-  lazy val dataCloneRef = data
-  
-  def edgeClone(newId1: VertexID = v1, newId2: VertexID = v2) = new AbstractEdge[VertexID, EdgeData] {
-    val data = dataCloneRef
-    val v1 = newId1
-    val v2 = newId2
-  }
-}
+abstract sealed class EdgeDirection
+object Ingress  extends EdgeDirection
+object Egress   extends EdgeDirection
+object SelfLoop extends EdgeDirection

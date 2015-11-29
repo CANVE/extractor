@@ -1,7 +1,7 @@
 package org.canve.compilerPlugin
 import tools.nsc.Global
 import performance._
-import org.canve.simpleGraph.{AbstractVertex, AbstractEdge}
+import org.canve.simpleGraph._
 
 /*
  * a class representing a single and complete model extracted for the project being compiled, 
@@ -14,19 +14,19 @@ class ExtractedModel(global: Global) {
   val graph = new ManagedExtractedGraph
   val codes = new ExtractedCodes
   
-  def addOrGet(global: Global)(s: global.Symbol): ManagedExtractedSymbol = {
+  def addOrGet(global: Global)(s: global.Symbol): ExtractedSymbol = {
     graph.vertex(s.id) match {
-      case Some(managedExtractedSymbol: ManagedExtractedSymbol) => managedExtractedSymbol 
-      case None    => add(global)(s)
+      case Some(v: graph.Vertex) => v.data 
+      case None => add(global)(s)
     }
   }
   
-  def add(global: Global)(s: global.Symbol): ManagedExtractedSymbol = {
+  def add(global: Global)(s: global.Symbol): ExtractedSymbol = {
     graph.vertex(s.id) match {
-      case Some(managedExtractedSymbol: ManagedExtractedSymbol) =>
+      case Some(v: graph.Vertex) =>
         //throw ExtractionException(s"graph already has symbol with id ${s.id}")
         TraversalSymbolRevisit.increment
-        managedExtractedSymbol
+        v.data
       case None =>
         val qualifiedId = QualifiedID.compute(global)(s)
   
@@ -42,13 +42,9 @@ class ExtractedModel(global: Global) {
         /*
          * add the symbol to the extracted model
          */
-        val managedExtractedSymbol = {
-          val extractedSymbol = ExtractedSymbol(s.id, s.nameString, s.kindString, !(s.isSynthetic), qualifiedId, definingProject)
-          ManagedExtractedSymbol(extractedSymbol) 
-        }
-
-        graph += managedExtractedSymbol
-              
+        val extractedSymbol = ExtractedSymbol(s.id, s.nameString, s.kindString, !(s.isSynthetic), qualifiedId, definingProject)
+        graph ++ graph.Vertex(extractedSymbol.symbolCompilerId, extractedSymbol) 
+            
         /*
          * pass on to attempt to extract the symbol's source code, 
          * if it is defined in the current project 
@@ -58,17 +54,17 @@ class ExtractedModel(global: Global) {
           case ExternallyDefined => // no source file included in this project for this entity
         }
         
-        normalization.CompleteOwnerChain(global)(managedExtractedSymbol, s, this)
-        managedExtractedSymbol
+        normalization.CompleteOwnerChain(global)(extractedSymbol, s, this)
+        extractedSymbol
     }
   }
   
   def add(symbolCompilerId1: SymbolCompilerId, edgeKind: ExtractedSymbolRelation, symbolCompilerId2: SymbolCompilerId) = {
-    graph addIfUnique ManagedExtractedEdge(symbolCompilerId1,edgeKind,symbolCompilerId2)
+    graph addIfUnique graph.Edge(symbolCompilerId1, symbolCompilerId2, edgeKind)
   }
   
   def addIfUnique(symbolCompilerId1: SymbolCompilerId, relation: ExtractedSymbolRelation, symbolCompilerId2: SymbolCompilerId) = {
-    graph addIfUnique ManagedExtractedEdge(symbolCompilerId1, relation, symbolCompilerId2)
+    graph addIfUnique graph.Edge(symbolCompilerId1, symbolCompilerId2, relation)
   }
 }
 

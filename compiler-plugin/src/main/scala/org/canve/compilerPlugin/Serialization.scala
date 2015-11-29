@@ -11,11 +11,11 @@ trait SymbolSerialization {
       definingProject match {
         case ProjectDefined    => "project"
         case ExternallyDefined => "external" },
-       notSynthetic,
-       symbolCompilerId, 
-       name, 
-       kind,
-       qualifiedId.pickle
+      notSynthetic,
+      symbolCompilerId, 
+      name, 
+      kind,
+      qualifiedId.pickle
     ).mkString(",")
   }
 }
@@ -38,12 +38,14 @@ object SymbolFromCsvRow {
 }
 
 /*
+/*
  * Symbol relation from CANVE CSV data row
  */
 object SymbolRelationFromCsvRow {
-  def apply(rowMap: Map[String, String]): ManagedExtractedEdge = 
-    ManagedExtractedEdge(
+  def apply(rowMap: Map[String, String]) = 
+    ExtractedSymbolRelation(
       rowMap("id1").toInt,
-      rowMap("relation"),
-      rowMap("id2").toInt)
+      rowMap("id2").toInt,
+      rowMap("relation"))
 }
+*/

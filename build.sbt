@@ -198,8 +198,9 @@ lazy val scalaPlus = (project in file("scala-plus")).settings(
 )
 
 /*
- * Sound notification for the patient
- */
+ * Sound notifications for the patient - not yet working
+ 
  sound.play(compile in Compile, Sounds.Blow, Sounds.Tink)
  sound.play(test in Test, Sounds.Blow, Sounds.Ping)
  sound.play(publishLocal, Sounds.Blow, Sounds.Ping)
+ */

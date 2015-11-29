@@ -12,11 +12,13 @@ object Output {
     writeOutputFile(PluginArgs.projectName, "symbols", 
                     "definition,notSynthetic,id,name,kind,qualifiedId\n" +
                     (model.graph.vertexIterator.map(_.data.toCsvRow)).mkString("\n"))
-         
+
+    println("before output")
     writeOutputFile(PluginArgs.projectName, "relations", 
         "id1,relation,id2\n" +
-        model.graph.edgeIterator.map { extractedEdge =>
-          List(extractedEdge.v1, extractedEdge.data, extractedEdge.v2).mkString(",")}.mkString("\n"))
+        model.graph.edgeIterator.map ( e => 
+          List(e.v1, e.data, e.v2).mkString(","))
+          .mkString("\n"))
           
     model.codes.get.foreach { keyVal => 
       val extractedCode = keyVal._2

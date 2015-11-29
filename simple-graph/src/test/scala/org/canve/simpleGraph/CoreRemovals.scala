@@ -5,36 +5,29 @@ import scala.util.{Try, Success, Failure}
 
 class CoreRemovals {
   
-  case class Entity(id: Int, name: String, kind: String) 
-  case class GraphNode(data: Entity)  
-     extends AbstractVertex[Int] {
-       val key = data.id
-  }    
-
   case class Relation(kind: String)
-  case class GraphEdge(v1: Int, data: Relation, v2: Int) extends AbstractEdge[Int, Relation]
   
-  val graph = new SimpleGraph[Int, Relation, GraphNode, GraphEdge]
+  val graph = new SimpleGraph[Int, Unit, Relation]
   
-  val GraphNode3 = GraphNode(Entity(3, "foo3" , "bar"))
+  val GraphNode3 = graph.Vertex(3, Unit)
   
   graph ++ GraphNode3
-  assert(Try(graph ++ GraphNode(Entity(3, "error", "error"))).isFailure)
+  assert(Try(graph ++ graph.Vertex(3, Unit)).isFailure)
   assert(Try(graph ++ GraphNode3).isFailure) // we can't follow this semantic for edges though
   assert(graph.vertex(3).get == GraphNode3)
   
   assert(graph.vertex(4).isEmpty)
-  val GraphNode4 = GraphNode(Entity(4, "foo4", "bar"))
+  val GraphNode4 = graph.Vertex(4, Unit)
   graph ++ GraphNode4
   
   assert(graph.vertex(4).get == GraphNode4)    
   assert(graph.vertex(4).get == GraphNode4)    
   assert(graph.vertex(4).get != GraphNode3)
   
-  graph ++ GraphNode(Entity(5, "foo5", "bar"))
+  graph ++ graph.Vertex(5, Unit) 
   
-  val relationA = GraphEdge(3, Relation("relates to"), 4)
-  val relationB = GraphEdge(3, Relation("relates to"), 5)
+  val relationA = new graph.Edge(3, 4, Relation("relates to"))
+  val relationB = new graph.Edge(3, 5, Relation("relates to"))
   
   graph ++ relationA
   graph ++ relationB
@@ -43,17 +36,17 @@ class CoreRemovals {
   //assert(Try(graph += relationA.copy()).isFailure)
   assert(graph.vertexEdges(3).size == 2)
   
-  val relationC = GraphEdge(5, Relation("relates back to"), 3)
+  val relationC = new graph.Edge(5, 3, Relation("relates back to"))
   graph ++ relationC
   //assert(Try(graph += relationC).isFailure)
   assert(graph.vertexEdges(3).size == 3)
   
-  graph ++ GraphEdge(3, Relation("relates back to"), 5)
+  graph ++ new graph.Edge(3, 5, Relation("relates back to"))
   assert(graph.vertexEdges(3).size == 4)
 
-  graph ++ GraphEdge(5, Relation("relates to"), 5) // verifies relation can point to itself
+  graph ++ new graph.Edge(5, 5, Relation("relates to")) // verifies relation can point to itself
   
-  assert(Try(graph ++ GraphEdge(6, Relation("relates back to"), 5)).isFailure)
+  assert(Try(graph ++ new graph.Edge(6, 6, Relation("relates back to"))).isFailure)
   
   assert(graph.vertexIterator ne graph.vertexIterator) // verifies vertexIterator returns new iterator on each call 
  

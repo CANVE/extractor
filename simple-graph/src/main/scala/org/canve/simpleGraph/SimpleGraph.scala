@@ -12,16 +12,6 @@ import collection.mutable.HashMap
 class SimpleGraph[VertexID, VertexData, EdgeData] 
   extends AbstractGraph[VertexID, VertexData, EdgeData] {
 
-  /*
-   *  a custom constructor (because a companion object won't work 
-   *  for a type parameterized class, so it seemed (http://stackoverflow.com/questions/32910646/custom-and-multiple-constructor-inheritance-in-scala) 
-	def this(vertices: Set[Vertex], edges: Set[Edge]) = {
-    this
-    vertices.foreach(this ++)
-    edges.foreach(this ++)
-  }
- */
-  
   private val vertexIndex        = new HashMap[VertexID, Vertex]   
   protected val edgeIndex        = new EdgeIndex
   protected val reverseEdgeIndex = new EdgeIndex 
@@ -179,33 +169,4 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
   
   def edgeIterator: Iterator[Edge] = edgeIndex.iterator.flatMap(_._2)
   
-  /*
-  def vertexEdgePeersVerbose(id: VertexID): List[FilterFuncArguments[Vertex, Edge]] = { 
-    edgeIndex
-      .vertexEdges(id).getOrElse(Set()).toList
-      .map(edge => FilterFuncArguments(Egress, edge, vertex(edge.v2).get)) ++
-    reverseEdgeIndex     
-      .vertexEdges(id).getOrElse(Set()).toList
-      .map(edge => FilterFuncArguments(Ingress, edge, vertex(edge.v1).get))
-  }
-  */
 }
-
-/*
-/*
- * companion object / constructors
- */
-object SimpleGraph {
-  
-  // code credit: http://stackoverflow.com/questions/32768816/bypassing-sets-invariance-in-scala/32769068#32769068
-  def apply[ID, Vertex <: AbstractVertex[ID], Edge <: AbstractEdge[ID]]
-           (vertices: Set[Vertex], edges: Set[Edge]) = {
-    
-    val simpleGraph = new SimpleGraph[ID, Vertex, Edge]
-    vertices.foreach(simpleGraph +=)
-    edges.foreach(simpleGraph +=)
-    simpleGraph
-  }
-  
-}
-*/

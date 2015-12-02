@@ -3,98 +3,117 @@ import org.canve.compilerPlugin._
 import scala.tools.nsc.Global
 //import pprint._, pprint.Config.Colors._ 
 
-object MergeSameSpanSymbols {
-  def apply(extractedModel: ExtractedModel) = {
+/*
+ * Merge symbols per source file
+ */
+
+object MergeSameSpanSymbols extends MergeSameSpanSymbols
+
+trait MergeSameSpanSymbols extends MergeStrategies {
+
+   /* Future logging/exception classes */
+  
+  case class SpansDefer(extractedSymbols: (ExtractedSymbol, ExtractedSymbol))(implicit extractedModel: ExtractedModel) {
+    def apply() =
+      s"""Data normalization unexpected inconsistency encountered - two symbols having the same Qualified ID have different source extraction spans:
+      |${extractedSymbols._1.toJoinedString}  
+      |${extractedSymbols._2.toJoinedString}""".stripMargin
+  }
+  
+  case class StartPositionsDefer(extractedSymbols: (ExtractedSymbol, ExtractedSymbol))(implicit extractedModel: ExtractedModel) { 
+    def apply() =
+      s"""Data normalization unexpected inconsistency encountered - two symbols having the same Qualified ID have different source location start position:
+      |${extractedSymbols._1.toJoinedString}  
+      |${extractedSymbols._2.toJoinedString}""".stripMargin    
+  }
+ 
+  /* 
+   * The Merge (excuse the nested methods)
+   */  
+  
+  def apply(implicit extractedModel: ExtractedModel) = {
+
+    def doMerge(group: List[extractedModel.graph.Vertex]) = {
+      assert(group.size == 2) // assumes a pair
+      logMerge(group.head.data, group.last.data)
+      reduceSymbols(extractedModel)(group)
+    }   
     
-    println("merging same span symbols...")
-    
-    def pointOrStart(location: MaybePosition): Option[Int] = location match {
+    def logMerge(extractedSymbols: (ExtractedSymbol, ExtractedSymbol)) = {
+      val message = 
+        s"""deduplicating symbol pair:
+        |${extractedSymbols._1.toJoinedString}
+        |${extractedSymbols._2.toJoinedString}""".stripMargin
+      
+      println(message)
+    }
+  
+    @deprecated def pointOrStart(location: Position): Option[Int] = location match {
       case Span(start, end) => Some(start)
       case Point(loc)       => Some(loc)
-      case NoPosition   => None
-    }
-    
-    def getLocation(e: ExtractedCode) = e.codeLocation.position
-    
-    def extractedCode(e: ExtractedSymbol): Option[ExtractedCode] = extractedModel.codes.get.get(e.symbolCompilerId)
-    
-    def logDeduplication(
-      extractedSymbols: (ExtractedSymbol, ExtractedSymbol),
-      extractedCodes: (ExtractedCode, ExtractedCode)) = {
-        val message = 
-          "deduplicating symbol pair:\n" +
-          List(extractedSymbols._1, extractedSymbols._2).zip(List(extractedCodes._1, extractedCodes._2)).mkString("\n")
-        
-        println(message)
     }
     
     /* 
-     * group extracted symbols by their qualified ID    
+     * Is a point location reasonably within bounds of given span?
      */
-    val symbolsByQualifiedId = 
+    def pointWithinSpan(spanStart: Int, spanEnd:Int, start:Int): Boolean = 
+      spanStart <= start && start < spanEnd
+     
+    /* let's go */  
+    
+    println("merging same span symbols...")
+
+    val symbolsByQualifiedId = // groups extracted symbols by their qualified ID 
       extractedModel.graph.vertexIterator
-      .filter(v => v.data.notSynthetic && v.data.definingProject == ProjectDefined)
+      .filter(v => v.data.notSynthetic && v.data.definingProject == ProjectDefined) // only those that should have `Code` for them by now
       .toList.groupBy(m => m.data.qualifiedId)
-      .foreach { groupedByQualifiedId => val group: List[extractedModel.graph.Vertex] = groupedByQualifiedId._2
+      .foreach { qualifiedIdBin => val symbolBin = qualifiedIdBin._2
         
-        if (group.size > 2) {
-          println(group.size)
-          group.foreach { x =>
-            println(x.data)
-            println(extractedCode(x.data))
-          }
-          throw DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: $groupedByQualifiedId")
+        if (symbolBin.size > 2) {
+          println(symbolBin.size)
+          symbolBin.foreach(v => println(SymbolCodeJoin(extractedModel, v.data)))
+          throw DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: $qualifiedIdBin")
         }
         
-        if (group.size == 2) {
+        if (symbolBin.size == 2) {
           
-          val extractedSymbols: (ExtractedSymbol, ExtractedSymbol) = 
-            (group.head.data, group.last.data)
-            
-          val extractedCodes: (Option[ExtractedCode], Option[ExtractedCode]) = 
-            (extractedCode(extractedSymbols._1), extractedCode(extractedSymbols._2)) 
+          val extractedSymbols = (symbolBin.head.data, symbolBin.last.data)
           
+          val definingCodes: (Code, Code) = (extractedSymbols._1.definitionCode.get, extractedSymbols._2.definitionCode.get)
+
           /*
            * do the symbols sharing the same qualified ID come from the exact same source code 
-           * definition? we check that by comparing their start position in the source file, 
-           * treating the case of a singular position as a start position.
+           * definition? we check that by comparing the location of their definition 
            */
-          extractedCodes match {
-            case (Some(code1), Some(code2)) =>
-              val positions = (getLocation(code1), getLocation(code2))
+          assert (definingCodes._1.location.path == definingCodes._1.location.path) // should come from the same source file
+          val positions: (Option[Position], Option[Position]) = (definingCodes._1.location.position, definingCodes._2.location.position)
+          
+          (positions._1, positions._2) match {
+            
+            // The case of two spans -> are they the same? 
+            case (Some(Span(start1, end1)), Some(Span(start2, end2))) =>
+              if (start1 == start2 && end1 == end2) doMerge(symbolBin)
+              else println(SpansDefer(extractedSymbols)) // TODO: refer to dedicated log file that holds all cases
+
+            // The case of a span and a point position -> do they share the same start position?
+            case (Some(Span(spanStart, spanEnd)), Some(Point(start))) =>
+              if (spanStart == start || pointWithinSpan(spanStart, spanEnd, start)) doMerge(symbolBin)
+              else println(StartPositionsDefer(extractedSymbols)) // TODO: refer to dedicated log file that holds all cases
               
-              if (pointOrStart(positions._1) == pointOrStart(positions._2)) {
-                logDeduplication(extractedSymbols, (code1, code2))
-                
-                /* 
-                 * Merges a list of vertices to its head vertex, collapsing all their
-                 * edges to the head vertex. 
-                 * 
-                 * Specifically the following steps are taken in order:
-                 * 
-                 * - remove all edges connecting between them
-                 * - re-wire all their edges to the head vertex
-                 * - remove them all, leaving only the head vertex 
-                 */
-                def mergeVertices(group: List[extractedModel.graph.Vertex]) = 
-                  group.reduce { (s1, s2) => 
-                    
-                    val ids = (s1.data.symbolCompilerId, s2.data.symbolCompilerId)
-                    
-                    extractedModel.graph -= extractedModel.graph edgesBetween(ids._1, ids._2)
-                    extractedModel.graph.vertexEdges(ids._2) foreach (e => 
-                      extractedModel.graph.edgeReWire(e, to = ids._1, from = ids._2)
-                    )
-                    extractedModel.graph -= ids._2
-                    
-                    s1
-                  }
-                
-                mergeVertices(group)
-              }
-            case _ =>
-          }
+            // Same, but appearing in reverse order
+            case (Some(Point(start)), Some(Span(spanStart, spanEnd))) =>
+              if (spanStart == start || pointWithinSpan(spanStart, spanEnd, start)) doMerge(symbolBin.reverse)
+              else println(StartPositionsDefer(extractedSymbols)) // TODO: refer to dedicated log file that holds all cases
+              
+            case x@(Some(Point(point1)), Some(Point(point2))) =>
+              println(s"""Two symbols having the same Qualified ID both have only a position location: $x""")
+
+            case x@_ =>
+              throw DataNormalizationException(s"One or more non-synthetic symbols project-defined symbols do not have a code descriptor: $x")  
+              // println(s"""Two synthetic symbols have the same Qualified ID: $x""")
+              // TODO: this is aught to be when a synthetic symbol is involved. To handle later.
         }
       }
+    }
   }
 }

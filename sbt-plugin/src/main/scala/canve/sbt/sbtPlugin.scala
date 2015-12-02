@@ -15,8 +15,6 @@ package canve.sbt
 
 import sbt.Keys._
 import sbt._
-//import org.canve.compilerPlugin.NormalizedData
-//import org.canve.compilerPlugin.NormalizedData
 
 // in case we want to add anything to the general cleanup task: http://www.scala-sbt.org/0.13.5/docs/Getting-Started/More-About-Settings.html#appending-with-dependencies-and
 
@@ -123,7 +121,7 @@ object Plugin extends AutoPlugin {
     successfulProjects.length == extracted.structure.allProjectRefs.length match {
       case true =>
         println("normalizing data across subprojects...")
-        //val normalizedData = new NormalizedData
+        val normalizedData = org.canve.compilerPlugin.CrossProjectNormalizer.apply
         println("canve task done")
         state
       case false =>

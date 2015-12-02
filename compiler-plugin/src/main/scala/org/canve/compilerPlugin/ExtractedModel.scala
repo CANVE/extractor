@@ -70,9 +70,9 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
 
 class ExtractedCodes {
   
-  var map: Map[Int, ExtractedCode] = Map()
+  var map: Map[Int, Code] = Map()
   
-  def apply(global: Global)(s: global.Symbol, code: ExtractedCode) = {
+  def apply(global: Global)(s: global.Symbol, code: Code) = {
     map.contains(s.id) match {
       case false => map += (s.id -> code)
       case true  => // do nothing 

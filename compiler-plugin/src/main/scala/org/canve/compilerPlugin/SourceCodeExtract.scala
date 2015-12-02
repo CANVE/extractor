@@ -26,9 +26,13 @@ object AttemptCodeExtract {
     " " * firstLineIdentLength + sourceFileContents.slice(span.start, span.end)
   }
 
-  
-  @deprecated("the heuristics are not needed, as long as -Yrangepos is used",
-              "but since -Yrangepos may crash on scala 2.10 code that uses macros, this might come back") 
+  /*
+   * heuristic based extraction - may be necessary for supporting scala 2.10 so keep it alive in compilation
+   * (c.f. https://github.com/scoverage/scalac-scoverage-plugin/blob/5d0c92479dff0055f2cf7164439f838b803fe44a/2.10.md)
+   * 
+   * This heuristic algorithm is not needed, as long as -Yrangepos is used, but since -Yrangepos 
+   * may crash on scala 2.10 code that uses macros, this might come back 
+  */  
   private def getSymbolCodeHeuristically(global: Global)(symbol: global.Symbol): List[String] = {
     
     def getStartCol(s: String) = s.indexWhere(c => c !=' ')
@@ -89,7 +93,7 @@ object AttemptCodeExtract {
     
   }
   
-  def apply(global: Global)(symbol: global.Symbol): ExtractedCode = {
+  def apply(global: Global)(symbol: global.Symbol): Code = {
     
     def logCantDetermine(reason: String) = {
       println(s"Could not determine source definition for symbol ${symbol.nameString} (${symbol.id}) because $reason") 
@@ -100,13 +104,13 @@ object AttemptCodeExtract {
     // guard statements necessary given all kinds of special cases
     
     if (symbol.isSynthetic) 
-      return ExtractedCode(symbol.id, SourceCodeLocation(symbol.sourceFile.toString, NoPosition), None)                   
+      return Code(symbol.id, CodeLocation(symbol.sourceFile.toString, None), None)                   
 
     if (symbol.pos.toString == "NoPosition") { 
       // the above can be the case for Scala 2.10 projects, 
       // or just when macros are involved.
       logCantDetermine("pos property is NoPosition") 
-      return ExtractedCode(symbol.id, SourceCodeLocation(symbol.sourceFile.toString, NoPosition), None)
+      return Code(symbol.id, CodeLocation(symbol.sourceFile.toString, None), None)
     }
 
     val sourceFilePath = symbol.sourceFile.toString
@@ -120,24 +124,22 @@ object AttemptCodeExtract {
       // whereas line numbers are confirmed to start from 1. 
       // Hence we can't extract source here.         
       logCantDetermine("line=0")
-      return ExtractedCode(symbol.id, SourceCodeLocation(sourceFilePath, NoPosition), None)
+      return Code(symbol.id, CodeLocation(sourceFilePath, None), None)
     }
     
     if (start == end) {
       logCantDetermine(s"start=end ($start)")
-      println(scala.io.Source.fromFile(sourceFilePath).mkString.slice(start, start + 20) + "[in ..." + sourceFilePath.takeRight(30) + "]")
-      return ExtractedCode(symbol.id, SourceCodeLocation(sourceFilePath, NoPosition), None)
+      //println(scala.io.Source.fromFile(sourceFilePath).mkString.slice(start, start + 20) + "[in ..." + sourceFilePath.takeRight(30) + "]")
+      Code(
+        symbol.id, 
+        location = CodeLocation(sourceFilePath, Some(Point(start))), 
+        code = None)
     }
 
-    /*
-     * heuristic based extraction - may be necessary for supporting scala 2.10 so keep it alive in compilation
-     * (c.f. https://github.com/scoverage/scalac-scoverage-plugin/blob/5d0c92479dff0055f2cf7164439f838b803fe44a/2.10.md)
-     */        
-    val blockFromHeuristic = getSymbolCodeHeuristically(global)(symbol)
-
-    ExtractedCode(
-      symbolCompilerId = symbol.id,
-      SourceCodeLocation(sourceFilePath, Span(start, end)), 
-      code = Some(grabSymbolCode(global)(symbol, Span(start, end))))
+    else 
+      Code(
+        symbol.id,
+        location = CodeLocation(sourceFilePath, Some(Span(start, end))), 
+        code = Some(grabSymbolCode(global)(symbol, Span(start, end))))
   }
 }

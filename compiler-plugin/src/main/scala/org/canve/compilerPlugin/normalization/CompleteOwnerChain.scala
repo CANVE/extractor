@@ -2,14 +2,15 @@ package org.canve.compilerPlugin.normalization
 import org.canve.compilerPlugin._
 import scala.tools.nsc.Global
 
+/*
+ * Assure that a symbol's hierarchy chain has been captured -  
+ * this is needed for the case that the node is a library symbol, 
+ * so we won't (necessarily) bump into its parents while compiling
+ * the project being compiled. And also for ultimately merging symbols
+ * from different projects
+ */
+
 object CompleteOwnerChain {
-  /*
-   * Assure that the symbol's hierarchy chain has been captured -  
-   * this is needed for the case that the node is a library symbol, 
-   * so we won't (necessarily) bump into its parents while compiling
-   * the project being compiled. And also for ultimately merging symbols
-   * from different projects
-   */
   def apply
     (global: Global)
     (extractedSymbol: ExtractedSymbol, s: global.Symbol, model: ExtractedModel): Unit = {

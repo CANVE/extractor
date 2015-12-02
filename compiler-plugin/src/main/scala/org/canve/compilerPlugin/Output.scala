@@ -26,7 +26,7 @@ object Output {
         writeOutputFile(
           PluginArgs.projectName, 
           keyVal._1.toString() /* extractedSymbol.qualifiedId.pickle */, 
-          "< definition from source file: " + extractedCode.codeLocation.path + " >\n\n" + extractedCode.code.mkString + "\n"
+          "< definition from source file: " + extractedCode.location.path + " >\n\n" + extractedCode.code.mkString + "\n"
         )
     }
   }

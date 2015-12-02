@@ -98,7 +98,7 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
   }
   
   // TODO: test code coverage
-  def -= (vertexId: VertexID): SimpleGraph[VertexID, VertexData, EdgeData] = {   
+  def -- (vertexId: VertexID): SimpleGraph[VertexID, VertexData, EdgeData] = {   
     if (vertexEdges(vertexId).size < 0) throw SimpleGraphApiException(s"cannot remove vertex $vertexId as it still has one or more edges connected to it") 
     vertexIndex.get(vertexId) match {      
       case None => throw SimpleGraphInvalidVertex(s"node with id $vertexId cannot be removed from the graph - as it is not part of it")
@@ -108,7 +108,7 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
   }
 
   // TODO: test code coverage
-  def -= (edge: Edge): SimpleGraph[VertexID, VertexData, EdgeData] = {
+  def -- (edge: Edge): SimpleGraph[VertexID, VertexData, EdgeData] = {
     edgeIndex.remove(edge.v1, edge)
     reverseEdgeIndex.remove(edge.v2, edge)
     this

@@ -38,9 +38,9 @@ abstract class AbstractGraph[VertexID, VertexData, EdgeData]
   
   def ++ (edge: Edge): This
   
-  def -= (vertexId: VertexID): This 
+  def -- (vertexId: VertexID): This 
   
-  def -= (edge: Edge): This 
+  def -- (edge: Edge): This 
   
   def addIfNew (vertex: Vertex): This
     
@@ -64,8 +64,8 @@ abstract class AbstractGraph[VertexID, VertexData, EdgeData]
  
   def -= (inputs: Iterable[Addable]): This = {
     inputs foreach {
-      case v : Vertex => -= (v.key)
-      case e : Edge   => -= (e.asInstanceOf[Edge])
+      case v : Vertex => -- (v.key)
+      case e : Edge   => -- (e.asInstanceOf[Edge])
     }
     this
   }

@@ -16,28 +16,40 @@ case class ExtractedSymbol
    kind: String,
    notSynthetic: Boolean,
    qualifiedId: QualifiedID,
-   definingProject: DefiningProject)
-   extends SymbolSerialization {
-     var ownersTraversed = false 
+   definingProject: DefiningProject) extends SymbolSerialization {
+  
+     var ownersTraversed = false
+     
+     def definitionCode(implicit extractedModel: ExtractedModel): Option[Code] = 
+       extractedModel.codes.get.get(symbolCompilerId)
+       
+     def toJoinedString(implicit extractedModel: ExtractedModel) = this.toString + definitionCode.toString  
 }
 
 /*
- * symbol's extracted source code
+ * symbol's extracted source code location and content
  */
 
-abstract class MaybePosition
-object NoPosition extends MaybePosition // TODO: this no longer belongs in here maybe
-case class Span(start: Int, end: Int) extends MaybePosition
-case class Point(init: Int) extends MaybePosition { def apply = init }
-
-case class SourceCodeLocation(
-  path: String,           // the source (file) path  
-  position: MaybePosition // the location within that source
-) 
-
-case class ExtractedCode
+case class Code
   (symbolCompilerId: Int,
-   codeLocation: SourceCodeLocation,
-   code: Option[String]) // the code extracted
+   location: CodeLocation, // the location of the symbol's definition
+   code: Option[String])   // the code extracted, if any
+
+case class CodeLocation(
+  path: String,              // the source (file) path  
+  position: Option[Position] // the location within that source
+) 
    
+/* differentiate two types of location provided by the compiler */
+abstract class Position
+case class Span(start: Int, end: Int) extends Position
+case class Point(init: Int) extends Position { def apply = init }
    
+/*
+ * Simply a join of a symbol and its extracted code, wherever helpful
+ */
+case class SymbolCodeJoin(
+  extractedModel: ExtractedModel, 
+  symbol: ExtractedSymbol) {
+  val extractedCode = extractedModel.codes.get.get(symbol.symbolCompilerId)
+}

@@ -7,7 +7,7 @@ object TraversalExtractionWriter {
     
     TraversalExtraction(global)(unit.body)(extractedModel)
     
-    normalization.MergeSameSpanSymbols(extractedModel)
+    normalization.MergeSameSpanSymbols.apply(extractedModel) 
     
     extractedModel
   }

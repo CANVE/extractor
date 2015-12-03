@@ -12,10 +12,10 @@ import org.canve.simpleGraph._
 trait DataReader {
 
   type LoadedGraph = SimpleGraph[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation]
-  type ReIndexedGraph = SimpleGraph[QualifiedID, ExtractedSymbol, ExtractedSymbolRelation]
+  type ReIndexedGraph = SimpleGraph[FurtherQualifiedID, ExtractedSymbol, ExtractedSymbolRelation]
   
   /*
-   * builds canve nodes and edges from a canve data directory
+   * builds graph from a canve data directory
    */
   def readCanveDirData(dir: File): ManagedExtractedGraph = {
      
@@ -62,9 +62,9 @@ object CrossProjectNormalizer extends DataReader {
     
     projectGraphs.foreach { graph =>
       graph.vertexIterator.foreach { v => val symbol = v.data
-        aggregateGraph.vertex(symbol.qualifiedId) match {
+        aggregateGraph.vertex(symbol.qualifiedIdAndSignature) match {
         
-          case None => aggregateGraph ++ aggregateGraph.Vertex(key = symbol.qualifiedId, data = symbol)
+          case None => aggregateGraph ++ aggregateGraph.Vertex(key = symbol.qualifiedIdAndSignature, data = symbol)
           
           case Some(v) => maybeMerge(aggregateGraph, aggregateGraphSymbol = v.data, sameKeyedSymbol = symbol)
           
@@ -88,15 +88,15 @@ object CrossProjectNormalizer extends DataReader {
       case (ExternallyDefined, ExternallyDefined) => // do nothing
             
       case (ExternallyDefined, ProjectDefined) => 
-        aggregateGraph -- aggregateGraphSymbol.qualifiedId 
-        aggregateGraph ++ aggregateGraph.Vertex(key = sameKeyedSymbol.qualifiedId, data = sameKeyedSymbol)
+        aggregateGraph -- aggregateGraphSymbol.qualifiedIdAndSignature 
+        aggregateGraph ++ aggregateGraph.Vertex(key = sameKeyedSymbol.qualifiedIdAndSignature, data = sameKeyedSymbol)
         println("deduplicated one node")
               
-      case (ProjectDefined, ProjectDefined) => 
+      case (ProjectDefined, ProjectDefined) =>  
         // TODO: This exception message doesn't help zoom in on the project names without logs excavation.
         //       Might be solved by adding the project name to each symbol being compared, somewhere before. 
         println(DataNormalizationException(
-          "Two subprojects seem to define the same qualified name:" + 
+          "Two symbols seem to define the same qualified name:" + 
           s"\n$aggregateGraphSymbol and" +
           s"\n$sameKeyedSymbol"))
     }
@@ -110,9 +110,9 @@ object CrossProjectNormalizer extends DataReader {
     return
      
     println(DataNormalizationException(
-      s"""Two symbols having the same Qualified ID are unexpectedly different:
-      |$s1" +  
-      |$s2" +  
+      s"""Two symbols expected to be the same are unexpectedly different:
+      |$s1 
+      |$s2  
       |This may indicate the normalization model is relying on a false assumption.""".stripMargin)) 
   }
 }

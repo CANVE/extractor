@@ -10,6 +10,7 @@ package object compilerPlugin {
   
   type ExtractedSymbolRelation = String
   type SymbolCompilerId = Int
+  type FurtherQualifiedID = String
   
   /*
    * extracted graph type

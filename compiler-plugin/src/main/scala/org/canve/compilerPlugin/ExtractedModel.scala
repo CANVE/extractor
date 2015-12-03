@@ -38,11 +38,22 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
           case _    => ProjectDefined
         }
   
-
         /*
          * add the symbol to the extracted model
          */
-        val extractedSymbol = ExtractedSymbol(s.id, s.nameString, s.kindString, !(s.isSynthetic), qualifiedId, definingProject)
+        val extractedSymbol = 
+          ExtractedSymbol(
+            symbolCompilerId = s.id, 
+            name = s.nameString, 
+            kind = s.kindString, 
+            qualifiedId = qualifiedId, 
+            notSynthetic = !(s.isSynthetic), 
+            definingProject = definingProject,
+            signatureString = s.signatureString match {
+              case("<_>") => None
+              case signatureString@_ => Some(signatureString)
+            })
+            
         graph ++ graph.Vertex(extractedSymbol.symbolCompilerId, extractedSymbol) 
             
         /*

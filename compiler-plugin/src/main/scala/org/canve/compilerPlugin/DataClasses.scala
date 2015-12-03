@@ -1,29 +1,41 @@
 package org.canve.compilerPlugin
 import tools.nsc.Global
 
-/*
- * types for whether a symbol is defined in 
- * the current project, or is an external one
- */
-   
-abstract class DefiningProject
-object ProjectDefined    extends DefiningProject
-object ExternallyDefined extends DefiningProject
-
 case class ExtractedSymbol 
   (symbolCompilerId: SymbolCompilerId,
    name: String,
    kind: String,
-   notSynthetic: Boolean,
    qualifiedId: QualifiedID,
+   
+   signatureString: Option[String] = None,  
+   
+   notSynthetic: Boolean,
    definingProject: DefiningProject) extends SymbolSerialization {
   
-     var ownersTraversed = false
+     val qualifiedIdAndSignature: FurtherQualifiedID = 
+       qualifiedId.pickle + (signatureString match {
+         case Some(s) => " * " + s
+         case None => "" 
+       }) 
      
      def definitionCode(implicit extractedModel: ExtractedModel): Option[Code] = 
        extractedModel.codes.get.get(symbolCompilerId)
+     
+     /* more inclusive serialization for this class - for logging */
+     override def toString = 
+       List(symbolCompilerId, 
+            name, 
+            kind, 
+            qualifiedId, 
+            signatureString, 
+            notSynthetic, 
+            definingProject,
+            qualifiedIdAndSignature).map(_.toString).mkString(",")
        
-     def toJoinedString(implicit extractedModel: ExtractedModel) = this.toString + definitionCode.toString  
+     /* symbol and its code info joined into a string - for logging */
+     def toJoinedString(implicit extractedModel: ExtractedModel) = toString + ",code: " + definitionCode.toString
+          
+     var ownersTraversed = false
 }
 
 /*
@@ -46,8 +58,18 @@ case class Span(start: Int, end: Int) extends Position
 case class Point(init: Int) extends Position { def apply = init }
    
 /*
- * Simply a join of a symbol and its extracted code, wherever helpful
+ * types for whether a symbol is defined in 
+ * the current project, or is an external one
  */
+
+abstract class DefiningProject
+object ProjectDefined    extends DefiningProject
+object ExternallyDefined extends DefiningProject
+
+/*
+ * a lame join type of a symbol and its extracted code, wherever helpful
+ */
+
 case class SymbolCodeJoin(
   extractedModel: ExtractedModel, 
   symbol: ExtractedSymbol) {

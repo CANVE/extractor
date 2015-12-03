@@ -33,8 +33,14 @@ object TraversalExtraction {
 
                 extractedModel.add(global)(select.symbol)
                 
-                if (defParent.isDefined) extractedModel.add(defParent.get.id, "uses", select.symbol.id)
-
+                if (defParent.isDefined) {
+                  extractedModel.add(defParent.get.id, "uses", select.symbol.id)
+                  println
+                  println(s"Method call. Symbol owner chain: ${select.symbol.ownerChain.reverse}, \nParams: ${select.symbol.paramss}")
+                  println("signatureString: " + select.symbol.signatureString)
+                  println
+                }
+                
                 // record the source code location where the symbol is being used by the user 
                 // this is a proof of concept, that only doesn't propagate its information
                 // to the UI in any way yet.
@@ -90,7 +96,11 @@ object TraversalExtraction {
 
             extractedModel.add(global)(symbol)
             extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
-
+            println
+            println(s"Method definition. Symbol owner chain: ${symbol.ownerChain.reverse}, \nParams: ${symbol.paramss}")
+            println("signatureString: " + symbol.signatureString)
+            println
+            
             val traverser = new ExtractionTraversal(Some(tree.symbol))
             if (symbol.nameString == "get") {
               //val tracer = new TraceTree
@@ -115,8 +125,15 @@ object TraversalExtraction {
               if (defParent.get.id != typeSymbol.owner.id)
                 Warning.logParentNotOwner(global)(defParent.get, typeSymbol.owner)
                 
-            parentTypeSymbols.foreach(s =>
-              extractedModel.add(typeSymbol.id, "extends", s.id))
+            parentTypeSymbols.foreach(s => {
+              extractedModel.add(typeSymbol.id, "extends", s.id)
+              println
+              println(s"Symbol ${typeSymbol.ownerChain.reverse}")
+              println(s"Performs Type extension of ${s.ownerChain.reverse}. TypeParams: ${s.typeParams}")
+              println("signatureString: " + s.signatureString)
+              println("typeSignature: " + s.typeSignature)
+              println
+            })
 
             val traverser = new ExtractionTraversal(Some(tree.tpe.typeSymbol))
             body foreach { tree => traverser.traverse(tree) }

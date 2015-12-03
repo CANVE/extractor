@@ -1,12 +1,13 @@
 package org.canve.compilerPlugin
 
 /*
- * helper for writing node data to csv 
+ * Serialize extracted symbol into CSV data row
  */
 trait SymbolSerialization {
   self: ExtractedSymbol =>
   
-  def toCsvRow: String = {
+  def toCsvRow(implicit extractedModel: ExtractedModel): String = {
+    // Note: escaping for csv is for now handled here by hand (likely a tad faster)
     List(
       definingProject match {
         case ProjectDefined    => "project"
@@ -15,7 +16,8 @@ trait SymbolSerialization {
       symbolCompilerId, 
       name, 
       kind,
-      qualifiedId.pickle
+      qualifiedId.pickle,
+      "\"" + signatureString + "\"" // escaped as it contains, typically, commas
     ).mkString(",")
   }
 }
@@ -24,12 +26,14 @@ trait SymbolSerialization {
  * Symbol constructor from CANVE CSV data row
  */
 object SymbolFromCsvRow {
+  import Util._
   def apply(projectName: String, rowMap: Map[String, String]): ExtractedSymbol = { 
      ExtractedSymbol(symbolCompilerId = rowMap("id").toInt,
           name = rowMap("name"),
           kind = rowMap("kind"),
           notSynthetic = rowMap("notSynthetic").toBoolean,
           qualifiedId = QualifiedID.unpickle(rowMap("qualifiedId")),
+          signatureString = deSerializeOption(rowMap("signature")),
           definingProject = rowMap("definition") match {
             case "project" => ProjectDefined
             case "external" => ExternallyDefined
@@ -37,15 +41,11 @@ object SymbolFromCsvRow {
   }
 }
 
-/*
-/*
- * Symbol relation from CANVE CSV data row
- */
-object SymbolRelationFromCsvRow {
-  def apply(rowMap: Map[String, String]) = 
-    ExtractedSymbolRelation(
-      rowMap("id1").toInt,
-      rowMap("id2").toInt,
-      rowMap("relation"))
+object Util {
+  def deSerializeOption[T](s: String): Option[T] = {
+    s match {
+      case "None" => None
+      case s@_ => Some(s.drop("Some(".length).dropRight(1).asInstanceOf[T])
+    }
+  }
 }
-*/

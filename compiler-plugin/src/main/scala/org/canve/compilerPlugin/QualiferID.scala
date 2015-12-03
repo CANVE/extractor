@@ -22,7 +22,10 @@ object QualifiedID {
    
     assert(kindNameList.head.kind == "package")
     assert(kindNameList.head.name == "<root>")
-   
+
+    /*
+     * TODO: remove this commented out code
+     * 
     (s.kindString == "method") match {
       case true => 
         val paramListList: List[List[global.Symbol]] = s.paramss
@@ -30,6 +33,10 @@ object QualifiedID {
       case false => 
         QualifiedID(kindNameList.drop(1))
     }
+    */
+    
+    QualifiedID(kindNameList.drop(1))
+    
   }
   
   def unpickle(s: String) = 

@@ -9,14 +9,14 @@ trait SymbolSerialization {
   def toCsvRow(implicit extractedModel: ExtractedModel): String = {
     // Note: escaping for csv is for now handled here by hand (likely a tad faster)
     List(
-      definingProject match {
+      implementation match {
         case ProjectDefined    => "project"
         case ExternallyDefined => "external" },
-      notSynthetic,
+      nonSynthetic,
       symbolCompilerId, 
       name, 
       kind,
-      qualifiedId.pickle,
+      qualifyingPath.pickle,
       "\"" + signatureString + "\"" // escaped as it contains, typically, commas
     ).mkString(",")
   }
@@ -29,12 +29,12 @@ object SymbolFromCsvRow {
   import Util._
   def apply(projectName: String, rowMap: Map[String, String]): ExtractedSymbol = { 
      ExtractedSymbol(symbolCompilerId = rowMap("id").toInt,
-          name = rowMap("name"),
+          name = deSerializeOption(rowMap("name")),
           kind = rowMap("kind"),
-          notSynthetic = rowMap("notSynthetic").toBoolean,
-          qualifiedId = QualifiedID.unpickle(rowMap("qualifiedId")),
+          nonSynthetic = rowMap("nonSynthetic").toBoolean,
+          qualifyingPath = QualifyingPath(rowMap("qualifiedId")),
           signatureString = deSerializeOption(rowMap("signature")),
-          definingProject = rowMap("definition") match {
+          implementation = rowMap("implementation") match {
             case "project" => ProjectDefined
             case "external" => ExternallyDefined
           })

@@ -2,6 +2,7 @@ package org.canve
 
 import org.canve.simpleGraph._
 import org.canve.simpleGraph.algo.impl.GetPathsBetween
+import tools.nsc.Global
 
 package object compilerPlugin {
   
@@ -22,5 +23,13 @@ package object compilerPlugin {
     val graph = 
       new ManagedExtractedGraph
         with GetPathsBetween[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation] 
-  } 
+  }
+  
+  def maybeName(global: Global)(s: global.Symbol): Option[String] = {
+    (s.isAnonymousClass || s.isAnonymousFunction) match {
+        case true => None
+        case false => Some(s.nameString)   
+    }
+  }
+
 }

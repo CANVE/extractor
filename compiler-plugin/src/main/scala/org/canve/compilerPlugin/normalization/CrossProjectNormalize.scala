@@ -1,4 +1,5 @@
-package org.canve.compilerPlugin
+package org.canve.compilerPlugin.normalization
+import org.canve.compilerPlugin._
 import org.canve.util.CanveDataIO._
 import com.github.tototoshi.csv._
 import java.io.File
@@ -12,7 +13,7 @@ import org.canve.simpleGraph._
 trait DataReader {
 
   type LoadedGraph = SimpleGraph[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation]
-  type ReIndexedGraph = SimpleGraph[FurtherQualifiedID, ExtractedSymbol, ExtractedSymbolRelation]
+  type ReIndexedGraph = SimpleGraph[FQI, ExtractedSymbol, ExtractedSymbolRelation]
   
   /*
    * builds graph from a canve data directory
@@ -49,22 +50,28 @@ trait DataReader {
   }
 }
 
-object CrossProjectNormalizer extends DataReader {
+object CrossProjectNormalizer extends DataReader with MergeStrategies {
   
   def apply = normalize
   
   def normalize: ReIndexedGraph = {
     
-    val projectGraphs: Iterator[LoadedGraph] = 
-      getSubDirectories(canveRoot).toIterator.map(readCanveDirData)
+    /* iterator of tuples (directory name, read graph) */
+    val projectGraphs = 
+      getSubDirectories(canveRoot).toIterator.map(subDirectory => (subDirectory.getName, readCanveDirData(subDirectory)))
 
     val aggregateGraph = new ReIndexedGraph 
     
-    projectGraphs.foreach { graph =>
+    // TODO: make / refactor this to avoid ever merging stuff from same project
+    
+    projectGraphs.foreach { iterator => 
+      
+      val (projectName, graph) = iterator
+            
       graph.vertexIterator.foreach { v => val symbol = v.data
-        aggregateGraph.vertex(symbol.qualifiedIdAndSignature) match {
+        aggregateGraph.vertex(FQI(symbol)) match {
         
-          case None => aggregateGraph ++ aggregateGraph.Vertex(key = symbol.qualifiedIdAndSignature, data = symbol)
+          case None => aggregateGraph ++ aggregateGraph.Vertex(key = FQI(symbol), data = symbol)
           
           case Some(v) => maybeMerge(aggregateGraph, aggregateGraphSymbol = v.data, sameKeyedSymbol = symbol)
           
@@ -75,6 +82,9 @@ object CrossProjectNormalizer extends DataReader {
     aggregateGraph  
   }
   
+  /*
+   * 
+   */
   private def maybeMerge(
     aggregateGraph: ReIndexedGraph, 
     aggregateGraphSymbol: ExtractedSymbol, 
@@ -82,16 +92,22 @@ object CrossProjectNormalizer extends DataReader {
     
     assertSimilarity(aggregateGraphSymbol, sameKeyedSymbol)
     
-    (aggregateGraphSymbol.definingProject, sameKeyedSymbol.definingProject) match {
+    (aggregateGraphSymbol.implementation, sameKeyedSymbol.implementation) match {
 
-      case (ProjectDefined, ExternallyDefined) => // do nothing
-      case (ExternallyDefined, ExternallyDefined) => // do nothing
-            
+      case (ProjectDefined, ExternallyDefined) => 
+        // do not add new symbol to aggregate graph, thus de-duplicating it
+        // TODO: !! handle its edges re-wire though!
+        println(s"deduplicated one symbol: $sameKeyedSymbol")
+        
       case (ExternallyDefined, ProjectDefined) => 
-        aggregateGraph -- aggregateGraphSymbol.qualifiedIdAndSignature 
-        aggregateGraph ++ aggregateGraph.Vertex(key = sameKeyedSymbol.qualifiedIdAndSignature, data = sameKeyedSymbol)
-        println("deduplicated one node")
-              
+        // replace externally defined symbol with the new one, thus de-duplicating it
+        aggregateGraph -- FQI(aggregateGraphSymbol) 
+        aggregateGraph ++ aggregateGraph.Vertex(key = FQI(sameKeyedSymbol), data = sameKeyedSymbol)
+        // TODO: handle the edges re-wire! 
+        println(s"deduplicated one symbol: $aggregateGraphSymbol")
+
+      case (ExternallyDefined, ExternallyDefined) => // do nothing, or rather merge to single ExternallyDefined one?       
+        
       case (ProjectDefined, ProjectDefined) =>  
         // TODO: This exception message doesn't help zoom in on the project names without logs excavation.
         //       Might be solved by adding the project name to each symbol being compared, somewhere before. 
@@ -105,8 +121,8 @@ object CrossProjectNormalizer extends DataReader {
   private def assertSimilarity(s1: ExtractedSymbol, s2: ExtractedSymbol) {
     if (s1.name == s2.name) 
     if (s1.kind == s2.kind) 
-    if (s1.notSynthetic == s2.notSynthetic) 
-    if (s1.qualifiedId == s2.qualifiedId) 
+    if (s1.nonSynthetic == s2.nonSynthetic) 
+    if (s1.qualifyingPath == s2.qualifyingPath) 
     return
      
     println(DataNormalizationException(

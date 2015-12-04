@@ -101,9 +101,9 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
    * utility function for compact printing of symbols' qualified id
    */
   def shortDescription(symbol: ExtractedSymbol) = {
-    val shortenedQualifiedId = (symbol.qualifiedId.value.head.name match {
-      case "<empty>" => symbol.qualifiedId.value.drop(1)
-      case _ => symbol.qualifiedId.value
+    val shortenedQualifiedId = (symbol.qualifyingPath.value.head.name match {
+      case "<empty>" => symbol.qualifyingPath.value.drop(1)
+      case _ => symbol.qualifyingPath.value
     }).map(_.name).mkString(".")
     
     s"${symbol.kind} $shortenedQualifiedId (${symbol.symbolCompilerId})"      

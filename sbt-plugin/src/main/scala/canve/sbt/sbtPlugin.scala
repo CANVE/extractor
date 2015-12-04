@@ -121,7 +121,7 @@ object Plugin extends AutoPlugin {
     successfulProjects.length == extracted.structure.allProjectRefs.length match {
       case true =>
         println("normalizing data across subprojects...")
-        val normalizedData = org.canve.compilerPlugin.CrossProjectNormalizer.apply
+        val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.apply
         println("canve task done")
         state
       case false =>

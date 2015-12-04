@@ -6,9 +6,8 @@ import org.canve.simpleGraph._
  * a home for various vertices merger strategies
  */
 
-trait MergeStrategies extends {
-  self: MergeSameSpanSymbols =>
-    
+trait MergeStrategies {
+      
   /* 
    * Merges a list of vertices to its head vertex, collapsing all their
    * edges to the head vertex. 

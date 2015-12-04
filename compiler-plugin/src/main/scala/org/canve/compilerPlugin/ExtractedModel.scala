@@ -23,32 +23,34 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
   
   def add(global: Global)(s: global.Symbol): ExtractedSymbol = {
     graph.vertex(s.id) match {
+      
       case Some(v: graph.Vertex) =>
         //throw ExtractionException(s"graph already has symbol with id ${s.id}")
         TraversalSymbolRevisit.increment
         v.data
+      
       case None =>
-        val qualifiedId = QualifiedID.compute(global)(s)
+        val qualifyingPath = QualifyingPath(global)(s)
   
         /*
          * determine whether the symbol at hand is defined in the current project, 
          */ 
-        val definingProject = s.sourceFile match {
-          case null => ExternallyDefined // no source file included in this project for this entity
+        val implementation = s.sourceFile match {
+          case null => ExternallyDefined // no source file for this entity = external symbol
           case _    => ProjectDefined
         }
-  
+        
         /*
          * add the symbol to the extracted model
          */
         val extractedSymbol = 
           ExtractedSymbol(
             symbolCompilerId = s.id, 
-            name = s.nameString, 
+            name = maybeName(global)(s),
             kind = s.kindString, 
-            qualifiedId = qualifiedId, 
-            notSynthetic = !(s.isSynthetic), 
-            definingProject = definingProject,
+            qualifyingPath = qualifyingPath, 
+            nonSynthetic = !(s.isSynthetic), 
+            implementation = implementation,
             signatureString = s.signatureString match {
               case("<_>") => None
               case signatureString@_ => Some(signatureString)
@@ -60,7 +62,7 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
          * pass on to attempt to extract the symbol's source code, 
          * if it is defined in the current project 
          */
-        definingProject match {
+        implementation match {
           case ProjectDefined    => codes(global)(s, AttemptCodeExtract(global)(s))
           case ExternallyDefined => // no source file included in this project for this entity
         }

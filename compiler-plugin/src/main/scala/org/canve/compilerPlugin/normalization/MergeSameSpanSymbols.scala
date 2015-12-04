@@ -11,18 +11,18 @@ object MergeSameSpanSymbols extends MergeSameSpanSymbols
 
 trait MergeSameSpanSymbols extends MergeStrategies {
 
-   /* Future logging/exception classes */
+   /* Logging classes */
   
   case class SpansDefer(extractedSymbols: (ExtractedSymbol, ExtractedSymbol))(implicit extractedModel: ExtractedModel) {
     def apply() =
-      s"""(${this.getClass.getSimpleName}:) Data normalization unexpected inconsistency encountered - two symbols assumed to be the same one ID have different source extraction spans:
+      s"""(${this.getClass.getSimpleName}:) Info: samely qualified symbols have different source extraction spans:
       |${extractedSymbols._1.toJoinedString}  
       |${extractedSymbols._2.toJoinedString}""".stripMargin
   }
   
   case class StartPositionsDefer(extractedSymbols: (ExtractedSymbol, ExtractedSymbol))(implicit extractedModel: ExtractedModel) { 
     def apply() =
-      s"""${this.getClass.getSimpleName}:) Data normalization unexpected inconsistency encountered - two symbols assumed to be the same one ID have different source location start position:
+      s"""${this.getClass.getSimpleName}:) Info: samely qualified symbols have different source location start positions:
       |${extractedSymbols._1.toJoinedString}  
       |${extractedSymbols._2.toJoinedString}""".stripMargin    
   }
@@ -41,16 +41,11 @@ trait MergeSameSpanSymbols extends MergeStrategies {
     
     def logMerge(extractedSymbols: (ExtractedSymbol, ExtractedSymbol), comment: Option[String]) = {
       val message = 
-        s"""merging symbol pair ${comment.getOrElse()}:
+        s"""merging symbol pair ${comment.getOrElse("")}:
         |${extractedSymbols._1.toJoinedString}
         |${extractedSymbols._2.toJoinedString}""".stripMargin
       
       println(message)
-    }
-  
-    @deprecated def pointOrStart(location: Position): Option[Int] = location match {
-      case Span(start, end) => Some(start)
-      case Point(loc)       => Some(loc)
     }
     
     /* 
@@ -65,18 +60,18 @@ trait MergeSameSpanSymbols extends MergeStrategies {
 
 
     /*
-     * Merge project-defined synthetic symbols
+     * Merge project-defined synthetic symbols within the current source file which:
+     * have the same qualifying path, but not necessarily the same signature string
      */
 
     extractedModel.graph.vertexIterator // group extracted symbols - project defined synthetic ones only
-    .filter(v => !v.data.notSynthetic && v.data.definingProject == ProjectDefined) 
-    .toList.groupBy(m => m.data.qualifiedId)
+    .filter(v => !v.data.nonSynthetic && v.data.implementation == ProjectDefined) 
+    .toList.groupBy(v => v.data.qualifyingPath)
     .foreach { bin => val symbolBin = bin._2
   
       assert(symbolBin.forall(v => v.data.definitionCode.get.code.isEmpty)) // synthetic symbols aren't expected to have code definitions
       
       if (symbolBin.size > 2) {
-        println(symbolBin.size)
         symbolBin.foreach(v => println(v.data.toJoinedString))
         throw DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: ${symbolBin.map(_.data.toJoinedString)}")
       }
@@ -90,12 +85,16 @@ trait MergeSameSpanSymbols extends MergeStrategies {
     }
 
     /*
-     * Merge project-defined non-synthetic symbols
+     * Merge project-defined non-synthetic symbols within the current source file which:
+     * 
+     * 1. have the same qualifying path 
+     * 2. have the same signature string
+     * 3. sufficiently overlap in their location of definition in the current source file
      */
     
     extractedModel.graph.vertexIterator // first off, group extracted symbols - project defined non-synthetic ones only
-    .filter(v => v.data.notSynthetic && v.data.definingProject == ProjectDefined) 
-    .toList.groupBy(m => m.data.qualifiedIdAndSignature)
+    .filter(v => v.data.nonSynthetic && v.data.implementation == ProjectDefined) 
+    .toList.groupBy(v => FQI(v.data))
     .foreach { bin => val symbolBin = bin._2
       
       if (symbolBin.size > 2) {
@@ -110,8 +109,8 @@ trait MergeSameSpanSymbols extends MergeStrategies {
         val definingCodes: (Code, Code) = (extractedSymbols._1.definitionCode.get, extractedSymbols._2.definitionCode.get)
 
         /*
-         * do the symbols sharing the same qualified ID come from the exact same source code 
-         * definition? we check that by comparing the location of their definition 
+         * do the symbols sharing the same FQI also share the exact same 
+         * location of definition in the source code?  
          */
         assert (definingCodes._1.location.path == definingCodes._1.location.path) // should come from the same source file
 
@@ -120,18 +119,18 @@ trait MergeSameSpanSymbols extends MergeStrategies {
           
           // The case of two spans -> are they the same? 
           case (Some(Span(start1, end1)), Some(Span(start2, end2))) =>
-            if (start1 == start2 && end1 == end2) doMerge(symbolBin)
-            else println(SpansDefer(extractedSymbols).apply) // TODO: refer to dedicated log file that holds all cases
+            if (start1 == start2 && end1 == end2) doMerge(symbolBin, Some("non synthetics, equal spans"))
+            else println(SpansDefer(extractedSymbols).apply) 
 
           // The case of a span and a point position -> do they share the same start position?
           case (Some(Span(spanStart, spanEnd)), Some(Point(start))) =>
-            if (spanStart == start || pointWithinSpan(spanStart, spanEnd, start)) doMerge(symbolBin)
-            else println(StartPositionsDefer(extractedSymbols).apply) // TODO: refer to dedicated log file that holds all cases
+            if (spanStart == start || pointWithinSpan(spanStart, spanEnd, start)) doMerge(symbolBin, Some("both non synthetics, point within span"))
+            else println(StartPositionsDefer(extractedSymbols).apply) 
             
           // Same, but appearing in reverse order
           case (Some(Point(start)), Some(Span(spanStart, spanEnd))) =>
-            if (spanStart == start || pointWithinSpan(spanStart, spanEnd, start)) doMerge(symbolBin.reverse)
-            else println(StartPositionsDefer(extractedSymbols).apply) // TODO: refer to dedicated log file that holds all cases
+            if (spanStart == start || pointWithinSpan(spanStart, spanEnd, start)) doMerge(symbolBin.reverse, Some("both non synthetics, point within span"))
+            else println(StartPositionsDefer(extractedSymbols).apply) 
             
           case x@(Some(Point(point1)), Some(Point(point2))) =>
             println(s"""Info: two symbols assumed to be the same entity both have only a position location: $x""")

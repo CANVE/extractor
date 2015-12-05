@@ -1,6 +1,19 @@
 package org.canve.compilerPlugin
 import tools.nsc.Global
 
+case class ExtractedSymbolPlus(e: ExtractedSymbol, val implementingProject: String) 
+  extends ExtractedSymbol(
+    e.symbolCompilerId,
+    e.name,
+    e.kind,
+    e.qualifyingPath,
+    e.signatureString,
+    e.nonSynthetic,
+    e.implementation) {
+  
+  override def toString = s"${super.toString}, $implementingProject}" 
+}
+
 class ExtractedSymbol(
     
   /* 
@@ -10,7 +23,7 @@ class ExtractedSymbol(
   val symbolCompilerId: SymbolCompilerId,
    
   /* symbol's name, or None if the symbol is anonymous */   
-  val name: Option[String], 
+  val name: SymbolName, 
    
   /* symbol's kind - package, class, object, method, etc.. */ 
   val kind: String,
@@ -34,9 +47,7 @@ class ExtractedSymbol(
    * subproject summoned into the compilation classpath by sbt or other tool. In those cases, this marks that
    * the symbol's implementation resides externally, not within the project being compiled.  
    */
-  val implementation: ImplementationLoc) 
-  
-  extends SymbolSerialization {
+  val implementation: ImplementationLoc) extends SymbolSerialization { 
   
     /* getter for symbol's code description, the latter kept in a separate collection */
     def definitionCode(implicit extractedModel: ExtractedModel): Option[Code] = 
@@ -55,7 +66,7 @@ class ExtractedSymbol(
     /* symbol and its code info joined into a string - for logging */
     def toJoinedString(implicit extractedModel: ExtractedModel) = toString + ",code: " + definitionCode.toString
           
-    var ownersTraversed = false
+    var ownersTraversed = false // TODO: not needed by those that inherit, so further refactor to base class that excludes this var 
 }
 
 object ExtractedSymbol {
@@ -65,7 +76,7 @@ object ExtractedSymbol {
    */
   def apply(
     symbolCompilerId: SymbolCompilerId,
-    name: Option[String], 
+    name: SymbolName, 
     kind: String,
     qualifyingPath: QualifyingPath,
     signatureString: Option[String],   
@@ -80,6 +91,10 @@ object ExtractedSymbol {
         nonSynthetic,
         implementation)
 }
+
+class SymbolName(name: String)
+case class RealName(name: String) extends SymbolName(name)
+case class DeAnonimizedName(name: String) extends SymbolName(name)
 
 /*
  * symbol's extracted source code location and content

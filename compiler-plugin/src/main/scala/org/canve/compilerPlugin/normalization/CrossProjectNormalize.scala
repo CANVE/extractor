@@ -13,7 +13,7 @@ import org.canve.simpleGraph._
 trait DataReader {
 
   type LoadedGraph = SimpleGraph[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation]
-  type ReIndexedGraph = SimpleGraph[FQI, ExtractedSymbol, ExtractedSymbolRelation]
+  type ReIndexedGraph = SimpleGraph[FQI, ExtractedSymbolPlus, ExtractedSymbolRelation]
   
   /*
    * builds graph from a canve data directory
@@ -68,7 +68,7 @@ object CrossProjectNormalizer extends DataReader with MergeStrategies {
       
       val (projectName, graph) = iterator
             
-      graph.vertexIterator.foreach { v => val symbol = v.data
+      graph.vertexIterator.foreach { v => val symbol = ExtractedSymbolPlus(v.data, projectName)
         aggregateGraph.vertex(FQI(symbol)) match {
         
           case None => aggregateGraph ++ aggregateGraph.Vertex(key = FQI(symbol), data = symbol)
@@ -87,8 +87,8 @@ object CrossProjectNormalizer extends DataReader with MergeStrategies {
    */
   private def maybeMerge(
     aggregateGraph: ReIndexedGraph, 
-    aggregateGraphSymbol: ExtractedSymbol, 
-    sameKeyedSymbol: ExtractedSymbol) = {
+    aggregateGraphSymbol: ExtractedSymbolPlus, 
+    sameKeyedSymbol: ExtractedSymbolPlus) = {
     
     assertSimilarity(aggregateGraphSymbol, sameKeyedSymbol)
     

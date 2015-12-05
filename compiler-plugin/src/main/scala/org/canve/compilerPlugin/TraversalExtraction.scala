@@ -42,8 +42,9 @@ object TraversalExtraction {
                 }
                 
                 // record the source code location where the symbol is being used by the user 
-                // this is a proof of concept, that only doesn't propagate its information
-                // to the UI in any way yet.
+                // this is a proof of concept, that only writes to the log for now.
+                // needs to happen not just for method calls but also for object usage and whatever else -
+                // so that fully linked source code display has its data
                 if (defParent.isDefined) {
                   val callingSymbol = defParent.get
                   callingSymbol.sourceFile match {
@@ -53,7 +54,8 @@ object TraversalExtraction {
                       val source = callingSymbol.sourceFile.toString
                       val line = select.pos.line
                       val column = select.pos.column
-                      //Log("symbol " + select.symbol.nameString + "is being used in " + source + " " + line + "," + column)
+                      Log(s"""symbol ${select.symbol.nameString} is being used by $callingSymbol in $source ($line, $column):"
+                          |$source""".stripMargin) 
                   }
                 }
 

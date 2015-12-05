@@ -39,14 +39,17 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
           case null => ExternallyDefined // no source file for this entity = external symbol
           case _    => ProjectDefined
         }
-        
+
         /*
          * add the symbol to the extracted model
          */
         val extractedSymbol = 
           ExtractedSymbol(
             symbolCompilerId = s.id, 
-            name = maybeName(global)(s),
+            name = maybeName(global)(s) match {
+              case None => DeAnonimizedName(s.pos.hashCode.toHexString)
+              case Some(s) => RealName(s)
+            },
             kind = s.kindString, 
             qualifyingPath = qualifyingPath, 
             nonSynthetic = !(s.isSynthetic), 
@@ -64,7 +67,9 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
          */
         implementation match {
           case ProjectDefined    => codes(global)(s, AttemptCodeExtract(global)(s))
-          case ExternallyDefined => // no source file included in this project for this entity
+          case ExternallyDefined =>
+            println(s"""external symbol's pos details follow. symbol: $s, source: ${s.sourceFile} ${s.pos.line} ${s.pos.column}""".stripMargin)
+            // no source file included in this project for this entity
         }
         
         normalization.CompleteOwnerChain(global)(extractedSymbol, s, this)
@@ -88,7 +93,7 @@ class ExtractedCodes {
   def apply(global: Global)(s: global.Symbol, code: Code) = {
     map.contains(s.id) match {
       case false => map += (s.id -> code)
-      case true  => // do nothing 
+      case true  => // do nothing, for now 
     }
   }
   

@@ -14,7 +14,7 @@ trait SymbolSerialization {
         case ExternallyDefined => "external" },
       nonSynthetic,
       symbolCompilerId, 
-      name, 
+      name, // TODO: serialize harmoniously to the reader below and code that uses it
       kind,
       qualifyingPath.pickle,
       "\"" + signatureString + "\"" // escaped as it contains, typically, commas
@@ -29,7 +29,7 @@ object SymbolFromCsvRow {
   import Util._
   def apply(projectName: String, rowMap: Map[String, String]): ExtractedSymbol = { 
      ExtractedSymbol(symbolCompilerId = rowMap("id").toInt,
-          name = deSerializeOption(rowMap("name")),
+          name = new SymbolName(rowMap("name")), // TODO: this is not the correct way to deserialize the field as outputted
           kind = rowMap("kind"),
           nonSynthetic = rowMap("nonSynthetic").toBoolean,
           qualifyingPath = QualifyingPath(rowMap("qualifiedId")),

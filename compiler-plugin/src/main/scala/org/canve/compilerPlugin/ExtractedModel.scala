@@ -30,12 +30,16 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
         v.data
       
       case None =>
+        
+        val name = getUniqueName(global)(s)
+        
         val qualifyingPath = QualifyingPath(global)(s)
   
         /*
-         * determine whether the symbol at hand is defined in the current project, 
+         * determine whether the symbol at hand is defined in the current project,
+         * see https://github.com/CANVE/extractor/issues/8 
          */ 
-        val implementation = s.sourceFile match {
+        val implementation = s.sourceFile match { 
           case null => ExternallyDefined // no source file for this entity = external symbol
           case _    => ProjectDefined
         }
@@ -46,10 +50,7 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
         val extractedSymbol = 
           ExtractedSymbol(
             symbolCompilerId = s.id, 
-            name = maybeName(global)(s) match {
-              case None => DeAnonimizedName(s.pos.hashCode.toHexString)
-              case Some(s) => RealName(s)
-            },
+            name = name,
             kind = s.kindString, 
             qualifyingPath = qualifyingPath, 
             nonSynthetic = !(s.isSynthetic), 
@@ -67,9 +68,7 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
          */
         implementation match {
           case ProjectDefined    => codes(global)(s, AttemptCodeExtract(global)(s))
-          case ExternallyDefined =>
-            println(s"""external symbol's pos details follow. symbol: $s, source: ${s.sourceFile} ${s.pos.line} ${s.pos.column}""".stripMargin)
-            // no source file included in this project for this entity
+          case ExternallyDefined => // no source file included in this project for this entity
         }
         
         normalization.CompleteOwnerChain(global)(extractedSymbol, s, this)

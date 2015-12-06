@@ -25,11 +25,19 @@ package object compilerPlugin {
         with GetPathsBetween[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation] 
   }
   
-  def maybeName(global: Global)(s: global.Symbol): Option[String] = {
-    (s.isAnonymousClass || s.isAnonymousFunction) match {
-        case true => None
-        case false => Some(s.nameString)   
+  def getUniqueName(global: Global)(s: global.Symbol): SymbolName = {
+
+    (s.isAnonymousClass || 
+        
+     s.isAnonymousFunction ||
+     
+     s.nameString.startsWith("<local ") // as no method of global.Symbol seems to identify the same
+     
+     ) match {
+         case true =>
+           DeAnonimizedName(global)(s) 
+         case false => 
+           new RealName(s.nameString)
     }
   }
-
 }

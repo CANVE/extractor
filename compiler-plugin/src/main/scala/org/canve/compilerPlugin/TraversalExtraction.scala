@@ -32,7 +32,7 @@ object TraversalExtraction {
                 if (defParent.isEmpty) Warning.logMemberParentLacking(global)(select.symbol)
 
                 extractedModel.add(global)(select.symbol)
-                
+
                 if (defParent.isDefined) {
                   extractedModel.add(defParent.get.id, "uses", select.symbol.id)
                   println

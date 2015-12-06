@@ -28,11 +28,12 @@ trait SymbolSerialization {
 object SymbolFromCsvRow {
   import Util._
   def apply(projectName: String, rowMap: Map[String, String]): ExtractedSymbol = { 
+     //println(rowMap)
      ExtractedSymbol(symbolCompilerId = rowMap("id").toInt,
-          name = new SymbolName(rowMap("name")), // TODO: this is not the correct way to deserialize the field as outputted
+          name = SymbolName(rowMap("name")), 
           kind = rowMap("kind"),
           nonSynthetic = rowMap("nonSynthetic").toBoolean,
-          qualifyingPath = QualifyingPath(rowMap("qualifiedId")),
+          qualifyingPath = QualifyingPath(rowMap("qualifyingPath")),
           signatureString = deSerializeOption(rowMap("signature")),
           implementation = rowMap("implementation") match {
             case "project" => ProjectDefined

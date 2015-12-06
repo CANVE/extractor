@@ -10,7 +10,7 @@ object Output {
     Log(s"writing extracted type relations and call graph for project ${PluginArgs.projectName}...")
     
     writeOutputFile(PluginArgs.projectName, "symbols", 
-                    "implementation,nonSynthetic,id,name,kind,qualifiedId,signature\n" +
+                    "implementation,nonSynthetic,id,name,kind,qualifyingPath,signature\n" +
                     (extractedModel.graph.vertexIterator.map(_.data.toCsvRow)).mkString("\n"))
 
     println("before output")

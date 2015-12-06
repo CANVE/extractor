@@ -129,7 +129,7 @@ object AttemptCodeExtract {
     
     if (start == end) {
       logCantDetermine(s"start=end ($start)")
-      //println(scala.io.Source.fromFile(sourceFilePath).mkString.slice(start, start + 20) + "[in ..." + sourceFilePath.takeRight(30) + "]")
+      println(scala.io.Source.fromFile(sourceFilePath).mkString.slice(start, start+30))
       Code(
         symbol.id, 
         location = CodeLocation(sourceFilePath, Some(Point(start))), 

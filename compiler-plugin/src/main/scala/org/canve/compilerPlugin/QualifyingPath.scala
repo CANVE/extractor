@@ -11,14 +11,6 @@ import Util._
 /* The class and factory */
 
 case class QualifyingPath(value: List[QualificationUnit]) {
-  
-  /* 
-   * if any anonymous object is part of the qualification chain, then (by definition) the
-   * chain cannot be considered by any means unique - anonymous objects may sit side-by-side
-   * under the same program context, and having no name, cannot be easily differentiated.
-   */
-  val fullyNamed: Boolean = value.forall(_.name.isDefined) 
-  
   def pickle = value.map(kindAndName => "(" + kindAndName.kind + "|" + kindAndName.name + ")").mkString(".")
 }
 
@@ -32,29 +24,26 @@ object QualifyingPath {
     QualifyingPath(s.split('.').toList.map(s => 
       QualificationUnit(
         s.takeWhile(_!='|').drop(1), 
-        deSerializeOption[String](s) match {
-          case None => None
-          case Some(s) => Some(s.dropWhile(_!='|').drop(1).dropRight(1))
-        })))
+        SymbolName(s.dropWhile(_!='|').drop(1).dropRight(1)))))
   
   def apply(global: Global)(s: global.Symbol): QualifyingPath = {
     val kindNameList: List[QualificationUnit] = 
       s.ownerChain.reverse.map(owner => QualificationUnit(global)(owner))
    
     assert(kindNameList.head.kind == "package")
-    assert(kindNameList.head.name.get == "<root>")
+    assert(kindNameList.head.name.name == "<root>")
     
-    QualifyingPath(kindNameList.drop(1))   
+    QualifyingPath(kindNameList)   
   }
 }
 
 
 /* auxiliary class and factory */
 
-case class QualificationUnit(kind: String, name: Option[String])
+case class QualificationUnit(kind: String, name: SymbolName)
 
 object QualificationUnit {
   def apply(global: Global)(s: global.Symbol): QualificationUnit = {
-    new QualificationUnit(s.kindString, maybeName(global)(s))
+    new QualificationUnit(s.kindString, getUniqueName(global)(s))
   }
 }

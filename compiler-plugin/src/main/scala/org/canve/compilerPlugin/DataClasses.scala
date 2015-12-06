@@ -1,5 +1,4 @@
 package org.canve.compilerPlugin
-import tools.nsc.Global
 
 case class ExtractedSymbolPlus(e: ExtractedSymbol, val implementingProject: String) 
   extends ExtractedSymbol(
@@ -92,10 +91,6 @@ object ExtractedSymbol {
         implementation)
 }
 
-class SymbolName(name: String)
-case class RealName(name: String) extends SymbolName(name)
-case class DeAnonimizedName(name: String) extends SymbolName(name)
-
 /*
  * symbol's extracted source code location and content
  */
@@ -125,7 +120,8 @@ object ProjectDefined    extends ImplementationLoc
 object ExternallyDefined extends ImplementationLoc
 
 /*
- * case class and companion
+ * Holds a fully qualified identifier to a symbol, that should 
+ * uniquely identify a symbol across projects
  */
 case class FQI(qPath: QualifyingPath, signatureString: Option[String])
 

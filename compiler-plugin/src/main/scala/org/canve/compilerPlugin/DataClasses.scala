@@ -5,6 +5,7 @@ case class ExtractedSymbolPlus(e: ExtractedSymbol, val implementingProject: Stri
     e.symbolCompilerId,
     e.name,
     e.kind,
+    e.codeLocation,
     e.qualifyingPath,
     e.signatureString,
     e.nonSynthetic,
@@ -26,6 +27,9 @@ class ExtractedSymbol(
    
   /* symbol's kind - package, class, object, method, etc.. */ 
   val kind: String,
+  
+  /* code location of symbol's definition, if any */ 
+  val codeLocation: Option[CodeLocation],
    
   /* an identifier similar to Java's FQN, to help uniquely identify a symbol across projects */ 
   val qualifyingPath: QualifyingPath,
@@ -46,7 +50,7 @@ class ExtractedSymbol(
    * subproject summoned into the compilation classpath by sbt or other tool. In those cases, this marks that
    * the symbol's implementation resides externally, not within the project being compiled.  
    */
-  val implementation: ImplementationLoc) extends SymbolSerialization { 
+  val implementation: ImplementationLoc) extends ExtractedSymbolSerialization { 
   
     /* getter for symbol's code description, the latter kept in a separate collection */
     def definitionCode(implicit extractedModel: ExtractedModel): Option[Code] = 
@@ -68,7 +72,7 @@ class ExtractedSymbol(
     var ownersTraversed = false // TODO: not needed by those that inherit, so further refactor to base class that excludes this var 
 }
 
-object ExtractedSymbol {
+object ExtractedSymbol extends ExtractedSymbolDeserialization {
   
   /* 
    * just the obvious apply, to provide a case class instantiation style 
@@ -77,6 +81,7 @@ object ExtractedSymbol {
     symbolCompilerId: SymbolCompilerId,
     name: SymbolName, 
     kind: String,
+    codeLocation: Option[CodeLocation],
     qualifyingPath: QualifyingPath,
     signatureString: Option[String],   
     nonSynthetic: Boolean,
@@ -85,6 +90,7 @@ object ExtractedSymbol {
         symbolCompilerId,
         name,
         kind,
+        codeLocation,
         qualifyingPath,
         signatureString,
         nonSynthetic,
@@ -104,11 +110,29 @@ case class CodeLocation(
   path: String,              // the source (file) path  
   position: Option[Position] // the location within that source
 ) 
+object CodeLocation extends SerializationUtil {
+  def apply(s: String): CodeLocation = { /* a deserializing constructor */
+    s.split(',').toList match {
+      case head :: tail =>
+        new CodeLocation(head, toStringOption(tail.mkString(",")).map(s => Position(s)))
+      case _ => throw new Exception(s"failed deserializing $getClass from $s.")
+    }
+  }
+}
    
 /* differentiate two types of location provided by the compiler */
-abstract class Position
-case class Span(start: Int, end: Int) extends Position
+abstract class Position 
+case class Span(start: Int, end: Int) extends Position 
 case class Point(init: Int) extends Position { def apply = init }
+object Position { 
+  def apply(s: String): Position = {
+    s.split(Array(',' , '(' , ')')).toList match {
+      case "Span" :: start :: end :: Nil => Span(start.toInt, end.toInt)  
+      case "Point" :: start :: Nil => Point(start.toInt)
+      case _ => throw new Exception(s"failed deserializing $getClass from $s.")
+    }
+  }
+}
    
 /*
  * types for whether a symbol is defined in 

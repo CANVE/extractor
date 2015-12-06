@@ -1,6 +1,5 @@
 package org.canve.compilerPlugin
 import tools.nsc.Global
-import Util._
 
 /*
  * A Qualified Identification of a symbol, that does not rely on its compiler assigned id, 
@@ -11,7 +10,7 @@ import Util._
 /* The class and factory */
 
 case class QualifyingPath(value: List[QualificationUnit]) {
-  def pickle = value.map(kindAndName => "(" + kindAndName.kind + "|" + kindAndName.name + ")").mkString(".")
+  override def toString = value.map(kindAndName => "(" + kindAndName.kind + "|" + kindAndName.name + ")").mkString(".")
 }
 
 /*

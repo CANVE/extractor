@@ -3,20 +3,21 @@ package org.canve.compilerPlugin
 /*
  * Serialize extracted symbol into CSV data row
  */
-trait SymbolSerialization {
+trait ExtractedSymbolSerialization {
   self: ExtractedSymbol =>
   
   def toCsvRow(implicit extractedModel: ExtractedModel): String = {
-    // Note: escaping for csv is for now handled here by hand (likely a tad faster)
+    // Note: escaping for csv is for now handled here by hand (likely a tad faster).
     List(
       implementation match {
         case ProjectDefined    => "project"
         case ExternallyDefined => "external" },
       nonSynthetic,
       symbolCompilerId, 
-      name, // TODO: serialize harmoniously to the reader below and code that uses it
+      name, 
       kind,
-      qualifyingPath.pickle,
+      "\"" + codeLocation + "\"",
+      qualifyingPath,
       "\"" + signatureString + "\"" // escaped as it contains, typically, commas
     ).mkString(",")
   }
@@ -25,28 +26,32 @@ trait SymbolSerialization {
 /*
  * Symbol constructor from CANVE CSV data row
  */
-object SymbolFromCsvRow {
-  import Util._
+trait ExtractedSymbolDeserialization extends SerializationUtil {
   def apply(projectName: String, rowMap: Map[String, String]): ExtractedSymbol = { 
-     //println(rowMap)
-     ExtractedSymbol(symbolCompilerId = rowMap("id").toInt,
-          name = SymbolName(rowMap("name")), 
-          kind = rowMap("kind"),
-          nonSynthetic = rowMap("nonSynthetic").toBoolean,
-          qualifyingPath = QualifyingPath(rowMap("qualifyingPath")),
-          signatureString = deSerializeOption(rowMap("signature")),
-          implementation = rowMap("implementation") match {
-            case "project" => ProjectDefined
-            case "external" => ExternallyDefined
-          })
+    ExtractedSymbol(
+      symbolCompilerId = rowMap("id").toInt,
+      name = SymbolName(rowMap("name")), 
+      kind = rowMap("kind"),
+      codeLocation = toStringOption(rowMap("codeLocation")).map(toClassArgs).map(s => CodeLocation(s)),
+      nonSynthetic = rowMap("nonSynthetic").toBoolean,
+      qualifyingPath = QualifyingPath(rowMap("qualifyingPath")),
+      signatureString = toStringOption(rowMap("signature")),
+      implementation = rowMap("implementation") match {
+        case "project" => ProjectDefined
+        case "external" => ExternallyDefined
+      })
   }
 }
 
-object Util {
-  def deSerializeOption[T](s: String): Option[T] = {
+trait SerializationUtil {
+  def toStringOption(s: String): Option[String] = {
     s match {
       case "None" => None
-      case s@_ => Some(s.drop("Some(".length).dropRight(1).asInstanceOf[T])
+      case _ => Some(s.drop("Some(".length).dropRight(1))
     }
+  }
+  
+  def toClassArgs(s: String): String = {
+    s.dropWhile(_ != '(').drop(1).dropRight(1)
   }
 }

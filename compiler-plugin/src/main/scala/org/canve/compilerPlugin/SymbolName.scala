@@ -27,7 +27,6 @@ object DeAnonimizedName {
 object SymbolName {
   
   def apply(s: String): SymbolName = {
-    //println("string: " + s)
     val className = s.takeWhile(_ != '(')
     val value = s.drop(className.length).drop(1).dropRight(1)
     className match {
@@ -41,5 +40,4 @@ object SymbolName {
 /* the base inherited class */
 sealed abstract class SymbolName {
   val name: String
-  //override def toString = s"${getClass.getSimpleName}($name)"
 }

@@ -33,7 +33,7 @@ trait DataReader {
       
       val symbols: List[ExtractedSymbol] = 
         CSVReader.open(new File(dir + File.separator + "symbols")).allWithHeaders
-        .map(inputRowMap => SymbolFromCsvRow(projectName, inputRowMap))
+        .map(inputRowMap => ExtractedSymbol(projectName, inputRowMap))
         
       val asVertices: Iterable[graph.Vertex] = symbols.map(s => graph.Vertex(s.symbolCompilerId, s)).toIterable
       

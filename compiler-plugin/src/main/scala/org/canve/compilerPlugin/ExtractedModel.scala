@@ -45,6 +45,18 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
         }
 
         /*
+         * attempt extracting the symbol's source code, 
+         * if it is defined in the current project 
+         */
+        val code: Option[Code] = implementation match {
+          case ProjectDefined    => 
+            val code = AttemptCodeExtract(global)(s)
+            codes.maybeAdd(global)(s, code)
+            Some(code)
+          case ExternallyDefined => None
+        }
+        
+        /*
          * add the symbol to the extracted model
          */
         val extractedSymbol = 
@@ -52,6 +64,7 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
             symbolCompilerId = s.id, 
             name = name,
             kind = s.kindString, 
+            codeLocation = code.map(_.location), 
             qualifyingPath = qualifyingPath, 
             nonSynthetic = !(s.isSynthetic), 
             implementation = implementation,
@@ -62,16 +75,8 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
             
         graph ++ graph.Vertex(extractedSymbol.symbolCompilerId, extractedSymbol) 
             
-        /*
-         * pass on to attempt to extract the symbol's source code, 
-         * if it is defined in the current project 
-         */
-        implementation match {
-          case ProjectDefined    => codes(global)(s, AttemptCodeExtract(global)(s))
-          case ExternallyDefined => // no source file included in this project for this entity
-        }
-        
         normalization.CompleteOwnerChain(global)(extractedSymbol, s, this)
+        
         extractedSymbol
     }
   }
@@ -89,10 +94,10 @@ class ExtractedCodes {
   
   var map: Map[Int, Code] = Map()
   
-  def apply(global: Global)(s: global.Symbol, code: Code) = {
+  def maybeAdd(global: Global)(s: global.Symbol, code: Code) = {
     map.contains(s.id) match {
       case false => map += (s.id -> code)
-      case true  => // do nothing, for now 
+      case true  => // do nothing here 
     }
   }
   

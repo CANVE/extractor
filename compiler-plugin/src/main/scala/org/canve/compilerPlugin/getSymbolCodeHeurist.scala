@@ -1,6 +1,6 @@
 package org.canve.compilerPlugin
 import tools.nsc.Global
-import Logging.Utility._
+import org.canve.compilerPlugin.Utility._
 
 trait getSymbolCodeHeuristically {
 

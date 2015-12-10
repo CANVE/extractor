@@ -1,4 +1,5 @@
 package org.canve.compilerPlugin
+import org.canve.util._
 
 /*
  * Serialize extracted symbol into CSV data row
@@ -40,18 +41,5 @@ trait ExtractedSymbolDeserialization extends SerializationUtil {
         case "project" => ProjectDefined
         case "external" => ExternallyDefined
       })
-  }
-}
-
-trait SerializationUtil {
-  def toStringOption(s: String): Option[String] = {
-    s match {
-      case "None" => None
-      case _ => Some(s.drop("Some(".length).dropRight(1))
-    }
-  }
-  
-  def toClassArgs(s: String): String = {
-    s.dropWhile(_ != '(').drop(1).dropRight(1)
   }
 }

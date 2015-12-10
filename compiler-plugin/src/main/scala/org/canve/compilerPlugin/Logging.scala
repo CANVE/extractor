@@ -1,4 +1,5 @@
-package Logging
+package org.canve.compilerPlugin
+
 import tools.nsc.Global
 
 object Utility {

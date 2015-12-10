@@ -1,7 +1,7 @@
 package org.canve.compilerPlugin
-import Logging._
+import org.canve.logging.loggers._
 
 /*
  * logger object for the current project
  */
-object Log extends DefaultLogger("canve.log")
+object Log extends StringLogger("canve.log")

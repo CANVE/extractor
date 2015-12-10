@@ -42,7 +42,7 @@ val integrationTest = taskKey[Unit]("Executes integration tests.")
  * the root project definition
  */
 lazy val root = (project in file("."))
-  .aggregate(scalaPlus, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
+  .aggregate(scalaPlus, simpleLogging, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
   .settings(
     promptTheme := Scalapenos, 
@@ -61,7 +61,7 @@ lazy val root = (project in file("."))
  * missing at compile time.
  */
 lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
-  .dependsOn(simpleGraph, compilerPluginUnitTestLib % "test")
+  .dependsOn(simpleLogging, simpleGraph, compilerPluginUnitTestLib % "test")
   .settings(
     name := "compiler-plugin",
     organization := "canve",
@@ -195,6 +195,21 @@ lazy val scalaPlus = (project in file("scala-plus")).settings(
   promptTheme := Scalapenos,
   scalaVersion := "2.11.7",
   publishArtifact := false
+)
+
+lazy val simpleLogging = (project in file("simple-logging")).settings(
+  name := "simple-logging",
+  organization := "canve",
+  version := "0.0.1",
+  promptTheme := Scalapenos,
+  isSnapshot := true, // to enable overwriting the existing artifact version
+  scalaVersion := "2.11.7",
+  crossScalaVersions := commonCrossScalaVersions,
+  libraryDependencies ++= Seq(
+    "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
+    "com.lihaoyi" %% "pprint" % "0.3.6",
+    "com.lihaoyi" %% "utest" % "0.3.1" % "test"),
+  testFrameworks += new TestFramework("utest.runner.Framework")
 )
 
 /*

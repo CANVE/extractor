@@ -18,17 +18,17 @@ trait MergeStrategies {
    * - re-wire all their edges to the head vertex
    * - remove them all, leaving only the head vertex 
    */
-   def reduceSymbols(extractedModel: ExtractedModel)(group: List[extractedModel.graph.Vertex]) = 
-     group.reduce { (s1, s2) => 
-      
-       val ids = (s1.data.symbolCompilerId, s2.data.symbolCompilerId)
-      
-       extractedModel.graph -= extractedModel.graph edgesBetween(ids._1, ids._2)
-       extractedModel.graph.vertexEdges(ids._2) foreach (e => 
-         extractedModel.graph.edgeReWire(e, to = ids._1, from = ids._2)
-       )
-       extractedModel.graph -- ids._2
-      
-       s1
-    }
+  def reduceSymbols(extractedModel: ExtractedModel)(group: List[extractedModel.graph.Vertex]) = 
+    group.reduce { (s1, s2) => 
+     
+      val ids = (s1.data.symbolCompilerId, s2.data.symbolCompilerId)
+     
+      extractedModel.graph -= extractedModel.graph edgesBetween(ids._1, ids._2)
+      extractedModel.graph.vertexEdges(ids._2) foreach (e => 
+        extractedModel.graph.edgeReWire(e, to = ids._1, from = ids._2)
+      )
+      extractedModel.graph -- ids._2
+     
+      s1
+  }
 }

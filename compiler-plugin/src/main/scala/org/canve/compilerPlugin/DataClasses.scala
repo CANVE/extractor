@@ -1,4 +1,5 @@
 package org.canve.compilerPlugin
+import org.canve.util._
 
 case class ExtractedSymbolPlus(e: ExtractedSymbol, val implementingProject: String) 
   extends ExtractedSymbol(
@@ -61,6 +62,7 @@ class ExtractedSymbol(
       List(symbolCompilerId, 
            name, 
            kind, 
+           codeLocation,
            qualifyingPath, 
            signatureString, 
            nonSynthetic, 
@@ -123,7 +125,7 @@ object CodeLocation extends SerializationUtil {
 /* differentiate two types of location provided by the compiler */
 abstract class Position 
 case class Span(start: Int, end: Int) extends Position 
-case class Point(init: Int) extends Position { def apply = init }
+case class Point(start: Int) extends Position 
 object Position { 
   def apply(s: String): Position = {
     s.split(Array(',' , '(' , ')')).toList match {

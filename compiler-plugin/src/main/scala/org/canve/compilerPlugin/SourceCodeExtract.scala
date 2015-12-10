@@ -1,6 +1,6 @@
 package org.canve.compilerPlugin
 import tools.nsc.Global
-import Logging.Utility._
+import org.canve.compilerPlugin.Utility._
 
 // TODO: capture leading comment lines, as a separate `comments` property.
 //       surely the user will appreciate them, if they can be optionally shown to them.

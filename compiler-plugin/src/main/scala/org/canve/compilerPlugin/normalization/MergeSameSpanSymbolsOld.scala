@@ -1,3 +1,5 @@
+/*
+
 package org.canve.compilerPlugin.normalization
 import org.canve.compilerPlugin._
 import scala.tools.nsc.Global
@@ -71,10 +73,8 @@ trait MergeSameSpanSymbols extends MergeStrategies {
   
       assert(symbolBin.forall(v => v.data.definitionCode.get.code.isEmpty)) // synthetic symbols aren't expected to have code definitions
       
-      if (symbolBin.size > 2) {
-        symbolBin.foreach(v => println(v.data.toJoinedString))
-        throw DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: ${symbolBin.map(_.data.toJoinedString)}")
-      }
+      if (symbolBin.size > 2) throw 
+        DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: ${symbolBin.map(_.data.toJoinedString)}")
     
       if (symbolBin.size == 2) {
         val extractedSymbols = (symbolBin.head.data, symbolBin.last.data)
@@ -97,11 +97,8 @@ trait MergeSameSpanSymbols extends MergeStrategies {
     .toList.groupBy(v => FQI(v.data))
     .foreach { bin => val symbolBin = bin._2
       
-      if (symbolBin.size > 2) {
-        println(symbolBin.size)
-        symbolBin.foreach(v => println(v.data.toJoinedString))
-        throw DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: $bin")
-      }
+      if (symbolBin.size > 2) throw 
+        DataNormalizationException(s"Unexpected amount of mergeable symbols for single source location: ${symbolBin.map(_.data.toJoinedString)}")
       
       if (symbolBin.size == 2) {
         
@@ -144,3 +141,4 @@ trait MergeSameSpanSymbols extends MergeStrategies {
     }
   }
 }
+*/

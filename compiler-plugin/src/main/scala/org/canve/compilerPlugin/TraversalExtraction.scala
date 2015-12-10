@@ -1,13 +1,11 @@
 package org.canve.compilerPlugin
 import scala.tools.nsc.Global
-import Logging.Utility._
+import org.canve.compilerPlugin.Utility._
 
 object TraversalExtractionWriter {
   def apply(global: Global)(unit: global.CompilationUnit, projectName: String, extractedModel: ExtractedModel): ExtractedModel = {
     
     TraversalExtraction(global)(unit.body)(extractedModel)
-    
-    normalization.MergeSameSpanSymbols.apply(extractedModel) 
     
     extractedModel
   }
@@ -32,7 +30,7 @@ object TraversalExtraction {
                 if (defParent.isEmpty) Warning.logMemberParentLacking(global)(select.symbol)
 
                 extractedModel.add(global)(select.symbol)
-
+                
                 if (defParent.isDefined) {
                   extractedModel.add(defParent.get.id, "uses", select.symbol.id)
                   println
@@ -70,7 +68,8 @@ object TraversalExtraction {
             }
 
           /*
-           *    See:
+           *    We should probably treat `Ident`s same as `Select`s, as it is possible
+           *    we are missing on some symbols without that. See:
            *    https://groups.google.com/d/topic/scala-internals/Ms9WUAtokLo/discussion
            *    https://groups.google.com/forum/#!topic/scala-internals/noaEpUb6uL4
            */
@@ -80,7 +79,7 @@ object TraversalExtraction {
           case ValDef(mods: Modifiers, name: TermName, tpt: Tree, rhs: Tree) =>
 
             val symbol = tree.symbol
-
+            
             extractedModel.add(global)(symbol)
             extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
 
@@ -102,7 +101,7 @@ object TraversalExtraction {
             println(s"Method definition. Symbol owner chain: ${symbol.ownerChain.reverse}, \nParams: ${symbol.paramss}")
             println("signatureString: " + symbol.signatureString)
             println
-            
+
             val traverser = new ExtractionTraversal(Some(tree.symbol))
             if (symbol.nameString == "get") {
               //val tracer = new TraceTree
@@ -147,7 +146,7 @@ object TraversalExtraction {
       }
     }
 
-    // Exploration function to trace a tree
+    // Exploration function tempto trace a tree
     class TraceTree extends Traverser {
       override def traverse(tree: Tree): Unit = {
         tree match {

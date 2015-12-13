@@ -42,7 +42,7 @@ val integrationTest = taskKey[Unit]("Executes integration tests.")
  * the root project definition
  */
 lazy val root = (project in file("."))
-  .aggregate(scalaPlus, simpleLogging, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
+  .aggregate(simpleLogging, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
   .settings(
     promptTheme := Scalapenos, 
@@ -207,6 +207,11 @@ lazy val simpleLogging = (project in file("simple-logging")).settings(
   crossScalaVersions := commonCrossScalaVersions,
   libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
+    //"org.scala-lang.modules" %% "scala-pickling" % "0.10.1",
+    //"com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.0-1",
+    "io.circe" %% "circe-core" % "0.2.1", 
+    "io.circe" %% "circe-generic" % "0.2.1",
+    "io.circe" %% "circe-parse" % "0.2.1",
     "com.lihaoyi" %% "pprint" % "0.3.6",
     "com.lihaoyi" %% "utest" % "0.3.1" % "test"),
   testFrameworks += new TestFramework("utest.runner.Framework")

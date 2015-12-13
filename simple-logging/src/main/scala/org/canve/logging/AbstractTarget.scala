@@ -14,4 +14,3 @@ abstract class AbstractTarget {
   
   def apply(lines: List[String])
 }
-

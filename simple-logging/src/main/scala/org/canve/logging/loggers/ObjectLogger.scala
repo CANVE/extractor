@@ -1,11 +1,13 @@
 package org.canve.logging.loggers
 import org.canve.logging.targets.FileTarget
-import pprint._, pprint.Config.Colors._
+import pprint.Config.Defaults._
+//import upickle.default._
 
 /*
  * A simple object logger
  */
 class ObjectLogger {
+  
   def apply(
     obj: Any, 
     name: String, 
@@ -13,6 +15,8 @@ class ObjectLogger {
     textAfter: String = "") {
   
       val file = new FileTarget(name)
-      file(List(textBefore, obj.toString, textAfter))
-  }
+      println("in pprint")
+      pprint.pprintln(obj)
+      file(List(textBefore, pprint.tokenize(obj, indent=4).mkString, textAfter))
+    }
 }

@@ -4,7 +4,7 @@ import scala.tools.nsc.{Global, Phase}
 import tools.nsc.plugins.PluginComponent
 
 class PluginPhase(val global: Global)
-                  extends PluginComponent with debugSourceFilter
+                  extends PluginComponent with voidSourceFilter
                   { t =>
 
   import global._
@@ -46,6 +46,8 @@ class PluginPhase(val global: Global)
         } else Log("skipping non-scala source file: " + unit.source.path)
       }
       
+      assertSourceFilterMatched
+      
       normalization.NormalizeBySpans(model)
       
       Output.write(model)
@@ -56,14 +58,3 @@ class PluginPhase(val global: Global)
 
 }
 
-abstract trait sourceFilter {
-  def sourceFilter(path: String): Boolean
-}
-
-abstract trait voidSourceFilter {
-  def sourceFilter(path: String) = true
-}
-
-trait debugSourceFilter extends sourceFilter {
-  def sourceFilter(path: String) = path.endsWith("/pipeline/src/main/scala/org/allenai/pipeline/PipescriptParser.scala")
-}

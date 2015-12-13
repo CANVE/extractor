@@ -2,15 +2,16 @@ package org.canve.compilerPlugin
 import tools.nsc.Global
 import org.canve.compilerPlugin.Utility._
 
+/*
+ * heuristic based extraction - may be necessary for supporting scala 2.10 so keep it alive in compilation
+ * (c.f. https://github.com/scoverage/scalac-scoverage-plugin/blob/5d0c92479dff0055f2cf7164439f838b803fe44a/2.10.md)
+ * 
+ * This heuristic algorithm is not needed, as long as -Yrangepos is used, but since -Yrangepos 
+ * may crash on scala 2.10 code that uses macros, this might come back 
+*/  
+
 trait getSymbolCodeHeuristically {
 
-  /*
-   * heuristic based extraction - may be necessary for supporting scala 2.10 so keep it alive in compilation
-   * (c.f. https://github.com/scoverage/scalac-scoverage-plugin/blob/5d0c92479dff0055f2cf7164439f838b803fe44a/2.10.md)
-   * 
-   * This heuristic algorithm is not needed, as long as -Yrangepos is used, but since -Yrangepos 
-   * may crash on scala 2.10 code that uses macros, this might come back 
-  */  
   def apply(global: Global)(symbol: global.Symbol): List[String] = {
     
     def getStartCol(s: String) = s.indexWhere(c => c !=' ')

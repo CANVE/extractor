@@ -36,30 +36,34 @@ object Plugin extends AutoPlugin {
    */
   override lazy val projectSettings = Seq(
 
+    libraryDependencies += compilerPluginOrg % (compilerPluginArtifact + "_" + scalaBinaryVersion.value) % compilerPluginVersion % "provided",  
+      
     commands += Command.command(
       sbtCommandName,
       "Instruments all projects in the current build definition such that they run canve during compilation",
       "Instrument all projects in the current build definition such that they run canve during compilation")
-      (inject().andThen(canve()))
+      (canve())
+      //(perProjectInject().andThen(canve()))
   )
 
   /*
-   *  
+   * This does not work (http://stackoverflow.com/q/34253338/1509695)
    */
-  private def inject(): State => State = { state =>
+  private def perProjectInject(): State => State = { state =>
     val extracted: Extracted = Project.extract(state)
 
-    val enrichedLibDepSettings: Seq[Def.Setting[Seq[ModuleID]]] = extracted.structure.allProjectRefs map { projRef =>
+    val enrichedLibDepSettings = extracted.structure.allProjectRefs map { projRef =>
       val projectName = projRef.project
       val projectScalaVersion = (scalaBinaryVersion in projRef)
       
-      libraryDependencies in projRef += compilerPluginOrg % ("bla" + compilerPluginArtifact + "_" + projectScalaVersion.value) % compilerPluginVersion % "provided"
+      libraryDependencies in projRef += 
+        compilerPluginOrg % (compilerPluginArtifact + "_" + projectScalaVersion.value) % compilerPluginVersion % "provided"
     }
 
     val newState = extracted.append(enrichedLibDepSettings, state)
 
-    val updateAfterLibAppend = extracted.structure.allProjectRefs map { 
-      projRef => println("running update: " + EvaluateTask(extracted.structure, update, newState, projRef)) }
+    val updateAfterLibAppend = extracted.structure.allProjectRefs map { projRef => 
+      println("running update: " + EvaluateTask(extracted.structure, update, newState, projRef)) }
       state
   }
   
@@ -80,13 +84,10 @@ object Plugin extends AutoPlugin {
       
       val projectName = projRef.project
 
-      val projectScalaVersion = (scalaBinaryVersion in projRef)
-      
+      val projectScalaBinaryVersion = (scalaBinaryVersion in projRef)
       
       lazy val pluginScalacOptions: Def.Initialize[Task[Seq[String]]] = Def.task {
 
-        libraryDependencies in projRef += compilerPluginOrg % (compilerPluginArtifact + "_" + projectScalaVersion.value) % compilerPluginVersion % "provided"
-        
         // obtain the compiler plugin's file location to so it can be passed along to -Xplugin
         val providedDeps: Seq[File] = (update in projRef).value matching configurationFilter("provided")
         val pluginPath = providedDeps.find(_.getAbsolutePath.contains(compilerPluginArtifact))
@@ -95,16 +96,16 @@ object Plugin extends AutoPlugin {
 
           case Some(pluginPath) =>
 
-            println(s"picking up compiler plugin for project $projectName from path: " + pluginPath)
-            pluginPath.getName.contains(s"${compilerPluginArtifact}_$projectScalaVersion") match {
+            (projectScalaBinaryVersion.value) == scalaBinaryVersion.value match {
               
               case false =>  
-                println(s"Warn: skipping instrumentation for project $projectName (c.f. https://github.com/CANVE/extractor/issues/12)\n" +
-                        s"pluginPath $pluginPath does not match target project's scala version: $projectScalaVersion")
-                Seq() // avoid injecting the compiler plugin for the particular project at hand..
+                // avoid injecting the compiler plugin for the particular project at hand..
+                // perhaps the user can still manually add the necessary compiler plugin for those skipped projects, 
+                // through http://www.scala-sbt.org/0.13/docs/Compiler-Plugins.html or otherwise.
+                println(s"Warn: skipping instrumentation for project $projectName (c.f. https://github.com/CANVE/extractor/issues/12)\n")
+                Seq() 
               
               case true =>
-              
                 val baseCompilerOptions =
                   Seq(
                     // hooks in the compiler plugin
@@ -117,7 +118,7 @@ object Plugin extends AutoPlugin {
                   // will crash with some scala 2.10 projects which are using macros (c.f. https://github.com/scoverage/scalac-scoverage-plugin/blob/master/2.10.md)
                   baseCompilerOptions ++ Some(s"-Yrangepos")
                   
-                projectScalaVersion.value match {
+                projectScalaBinaryVersion.value match {
                   case "2.10" => baseCompilerOptions
                   case _      => fullCompilerOptions
                 }

@@ -1,0 +1,7 @@
+< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/IOUtils.scala >
+
+    val index = {
+      val lastUnixPos = path.lastIndexOf(UnixSeperator)
+      val lastWindowsPos = path.lastIndexOf(WindowsSeperator)
+      Math.max(lastUnixPos, lastWindowsPos)
+    }

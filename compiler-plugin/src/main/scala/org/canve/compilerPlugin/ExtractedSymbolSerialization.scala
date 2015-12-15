@@ -7,8 +7,12 @@ import org.canve.util._
 trait ExtractedSymbolSerialization {
   self: ExtractedSymbol =>
   
+  def escapeQuotes(s: String): String = {
+    s.replace("\"", "\"\"")
+  }
+    
   def toCsvRow(implicit extractedModel: ExtractedModel): String = {
-    // Note: escaping for csv is for now handled here by hand (likely a tad faster).
+    // Note: escaping for csv is for now handled by hand (likely a tad faster).
     List(
       implementation match {
         case ProjectDefined    => "project"
@@ -19,7 +23,7 @@ trait ExtractedSymbolSerialization {
       kind,
       "\"" + codeLocation + "\"",
       qualifyingPath,
-      "\"" + signatureString + "\"" // escaped as it contains, typically, commas
+      "\"" + escapeQuotes(signatureString.toString) + "\"" // escaped as it contains, typically, commas
     ).mkString(",")
   }
 }

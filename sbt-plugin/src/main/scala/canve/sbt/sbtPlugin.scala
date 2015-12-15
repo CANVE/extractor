@@ -8,6 +8,7 @@
  * leave ordinary `sbt compile` untouched).
  *
  * TODO: refactor this long sequential code into a more reasonably modular form.
+ * TODO: consider simplifying injection per https://github.com/scala/scala-dist-smoketest/commit/b4a342a26883d7e10cc7a28918d30b664e23f466
  */
 
 package canve.sbt
@@ -22,7 +23,7 @@ object Plugin extends AutoPlugin {
   override def requires = plugins.JvmPlugin
   override def trigger = allRequirements
 
-  val compilerPluginOrg = "canve"
+  val compilerPluginOrg = buildInfo.BuildInfo.organization
   val compilerPluginVersion = "0.0.1"
   val compilerPluginArtifact = "compiler-plugin"
   val compilerPluginNameProperty = "canve" // this is defined in the compiler plugin's code
@@ -43,28 +44,42 @@ object Plugin extends AutoPlugin {
       "Instruments all projects in the current build definition such that they run canve during compilation",
       "Instrument all projects in the current build definition such that they run canve during compilation")
       (canve())
+      // if only not https://github.com/CANVE/extractor/issues/12: 
       //(perProjectInject().andThen(canve()))
   )
 
   /*
-   * This does not work (http://stackoverflow.com/q/34253338/1509695)
+   * This does not work (http://stackoverflow.com/q/34253338/1509695), so not used for now,
+   * and we silently skip sub-projects that are not same scala version as the overall build definition (c.f. https://github.com/CANVE/extractor/issues/12)
    */
   private def perProjectInject(): State => State = { state =>
     val extracted: Extracted = Project.extract(state)
 
     val enrichedLibDepSettings = extracted.structure.allProjectRefs map { projRef =>
-      val projectName = projRef.project
+    
       val projectScalaVersion = (scalaBinaryVersion in projRef)
       
       libraryDependencies in projRef += 
-        compilerPluginOrg % (compilerPluginArtifact + "_" + projectScalaVersion.value) % compilerPluginVersion % "provided"
+        compilerPluginOrg % (compilerPluginArtifact + "_" + projectScalaVersion.value) % compilerPluginVersion
     }
 
-    val newState = extracted.append(enrichedLibDepSettings, state)
+    val appendedState = extracted.append(enrichedLibDepSettings, state)
 
-    val updateAfterLibAppend = extracted.structure.allProjectRefs map { projRef => 
-      println("running update: " + EvaluateTask(extracted.structure, update, newState, projRef)) }
-      state
+    val pluginFetching = (for (projRef <- extracted.structure.allProjectRefs.toStream) yield {
+      EvaluateTask(extracted.structure, update, appendedState, projRef) match {
+        case None =>
+          throw new Exception("sbt plugin internal error - failed to evaluate the update task")
+
+        case Some((resultState, result)) => result.toEither match {
+          case Left(incomplete: Incomplete) =>
+            false
+          case Right(analysis) =>
+            true
+        }
+      }
+    }).takeWhile(_ == true).force     
+
+    state
   }
   
   /*
@@ -89,7 +104,10 @@ object Plugin extends AutoPlugin {
       lazy val pluginScalacOptions: Def.Initialize[Task[Seq[String]]] = Def.task {
 
         // obtain the compiler plugin's file location to so it can be passed along to -Xplugin
-        val providedDeps: Seq[File] = (update in projRef).value matching configurationFilter("provided")
+        val providedDeps: Seq[File] = (update in projRef).value  matching configurationFilter("provided")
+        println(providedDeps)
+        println(projectScalaBinaryVersion.value)
+        println(scalaBinaryVersion.value)
         val pluginPath = providedDeps.find(_.getAbsolutePath.contains(compilerPluginArtifact))
 
         pluginPath match {
@@ -102,7 +120,9 @@ object Plugin extends AutoPlugin {
                 // avoid injecting the compiler plugin for the particular project at hand..
                 // perhaps the user can still manually add the necessary compiler plugin for those skipped projects, 
                 // through http://www.scala-sbt.org/0.13/docs/Compiler-Plugins.html or otherwise.
-                println(s"Warn: skipping instrumentation for project $projectName (c.f. https://github.com/CANVE/extractor/issues/12)\n")
+                println(
+                  s"Warn: skipping instrumentation for sub-project $projectName (c.f. https://github.com/CANVE/extractor/issues/12)\n" + 
+                  s"sub-project scala version is ${projectScalaBinaryVersion.value} while overall project version is ${scalaBinaryVersion.value}")
                 Seq() 
               
               case true =>
@@ -131,7 +151,7 @@ object Plugin extends AutoPlugin {
     }
 
     val appendedState = extracted.append(newSettings, state)
-
+  
     /*
      * clean & compile all sbt projects
      */

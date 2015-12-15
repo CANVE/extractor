@@ -1,0 +1,11 @@
+< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
+
+    def settings: Settings = {
+      val s = new scala.tools.nsc.Settings
+      s.classpath.value = classPath.mkString(File.pathSeparator)
+  
+      val path = s"./target/scala-$ShortScalaVersion/test-generated-classes"
+      new File(path).mkdirs()
+      s.d.value = path
+      s
+    }

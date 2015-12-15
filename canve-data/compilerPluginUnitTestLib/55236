@@ -1,0 +1,10 @@
+< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
+
+  private lazy val runTimeScalaVersion: String = {
+    val versionString = scala.util.Properties.versionString 
+    
+    versionString.take("version ".length) match {
+      case "version " => versionString.drop("version ".length) 
+      case _ => throw new Exception("Could not obtain scala runtime version. Are you running scala 2.9 or older?")
+    }
+  }

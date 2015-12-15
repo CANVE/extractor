@@ -1,0 +1,8 @@
+< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
+
+  private def sbtCompileDir: File = {
+    val dir = new File("./target/scala-" + ShortScalaVersion + "/classes")
+    if (!dir.exists)
+      throw new FileNotFoundException(s"Could not locate SBT compile directory for plugin files [$dir]")
+    dir
+  }

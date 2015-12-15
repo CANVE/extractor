@@ -1,24 +1,29 @@
 /*
  * Master build definition for CANVE data extraction.
- * 
- * Note: 
  *
- *   The default is not to build for 2.12, as some dependencies 
- *   are not yet published for 2.12 milestone releases. To cross build 
+ * Note:
+ *
+ *   The default is not to build for 2.12, as some dependencies
+ *   are not yet published for 2.12 milestone releases. To cross build
  *   also for 2.12, run sbt like so: sbt -Dscala12=true.
  *
  *   Ask us for a hacked 2.12 compilation of the external dependencies if
  *   you'd like to use this option.
- *   
+ *
  */
 
 /*
- * Import for https://github.com/agemooij/sbt-prompt, providing an informative multi-project sbt prompt. 
- * You will need to follow the instructions there for setting up the fancy unicode symbols which it 
- * uses for display. In particular you'll also need to configure your terminal preferences to use 
- * one of the fonts from https://github.com/powerline/fonts. 
+ * Import for https://github.com/agemooij/sbt-prompt, providing an informative multi-project sbt prompt.
+ * You will need to follow the instructions there for setting up the fancy unicode symbols which it
+ * uses for display. In particular you'll also need to configure your terminal preferences to use
+ * one of the fonts from https://github.com/powerline/fonts.
  */
 import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
+
+/*
+ * allow overriding the org name
+ */
+lazy val org = sys.props.getOrElse("org", "canve") 
 
 /*
  * Optional 2.12 milestone building
@@ -45,7 +50,7 @@ lazy val root = (project in file("."))
   .aggregate(simpleLogging, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
   .settings(
-    promptTheme := Scalapenos, 
+    promptTheme := Scalapenos,
     scalaVersion := "2.11.7",
     crossScalaVersions := commonCrossScalaVersions,
     publishArtifact := false, // no artifact to publish for the virtual root project
@@ -53,7 +58,7 @@ lazy val root = (project in file("."))
 )
 
 /*
- * The compiler plugin module. Note we cannot call it simply 
+ * The compiler plugin module. Note we cannot call it simply
  * `CompilerPlugin` as that name is already taken by sbt itself
  *
  * It uses the assembly plugin to stuff all its dependencies into its artifact,
@@ -64,7 +69,7 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
   .dependsOn(simpleLogging, simpleGraph, compilerPluginUnitTestLib % "test")
   .settings(
     name := "compiler-plugin",
-    organization := "canve",
+    organization := org,
     version := "0.0.1",
     promptTheme := Scalapenos,
     isSnapshot := true, // to enable overwriting the existing artifact version
@@ -81,14 +86,14 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
       //"org.apache.tinkerpop" % "tinkergraph-gremlin" % "3.0.1-incubating",
       //"canve" %% "simple-graph" % "0.0.1",
       //"canve" %% "compiler-plugin-unit-test-lib" % "0.0.1" % "test",
-      //"com.lihaoyi" %% "pprint" % "0.3.6", 
+      //"com.lihaoyi" %% "pprint" % "0.3.6",
       "com.lihaoyi" %% "utest" % "0.3.1" % "test"
     ),
-    
+
     testFrameworks += new TestFramework("utest.runner.Framework"),
 
     /*
-     * take care of including all non scala core library dependencies in the build artifact 
+     * take care of including all non scala core library dependencies in the build artifact
      */
 
     test in assembly := {},
@@ -113,16 +118,23 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
 lazy val canveSbtPlugin = (project in file("sbt-plugin"))
   .dependsOn(canveCompilerPlugin)
   .enablePlugins(CrossPerProjectPlugin)
+  .enablePlugins(BuildInfoPlugin)
   .settings(
-    organization := "canve",
+    organization := org,
     name := "sbt-plugin",
     isSnapshot := true, // to enable overwriting the existing artifact version
     promptTheme := Scalapenos,
     scalaVersion := "2.10.4",
     crossScalaVersions := Seq("2.10.4"),
-    sbtPlugin := true
+    sbtPlugin := true,
+
+    /* make the organization name available inside a dedicated object during the build */
+    buildInfoKeys := Seq[BuildInfoKey](organization),
+    buildInfoObject := "BuildInfo",
+    buildInfoPackage := "buildInfo"
+    
     //resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-    //libraryDependencies ++= Seq("com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT") 
+    //libraryDependencies ++= Seq("com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT")
   )
 
 /*
@@ -133,7 +145,7 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
   .enablePlugins(CrossPerProjectPlugin)
   .settings(
     name := "sbt-plugin-test-lib",
-    organization := "canve",
+    organization := org,
     version := "0.0.1",
     promptTheme := Scalapenos,
 
@@ -142,7 +154,7 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
      * and there is no need whatsoever to provided a cross-compilation of it for older scala.
      */
     scalaVersion := "2.11.7",
-    
+
     /*
      * The following resolver is added as a workaround: the `update task` of this subproject,
      * may oddly enough try to resolve scala-csv, which in turn may fail if the resolver for it is not in scope here.
@@ -153,7 +165,7 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided", // otherwise cannot use scala.tools.nsc.io.File
       "org.fusesource.jansi" % "jansi" % "1.4"
     ),
-    
+
     publishArtifact := false
 
     //(run in Compile) <<= (run in Compile).dependsOn(publishLocal in canveSbtPlugin).dependsOn(publishLocal in canveCompilerPlugin) // https://github.com/CANVE/extractor/issues/2
@@ -164,7 +176,7 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
  */
 lazy val simpleGraph: Project = (project in file("simple-graph")).settings(
   name := "simple-graph",
-  organization := "canve",
+  organization := org,
   version := "0.0.1",
   promptTheme := Scalapenos,
   isSnapshot := true, // to enable overwriting the existing artifact version
@@ -177,7 +189,7 @@ lazy val simpleGraph: Project = (project in file("simple-graph")).settings(
 )
 
 lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib")).settings(
-  organization := "canve",
+  organization := org,
   name := "compiler-plugin-unit-test-lib",
   promptTheme := Scalapenos,
   isSnapshot := true, // to enable overwriting the existing artifact version
@@ -199,7 +211,7 @@ lazy val scalaPlus = (project in file("scala-plus")).settings(
 
 lazy val simpleLogging = (project in file("simple-logging")).settings(
   name := "simple-logging",
-  organization := "canve",
+  organization := org,
   version := "0.0.1",
   promptTheme := Scalapenos,
   isSnapshot := true, // to enable overwriting the existing artifact version
@@ -209,7 +221,7 @@ lazy val simpleLogging = (project in file("simple-logging")).settings(
     "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
     //"org.scala-lang.modules" %% "scala-pickling" % "0.10.1",
     //"com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.0-1",
-    "io.circe" %% "circe-core" % "0.2.1", 
+    "io.circe" %% "circe-core" % "0.2.1",
     "io.circe" %% "circe-generic" % "0.2.1",
     "io.circe" %% "circe-parse" % "0.2.1",
     "com.lihaoyi" %% "pprint" % "0.3.6",
@@ -219,7 +231,7 @@ lazy val simpleLogging = (project in file("simple-logging")).settings(
 
 /*
  * Sound notifications for the patient - not yet working
- 
+
  sound.play(compile in Compile, Sounds.Blow, Sounds.Tink)
  sound.play(test in Test, Sounds.Blow, Sounds.Ping)
  sound.play(publishLocal, Sounds.Blow, Sounds.Ping)

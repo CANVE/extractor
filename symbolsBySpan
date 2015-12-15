@@ -1,0 +1,582 @@
+
+{
+  "4096,4938" : [
+    "Plugin"
+  ],
+  "398,465" : [
+    "Injectable"
+  ],
+  "3817,3955" : [
+    "compileSourceResources"
+  ],
+  "3256,3366" : [
+    "compileCodeSnippet"
+  ],
+  "2114,2147" : [
+    "sbtHome"
+  ],
+  "3107,3151" : [
+    "reporter"
+  ],
+  "1339,1492" : [
+    "getScalaJars"
+  ],
+  "1536,1606" : [
+    "dir"
+  ],
+  "4409,4928" : [
+    "run"
+  ],
+  "2152,2263" : [
+    "jarPath"
+  ],
+  "3023,5601" : [
+    "InjectingCompiler"
+  ],
+  "4304,4934" : [
+    "newPhase"
+  ],
+  "2475,2756" : [
+    "settings"
+  ],
+  "1384,1456" : [
+    "scalaJars"
+  ],
+  "4372,4401" : [
+    "name"
+  ],
+  "2619,2689" : [
+    "path"
+  ],
+  "3442,3538" : [
+    "command"
+  ],
+  "4352,4934" : [
+    "ed51c148"
+  ],
+  "737,2906" : [
+    "InjectingCompilerFactory"
+  ],
+  "4168,4197" : [
+    "runsAfter"
+  ],
+  "3592,3811" : [
+    "writeCodeSnippetToTempFile"
+  ],
+  "3047,3198" : [
+    "<init>"
+  ],
+  "419,463" : [
+    "apply"
+  ],
+  "2063,2109" : [
+    "userHome"
+  ],
+  "1972,2402" : [
+    "findIvyJar"
+  ],
+  "2766,2836" : [
+    "reporter"
+  ],
+  "2268,2296" : [
+    "file"
+  ],
+  "4254,4289" : [
+    "phaseName"
+  ],
+  "1135,1199" : [
+    "ShortScalaVersion"
+  ],
+  "1203,1262" : [
+    "classPath"
+  ],
+  "5199,5553" : [
+    "phs"
+  ],
+  "1854,1968" : [
+    "findScalaJar"
+  ],
+  "774,1127" : [
+    "runTimeScalaVersion",
+    "runTimeScalaVersion"
+  ],
+  "4547,4696" : [
+    "units"
+  ],
+  "4117,4135" : [
+    "<init>",
+    "global"
+  ],
+  "1496,1744" : [
+    "sbtCompileDir"
+  ],
+  "5156,5599" : [
+    "computeInternalPhases"
+  ],
+  "2508,2544" : [
+    "s"
+  ],
+  "4203,4246" : [
+    "runsRightAfter"
+  ],
+  "827,882" : [
+    "versionString"
+  ],
+  "3659,3738" : [
+    "file"
+  ],
+  "2408,2904" : [
+    "apply"
+  ],
+  "4730,4734" : [
+    "unit"
+  ],
+  "3370,3588" : [
+    "compileSourceFiles"
+  ],
+  "3176,3198" : [
+    "injectable"
+  ],
+  "3047,3081" : [
+    "settings"
+  ]
+}
+
+{
+  "163,213" : [
+    "getTempDirectory"
+  ],
+  "754,981" : [
+    "writeToFile"
+  ],
+  "411,452" : [
+    "WindowsSeperator"
+  ],
+  "1144,1148" : [
+    "file"
+  ],
+  "501,750" : [
+    "getName"
+  ],
+  "282,367" : [
+    "readStreamAsString"
+  ],
+  "143,1351" : [
+    "IOUtils"
+  ],
+  "455,497" : [
+    "UTF8Encoding"
+  ],
+  "1158,1192" : [
+    "reader"
+  ],
+  "803,900" : [
+    "writer"
+  ],
+  "216,278" : [
+    "getTempPath"
+  ],
+  "1095,1123" : [
+    "acc"
+  ],
+  "540,721" : [
+    "index"
+  ],
+  "1047,1348" : [
+    "invoked"
+  ],
+  "1205,1209" : [
+    "line"
+  ],
+  "371,408" : [
+    "UnixSeperator"
+  ]
+}
+
+{
+  "4096,4938" : [
+    "Plugin"
+  ],
+  "398,465" : [
+    "Injectable"
+  ],
+  "3817,3955" : [
+    "compileSourceResources"
+  ],
+  "3256,3366" : [
+    "compileCodeSnippet"
+  ],
+  "2114,2147" : [
+    "sbtHome"
+  ],
+  "3107,3151" : [
+    "reporter"
+  ],
+  "1339,1492" : [
+    "getScalaJars"
+  ],
+  "1536,1606" : [
+    "dir"
+  ],
+  "4409,4928" : [
+    "run"
+  ],
+  "2152,2263" : [
+    "jarPath"
+  ],
+  "3023,5601" : [
+    "InjectingCompiler"
+  ],
+  "4304,4934" : [
+    "newPhase"
+  ],
+  "2475,2756" : [
+    "settings"
+  ],
+  "1384,1456" : [
+    "scalaJars"
+  ],
+  "4372,4401" : [
+    "name"
+  ],
+  "2619,2689" : [
+    "path"
+  ],
+  "3442,3538" : [
+    "command"
+  ],
+  "4352,4934" : [
+    "ed51c148"
+  ],
+  "737,2906" : [
+    "InjectingCompilerFactory"
+  ],
+  "4168,4197" : [
+    "runsAfter"
+  ],
+  "3592,3811" : [
+    "writeCodeSnippetToTempFile"
+  ],
+  "3047,3198" : [
+    "<init>"
+  ],
+  "419,463" : [
+    "apply"
+  ],
+  "2063,2109" : [
+    "userHome"
+  ],
+  "1972,2402" : [
+    "findIvyJar"
+  ],
+  "2766,2836" : [
+    "reporter"
+  ],
+  "2268,2296" : [
+    "file"
+  ],
+  "4254,4289" : [
+    "phaseName"
+  ],
+  "1135,1199" : [
+    "ShortScalaVersion"
+  ],
+  "1203,1262" : [
+    "classPath"
+  ],
+  "5199,5553" : [
+    "phs"
+  ],
+  "1854,1968" : [
+    "findScalaJar"
+  ],
+  "774,1127" : [
+    "runTimeScalaVersion",
+    "runTimeScalaVersion"
+  ],
+  "4547,4696" : [
+    "units"
+  ],
+  "4117,4135" : [
+    "<init>",
+    "global"
+  ],
+  "1496,1744" : [
+    "sbtCompileDir"
+  ],
+  "5156,5599" : [
+    "computeInternalPhases"
+  ],
+  "2508,2544" : [
+    "s"
+  ],
+  "4203,4246" : [
+    "runsRightAfter"
+  ],
+  "827,882" : [
+    "versionString"
+  ],
+  "3659,3738" : [
+    "file"
+  ],
+  "2408,2904" : [
+    "apply"
+  ],
+  "4730,4734" : [
+    "unit"
+  ],
+  "3370,3588" : [
+    "compileSourceFiles"
+  ],
+  "3176,3198" : [
+    "injectable"
+  ],
+  "3047,3081" : [
+    "settings"
+  ]
+}
+
+{
+  "163,213" : [
+    "getTempDirectory"
+  ],
+  "754,981" : [
+    "writeToFile"
+  ],
+  "411,452" : [
+    "WindowsSeperator"
+  ],
+  "1144,1148" : [
+    "file"
+  ],
+  "501,750" : [
+    "getName"
+  ],
+  "282,367" : [
+    "readStreamAsString"
+  ],
+  "143,1351" : [
+    "IOUtils"
+  ],
+  "455,497" : [
+    "UTF8Encoding"
+  ],
+  "1158,1192" : [
+    "reader"
+  ],
+  "803,900" : [
+    "writer"
+  ],
+  "216,278" : [
+    "getTempPath"
+  ],
+  "1095,1123" : [
+    "acc"
+  ],
+  "540,721" : [
+    "index"
+  ],
+  "1047,1348" : [
+    "invoked"
+  ],
+  "1205,1209" : [
+    "line"
+  ],
+  "371,408" : [
+    "UnixSeperator"
+  ]
+}
+
+{
+  "4096,4938" : [
+    "Plugin"
+  ],
+  "398,465" : [
+    "Injectable"
+  ],
+  "3817,3955" : [
+    "compileSourceResources"
+  ],
+  "3256,3366" : [
+    "compileCodeSnippet"
+  ],
+  "2114,2147" : [
+    "sbtHome"
+  ],
+  "3107,3151" : [
+    "reporter"
+  ],
+  "1339,1492" : [
+    "getScalaJars"
+  ],
+  "1536,1606" : [
+    "dir"
+  ],
+  "4409,4928" : [
+    "run"
+  ],
+  "2152,2263" : [
+    "jarPath"
+  ],
+  "3023,5601" : [
+    "InjectingCompiler"
+  ],
+  "4304,4934" : [
+    "newPhase"
+  ],
+  "2475,2756" : [
+    "settings"
+  ],
+  "1384,1456" : [
+    "scalaJars"
+  ],
+  "4372,4401" : [
+    "name"
+  ],
+  "2619,2689" : [
+    "path"
+  ],
+  "3442,3538" : [
+    "command"
+  ],
+  "4352,4934" : [
+    "ed51c148"
+  ],
+  "737,2906" : [
+    "InjectingCompilerFactory"
+  ],
+  "4168,4197" : [
+    "runsAfter"
+  ],
+  "3592,3811" : [
+    "writeCodeSnippetToTempFile"
+  ],
+  "3047,3198" : [
+    "<init>"
+  ],
+  "419,463" : [
+    "apply"
+  ],
+  "2063,2109" : [
+    "userHome"
+  ],
+  "1972,2402" : [
+    "findIvyJar"
+  ],
+  "2766,2836" : [
+    "reporter"
+  ],
+  "2268,2296" : [
+    "file"
+  ],
+  "4254,4289" : [
+    "phaseName"
+  ],
+  "1135,1199" : [
+    "ShortScalaVersion"
+  ],
+  "1203,1262" : [
+    "classPath"
+  ],
+  "5199,5553" : [
+    "phs"
+  ],
+  "1854,1968" : [
+    "findScalaJar"
+  ],
+  "774,1127" : [
+    "runTimeScalaVersion",
+    "runTimeScalaVersion"
+  ],
+  "4547,4696" : [
+    "units"
+  ],
+  "4117,4135" : [
+    "<init>",
+    "global"
+  ],
+  "1496,1744" : [
+    "sbtCompileDir"
+  ],
+  "5156,5599" : [
+    "computeInternalPhases"
+  ],
+  "2508,2544" : [
+    "s"
+  ],
+  "4203,4246" : [
+    "runsRightAfter"
+  ],
+  "827,882" : [
+    "versionString"
+  ],
+  "3659,3738" : [
+    "file"
+  ],
+  "2408,2904" : [
+    "apply"
+  ],
+  "4730,4734" : [
+    "unit"
+  ],
+  "3370,3588" : [
+    "compileSourceFiles"
+  ],
+  "3176,3198" : [
+    "injectable"
+  ],
+  "3047,3081" : [
+    "settings"
+  ]
+}
+
+{
+  "163,213" : [
+    "getTempDirectory"
+  ],
+  "754,981" : [
+    "writeToFile"
+  ],
+  "411,452" : [
+    "WindowsSeperator"
+  ],
+  "1144,1148" : [
+    "file"
+  ],
+  "501,750" : [
+    "getName"
+  ],
+  "282,367" : [
+    "readStreamAsString"
+  ],
+  "143,1351" : [
+    "IOUtils"
+  ],
+  "455,497" : [
+    "UTF8Encoding"
+  ],
+  "1158,1192" : [
+    "reader"
+  ],
+  "803,900" : [
+    "writer"
+  ],
+  "216,278" : [
+    "getTempPath"
+  ],
+  "1095,1123" : [
+    "acc"
+  ],
+  "540,721" : [
+    "index"
+  ],
+  "1047,1348" : [
+    "invoked"
+  ],
+  "1205,1209" : [
+    "line"
+  ],
+  "371,408" : [
+    "UnixSeperator"
+  ]
+}

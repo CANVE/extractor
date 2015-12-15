@@ -1,0 +1,717 @@
+[0m[[0minfo[0m] [0mLoading global plugins from /home/matan/.sbt/0.13/plugins[0m
+[0m[[0minfo[0m] [0mUpdating {file:/home/matan/.sbt/0.13/plugins/}global-plugins...[0m
+[0m[[0minfo[0m] [0mResolving com.typesafe.sbteclipse#sbteclipse-plugin;4.0.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scalaz#scalaz-core_2.10;7.1.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-library;2.10.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scalaz#scalaz-effect_2.10;7.1.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.github.mpeltonen#sbt-idea;1.6.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving commons-io#commons-io;2.0.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.hanhuy.sbt#key-path;0.2 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving net.virtual-void#sbt-dependency-graph;0.7.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.github.mdr#ascii-graphs_2.10;0.0.3 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#sbt;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#main;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#actions;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#classpath;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-compiler;2.10.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-reflect;2.10.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#interface;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#io;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#control;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#launcher-interface;1.0.0-M1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#completion;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#collections;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving jline#jline;2.11 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#api;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-integration;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#incremental-compiler;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#logging;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#process;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#relation;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compile;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#classfile;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#persist;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-tools.sbinary#sbinary_2.10;0.4.2 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-ivy-integration;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#ivy;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#cross;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt.ivy#ivy;2.3.0-sbt-c5d1b95fdcc1e1007740ffbecf4eb07abc51ec93 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.jcraft#jsch;0.1.46 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#serialization_2.10;0.1.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-pickling_2.10;0.10.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scalamacros#quasiquotes_2.10;2.0.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-core_2.10;3.2.10 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-ast_2.10;3.2.10 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.thoughtworks.paranamer#paranamer;2.6 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.spire-math#jawn-parser_2.10;0.6.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.spire-math#json4s-support_2.10;0.6.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#run;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#task-system;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#tasks;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#tracking;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#cache;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#testing;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-agent;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-interface;1.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#main-settings;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#apply-macro;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#command;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#logic;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-interface;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_8_2;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_9_2;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_9_3;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#jline;2.10.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.fusesource.jansi#jansi;1.4 ...[0m
+[0m[[0minfo[0m] [0mDone updating.[0m
+[0m[[0minfo[0m] [0mLoading project definition from /repos/canve/extractor/project[0m
+[0m[[0minfo[0m] [0mUpdating {file:/repos/canve/extractor/project/}extractor-build...[0m
+[0m[[0minfo[0m] [0mResolving org.scala-sbt#global-plugins;0.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.typesafe.sbteclipse#sbteclipse-plugin;4.0.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scalaz#scalaz-core_2.10;7.1.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-library;2.10.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scalaz#scalaz-effect_2.10;7.1.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.github.mpeltonen#sbt-idea;1.6.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving commons-io#commons-io;2.0.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.hanhuy.sbt#key-path;0.2 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving net.virtual-void#sbt-dependency-graph;0.7.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.github.mdr#ascii-graphs_2.10;0.0.3 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.scalapenos#sbt-prompt;0.2.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.typesafe.sbt#sbt-git;0.6.4 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.eclipse.jgit#org.eclipse.jgit.pgm;3.3.2.201404171909-r ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving args4j#args4j;2.0.12 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.apache.commons#commons-compress;1.6 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.tukaani#xz;1.4 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.eclipse.jgit#org.eclipse.jgit.archive;3.3.2.201404171909-r ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.eclipse.jgit#org.eclipse.jgit;3.3.2.201404171909-r ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.jcraft#jsch;0.1.50 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.googlecode.javaewah#JavaEWAH;0.7.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.apache.httpcomponents#httpclient;4.1.3 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.apache.httpcomponents#httpcore;4.1.4 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving commons-logging#commons-logging;1.1.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving commons-codec#commons-codec;1.4 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.osgi#org.osgi.core;4.3.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.eclipse.jgit#org.eclipse.jgit.ui;3.3.2.201404171909-r ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.orrsella#sbt-sound;1.0.4 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.eed3si9n#sbt-buildinfo;0.5.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.eed3si9n#sbt-doge;0.1.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.eed3si9n#sbt-assembly;0.14.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scalactic#scalactic_2.10;2.2.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-reflect;2.10.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.pantsbuild.jarjar#jarjar;1.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#sbt;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#main;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#actions;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#classpath;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-compiler;2.10.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#interface;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#io;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#control;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#launcher-interface;1.0.0-M1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#completion;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#collections;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving jline#jline;2.11 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#api;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-integration;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#incremental-compiler;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#logging;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#process;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#relation;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compile;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#classfile;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#persist;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-tools.sbinary#sbinary_2.10;0.4.2 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-ivy-integration;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#ivy;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#cross;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt.ivy#ivy;2.3.0-sbt-c5d1b95fdcc1e1007740ffbecf4eb07abc51ec93 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.jcraft#jsch;0.1.46 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#serialization_2.10;0.1.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-pickling_2.10;0.10.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scalamacros#quasiquotes_2.10;2.0.1 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-core_2.10;3.2.10 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-ast_2.10;3.2.10 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving com.thoughtworks.paranamer#paranamer;2.6 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.spire-math#jawn-parser_2.10;0.6.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.spire-math#json4s-support_2.10;0.6.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#run;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#task-system;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#tasks;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#tracking;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#cache;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#testing;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-agent;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-interface;1.0 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#main-settings;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#apply-macro;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#command;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#logic;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-interface;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_8_2;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_9_2;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_9_3;0.13.9 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#jline;2.10.5 ...[0m
+[A[2K[0m[[0minfo[0m] [0mResolving org.fusesource.jansi#jansi;1.4 ...[0m
+[0m[[0minfo[0m] [0mDone updating.[0m
+[0m[[0minfo[0m] [0mSet current project to root (in build file:/repos/canve/extractor/)[0m
+[0m[[0minfo[0m] [0mSetting version to 2.11.7[0m
+[0m[[0minfo[0m] [0mReapplying settings...[0m
+[0m[[0minfo[0m] [0mSet current project to root (in build file:/repos/canve/extractor/)[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.11/compiler-plugin_2.11-0.0.1-sources.jar ...[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-logging/target/scala-2.11/simple-logging_2.11-0.0.1-sources.jar ...[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.11/compiler-plugin-unit-test-lib_2.11-0.0.1-sources.jar ...[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-graph/target/scala-2.11/simple-graph_2.11-0.0.1-sources.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.11/compiler-plugin-unit-test-lib_2.11-0.0.1.pom[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#compiler-plugin-unit-test-lib_2.11;0.0.1 :: 0.0.1 :: integration :: Tue Dec 15 17:49:38 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation to /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.11/api...[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation to /repos/canve/extractor/simple-graph/target/scala-2.11/api...[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#simple-graph_2.11;0.0.1 :: 0.0.1 :: integration :: Tue Dec 15 17:49:38 IST 2015[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation to /repos/canve/extractor/simple-logging/target/scala-2.11/api...[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/simple-graph/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/simple-graph/target/scala-2.11/simple-graph_2.11-0.0.1.pom[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/simple-logging/target/scala-2.11/simple-logging_2.11-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#simple-logging_2.11;0.0.1 :: 0.0.1 :: integration :: Tue Dec 15 17:49:38 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/simple-logging/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/compiler-plugin/target/scala-2.11/compiler-plugin_2.11-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#compiler-plugin_2.11;0.0.1 :: 0.0.1 :: integration :: Tue Dec 15 17:49:38 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/compiler-plugin/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#sbt-plugin-test-lib_2.11;0.0.1 :: 0.0.1 :: release :: Tue Dec 15 17:49:38 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[33mwarn[0m] [0mAttempting to overwrite /home/matan/.ivy2/local/canve/sbt-plugin-test-lib_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[33mwarn[0m] [0m	This usage is deprecated and will be removed in sbt 1.0.[0m
+[0m[[33mwarn[0m] [0mAttempting to overwrite /home/matan/.ivy2/local/canve/sbt-plugin-test-lib_2.11/0.0.1/ivys/ivy.xml.sha1[0m
+[0m[[33mwarn[0m] [0m	This usage is deprecated and will be removed in sbt 1.0.[0m
+[0m[[33mwarn[0m] [0mAttempting to overwrite /home/matan/.ivy2/local/canve/sbt-plugin-test-lib_2.11/0.0.1/ivys/ivy.xml.md5[0m
+[0m[[33mwarn[0m] [0m	This usage is deprecated and will be removed in sbt 1.0.[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/sbt-plugin-test-lib_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-graph/target/scala-2.11/simple-graph_2.11-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.11/compiler-plugin-unit-test-lib_2.11-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-logging/target/scala-2.11/simple-logging_2.11-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation to /repos/canve/extractor/compiler-plugin/target/scala-2.11/api...[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.11/compiler-plugin_2.11-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mIncluding from cache: machinist_2.11-0.4.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: export-hook_2.11-1.0.2.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-generic_2.11-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: macro-compat_2.11-1.0.4.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: cats-macros_2.11-0.2.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-jawn_2.11-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-parse_2.11-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: simulacrum_2.11-0.4.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: algebra-std_2.11-0.3.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: jawn-parser_2.11-0.8.3.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: derive_2.11-0.3.6.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: pprint_2.11-0.3.6.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: scala-csv_2.11.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-core_2.11-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: shapeless_2.11-2.2.5.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: cats-core_2.11-0.2.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: algebra_2.11-0.3.1.jar[0m
+[0m[[0minfo[0m] [0mChecking every *.class/*.jar file's SHA-1.[0m
+[0m[[0minfo[0m] [0mMerging files...[0m
+[0m[[33mwarn[0m] [0mMerging 'META-INF/MANIFEST.MF' with strategy 'discard'[0m
+[0m[[33mwarn[0m] [0mStrategy 'discard' was applied to a file[0m
+[0m[[0minfo[0m] [0mSHA-1: c32dc6c51045dd0afa69f41070a0fc442a974bc9[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.11/compiler-plugin_2.11.7-0.0.1-assembly.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+Using sbt-assembly to package library dependencies into a fat jar for publication
+model contains 18 documentable templates
+model contains 29 documentable templates
+model contains 6 documentable templates
+[0m[[0minfo[0m] [0mMain Scala API documentation successful.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-logging/target/scala-2.11/simple-logging_2.11-0.0.1-javadoc.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.11 to /home/matan/.ivy2/local/canve/simple-logging_2.11/0.0.1/poms/simple-logging_2.11.pom[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.11 to /home/matan/.ivy2/local/canve/simple-logging_2.11/0.0.1/jars/simple-logging_2.11.jar[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.11 to /home/matan/.ivy2/local/canve/simple-logging_2.11/0.0.1/srcs/simple-logging_2.11-sources.jar[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.11 to /home/matan/.ivy2/local/canve/simple-logging_2.11/0.0.1/docs/simple-logging_2.11-javadoc.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/simple-logging_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation successful.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-graph/target/scala-2.11/simple-graph_2.11-0.0.1-javadoc.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.11 to /home/matan/.ivy2/local/canve/simple-graph_2.11/0.0.1/poms/simple-graph_2.11.pom[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.11 to /home/matan/.ivy2/local/canve/simple-graph_2.11/0.0.1/jars/simple-graph_2.11.jar[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.11 to /home/matan/.ivy2/local/canve/simple-graph_2.11/0.0.1/srcs/simple-graph_2.11-sources.jar[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.11 to /home/matan/.ivy2/local/canve/simple-graph_2.11/0.0.1/docs/simple-graph_2.11-javadoc.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/simple-graph_2.11/0.0.1/ivys/ivy.xml[0m
+model contains 66 documentable templates
+[0m[[0minfo[0m] [0mMain Scala API documentation successful.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.11/compiler-plugin-unit-test-lib_2.11-0.0.1-javadoc.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.11/0.0.1/poms/compiler-plugin-unit-test-lib_2.11.pom[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.11/0.0.1/jars/compiler-plugin-unit-test-lib_2.11.jar[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.11/0.0.1/srcs/compiler-plugin-unit-test-lib_2.11-sources.jar[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.11/0.0.1/docs/compiler-plugin-unit-test-lib_2.11-javadoc.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation successful.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.11/compiler-plugin_2.11-0.0.1-javadoc.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin_2.11/0.0.1/poms/compiler-plugin_2.11.pom[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin_2.11/0.0.1/jars/compiler-plugin_2.11.jar[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin_2.11/0.0.1/srcs/compiler-plugin_2.11-sources.jar[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin_2.11/0.0.1/docs/compiler-plugin_2.11-javadoc.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/compiler-plugin_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[32msuccess[0m] [0mTotal time: 5 s, completed Dec 15, 2015 5:49:42 PM[0m
+[0m[[0minfo[0m] [0mSetting version to 2.10.4[0m
+[0m[[0minfo[0m] [0mReapplying settings...[0m
+[0m[[0minfo[0m] [0mSet current project to root (in build file:/repos/canve/extractor/)[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-logging/target/scala-2.10/simple-logging_2.10-0.0.1-sources.jar ...[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.10/compiler-plugin-unit-test-lib_2.10-0.0.1-sources.jar ...[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-graph/target/scala-2.10/simple-graph_2.10-0.0.1-sources.jar ...[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.10/compiler-plugin_2.10-0.0.1-sources.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.10/compiler-plugin-unit-test-lib_2.10-0.0.1.pom[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation to /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.10/api...[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation to /repos/canve/extractor/simple-graph/target/scala-2.10/api...[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/simple-logging/target/scala-2.10/simple-logging_2.10-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#compiler-plugin-unit-test-lib_2.10;0.0.1 :: 0.0.1 :: integration :: Tue Dec 15 17:49:43 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.10/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation to /repos/canve/extractor/simple-logging/target/scala-2.10/api...[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/simple-graph/target/scala-2.10/simple-graph_2.10-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#simple-logging_2.10;0.0.1 :: 0.0.1 :: integration :: Tue Dec 15 17:49:43 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/simple-logging/target/scala-2.10/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#simple-graph_2.10;0.0.1 :: 0.0.1 :: integration :: Tue Dec 15 17:49:43 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/simple-graph/target/scala-2.10/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-graph/target/scala-2.10/simple-graph_2.10-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/compiler-plugin/target/scala-2.10/compiler-plugin_2.10-0.0.1.pom[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/sbt-plugin/target/scala-2.10/sbt-0.13/sbt-plugin-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#compiler-plugin_2.10;0.0.1 :: 0.0.1 :: integration :: Tue Dec 15 17:49:43 IST 2015[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-logging/target/scala-2.10/simple-logging_2.10-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/compiler-plugin/target/scala-2.10/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.10/compiler-plugin-unit-test-lib_2.10-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation to /repos/canve/extractor/compiler-plugin/target/scala-2.10/api...[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#sbt-plugin;0.0.1 :: 0.0.1 :: integration :: Tue Dec 15 17:49:43 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/sbt-plugin/target/scala-2.10/sbt-0.13/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.10/compiler-plugin_2.10-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation to /repos/canve/extractor/sbt-plugin/target/scala-2.10/sbt-0.13/api...[0m
+[0m[[0minfo[0m] [0mIncluding from cache: macro-compat_2.10-1.0.4.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-generic_2.10-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: simulacrum_2.10-0.4.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: pprint_2.10-0.3.6.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: jawn-parser_2.10-0.8.3.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-jawn_2.10-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: machinist_2.10-0.4.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: algebra-std_2.10-0.3.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: quasiquotes_2.10-2.1.0-M5.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: cats-macros_2.10-0.2.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: derive_2.10-0.3.6.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-parse_2.10-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: scala-csv_2.10.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: export-hook_2.10-1.0.2.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-core_2.10-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/sbt-plugin/target/scala-2.10/sbt-0.13/sbt-plugin-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mIncluding from cache: algebra_2.10-0.3.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: cats-core_2.10-0.2.0.jar[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mIncluding from cache: shapeless_2.10-2.2.5.jar[0m
+[0m[[0minfo[0m] [0mChecking every *.class/*.jar file's SHA-1.[0m
+[0m[[0minfo[0m] [0mMerging files...[0m
+[0m[[33mwarn[0m] [0mMerging 'META-INF/MANIFEST.MF' with strategy 'discard'[0m
+[0m[[33mwarn[0m] [0mStrategy 'discard' was applied to a file[0m
+[0m[[0minfo[0m] [0mSHA-1: 44f677049589155e61fb40d1793d7c134f05f7b3[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.10/compiler-plugin_2.10.4-0.0.1-assembly.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+Using sbt-assembly to package library dependencies into a fat jar for publication
+model contains 18 documentable templates
+model contains 29 documentable templates
+model contains 6 documentable templates
+model contains 8 documentable templates
+[0m[[0minfo[0m] [0mMain Scala API documentation successful.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-logging/target/scala-2.10/simple-logging_2.10-0.0.1-javadoc.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.10 to /home/matan/.ivy2/local/canve/simple-logging_2.10/0.0.1/poms/simple-logging_2.10.pom[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.10 to /home/matan/.ivy2/local/canve/simple-logging_2.10/0.0.1/jars/simple-logging_2.10.jar[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.10 to /home/matan/.ivy2/local/canve/simple-logging_2.10/0.0.1/srcs/simple-logging_2.10-sources.jar[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.10 to /home/matan/.ivy2/local/canve/simple-logging_2.10/0.0.1/docs/simple-logging_2.10-javadoc.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/simple-logging_2.10/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation successful.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/sbt-plugin/target/scala-2.10/sbt-0.13/sbt-plugin-0.0.1-javadoc.jar ...[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation successful.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-graph/target/scala-2.10/simple-graph_2.10-0.0.1-javadoc.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published sbt-plugin to /home/matan/.ivy2/local/canve/sbt-plugin/scala_2.10/sbt_0.13/0.0.1/poms/sbt-plugin.pom[0m
+[0m[[0minfo[0m] [0m	published sbt-plugin to /home/matan/.ivy2/local/canve/sbt-plugin/scala_2.10/sbt_0.13/0.0.1/jars/sbt-plugin.jar[0m
+[0m[[0minfo[0m] [0m	published sbt-plugin to /home/matan/.ivy2/local/canve/sbt-plugin/scala_2.10/sbt_0.13/0.0.1/srcs/sbt-plugin-sources.jar[0m
+[0m[[0minfo[0m] [0m	published sbt-plugin to /home/matan/.ivy2/local/canve/sbt-plugin/scala_2.10/sbt_0.13/0.0.1/docs/sbt-plugin-javadoc.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/sbt-plugin/scala_2.10/sbt_0.13/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.10 to /home/matan/.ivy2/local/canve/simple-graph_2.10/0.0.1/poms/simple-graph_2.10.pom[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.10 to /home/matan/.ivy2/local/canve/simple-graph_2.10/0.0.1/jars/simple-graph_2.10.jar[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.10 to /home/matan/.ivy2/local/canve/simple-graph_2.10/0.0.1/srcs/simple-graph_2.10-sources.jar[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.10 to /home/matan/.ivy2/local/canve/simple-graph_2.10/0.0.1/docs/simple-graph_2.10-javadoc.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/simple-graph_2.10/0.0.1/ivys/ivy.xml[0m
+model contains 66 documentable templates
+[0m[[0minfo[0m] [0mMain Scala API documentation successful.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.10/compiler-plugin-unit-test-lib_2.10-0.0.1-javadoc.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.10/0.0.1/poms/compiler-plugin-unit-test-lib_2.10.pom[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.10/0.0.1/jars/compiler-plugin-unit-test-lib_2.10.jar[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.10/0.0.1/srcs/compiler-plugin-unit-test-lib_2.10-sources.jar[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.10/0.0.1/docs/compiler-plugin-unit-test-lib_2.10-javadoc.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.10/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mMain Scala API documentation successful.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.10/compiler-plugin_2.10-0.0.1-javadoc.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin_2.10/0.0.1/poms/compiler-plugin_2.10.pom[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin_2.10/0.0.1/jars/compiler-plugin_2.10.jar[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin_2.10/0.0.1/srcs/compiler-plugin_2.10-sources.jar[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin_2.10/0.0.1/docs/compiler-plugin_2.10-javadoc.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/compiler-plugin_2.10/0.0.1/ivys/ivy.xml[0m
+[0m[[32msuccess[0m] [0mTotal time: 5 s, completed Dec 15, 2015 5:49:48 PM[0m
+[0m[[0minfo[0m] [0mSetting version to 2.11.7[0m
+[0m[[0minfo[0m] [0mReapplying settings...[0m
+[0m[[0minfo[0m] [0mSet current project to root (in build file:/repos/canve/extractor/)[0m
+Running for target project pipeline...
+[0m[[0minfo[0m] [0mLoading global plugins from /home/matan/.sbt/0.13/plugins[0m
+[0m[[0minfo[0m] [0mUpdating {file:/home/matan/.sbt/0.13/plugins/}global-plugins...[0m
+[0m[[0minfo[0m] [0mResolving com.typesafe.sbteclipse#sbteclipse-plugin;4.0.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalaz#scalaz-core_2.10;7.1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-library;2.10.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalaz#scalaz-effect_2.10;7.1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.mpeltonen#sbt-idea;1.6.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving commons-io#commons-io;2.0.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.hanhuy.sbt#key-path;0.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving net.virtual-void#sbt-dependency-graph;0.7.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.mdr#ascii-graphs_2.10;0.0.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#sbt;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#main;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#actions;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#classpath;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-compiler;2.10.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-reflect;2.10.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#launcher-interface;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#interface;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#io;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#control;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#completion;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#collections;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving jline#jline;2.11 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#api;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-integration;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#incremental-compiler;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#logging;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#process;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#relation;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compile;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#persist;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-tools.sbinary#sbinary_2.10;0.4.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#classfile;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-ivy-integration;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#ivy;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#cross;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt.ivy#ivy;2.3.0-sbt-fccfbd44c9f64523b61398a0155784dcbaeae28f ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.jcraft#jsch;0.1.46 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-native_2.10;3.2.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-core_2.10;3.2.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-ast_2.10;3.2.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.thoughtworks.paranamer#paranamer;2.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scalap;2.10.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.spire-math#jawn-parser_2.10;0.6.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.spire-math#json4s-support_2.10;0.6.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#run;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#task-system;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#tasks;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#tracking;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#cache;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#testing;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-agent;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-interface;1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#main-settings;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#apply-macro;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#command;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#logic;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-interface;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_8_2;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_9_2;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_9_3;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#jline;2.10.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.fusesource.jansi#jansi;1.4 ...[0m
+[0m[[0minfo[0m] [0mDone updating.[0m
+[0m[[0minfo[0m] [0mLoading project definition from /repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/classes/integration-test-projects/pipeline/project[0m
+[0m[[0minfo[0m] [0mUpdating {file:/repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/classes/integration-test-projects/pipeline/project/}pipeline-build...[0m
+[0m[[0minfo[0m] [0mResolving org.scala-sbt#global-plugins;0.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.typesafe.sbteclipse#sbteclipse-plugin;4.0.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalaz#scalaz-core_2.10;7.1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-library;2.10.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalaz#scalaz-effect_2.10;7.1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.mpeltonen#sbt-idea;1.6.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving commons-io#commons-io;2.0.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.hanhuy.sbt#key-path;0.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving net.virtual-void#sbt-dependency-graph;0.7.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.mdr#ascii-graphs_2.10;0.0.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving canve#sbt-plugin;0.0.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving canve#compiler-plugin_2.10;0.0.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving canve#simple-logging_2.10;0.0.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving io.circe#circe-core_2.10;0.2.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.typelevel#export-hook_2.10;1.0.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.typelevel#macro-compat_2.10;1.0.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalamacros#quasiquotes_2.10;2.1.0-M5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-reflect;2.10.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.spire-math#cats-core_2.10;0.2.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.spire-math#cats-macros_2.10;0.2.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.mpilquist#simulacrum_2.10;0.4.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.spire-math#algebra_2.10;0.3.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.spire-math#algebra-std_2.10;0.3.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.typelevel#machinist_2.10;0.4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving io.circe#circe-generic_2.10;0.2.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.chuusai#shapeless_2.10;2.2.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving io.circe#circe-parse_2.10;0.2.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving io.circe#circe-jawn_2.10;0.2.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.spire-math#jawn-parser_2.10;0.8.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.lihaoyi#pprint_2.10;0.3.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.lihaoyi#derive_2.10;0.3.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving canve#simple-graph_2.10;0.0.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.tototoshi#scala-csv_2.10;1.3.0-SNAPSHOT ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.tototoshi#scala-csv_2.10;1.3.0-SNAPSHOT ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.allenai.plugins#allenai-sbt-plugins;2015.05.29-0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#slf4j-api;1.7.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#log4j-over-slf4j;1.7.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#jcl-over-slf4j;1.7.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving ch.qos.logback#logback-core;1.1.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving ch.qos.logback#logback-classic;1.1.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.typesafe#config;1.2.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving me.lessis#bintray-sbt;0.2.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving me.lessis#bintry_2.10;0.4.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving net.databinder.dispatch#dispatch-json4s-native_2.10;0.11.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving net.databinder.dispatch#dispatch-core_2.10;0.11.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.ning#async-http-client;1.8.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving io.netty#netty;3.9.2.Final ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-core_2.10;3.2.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-ast_2.10;3.2.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.thoughtworks.paranamer#paranamer;2.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scalap;2.10.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-compiler;2.10.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.json4s#json4s-native_2.10;3.2.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#slf4j-nop;1.7.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.gseitz#sbt-release;0.8.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalastyle#scalastyle-sbt-plugin;0.6.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalastyle#scalastyle_2.10;0.6.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.jkinkead#sbt-scalariform;0.1.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.github.jkinkead#scalariform_2.10;0.1.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.gilt#sbt-dependency-graph-sugar;0.7.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving io.spray#sbt-revolver;0.7.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.typesafe.sbt#sbt-native-packager;1.0.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.commons#commons-compress;1.4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.tukaani#xz;1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.vafer#jdeb;1.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving commons-io#commons-io;2.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.commons#commons-compress;1.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.tukaani#xz;1.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.maven#maven-core;3.2.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.maven#maven-model;3.2.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.codehaus.plexus#plexus-utils;3.0.17 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.maven#maven-settings;3.2.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.maven#maven-settings-builder;3.2.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.codehaus.plexus#plexus-interpolation;1.19 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.codehaus.plexus#plexus-component-annotations;1.5.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.sonatype.plexus#plexus-sec-dispatcher;1.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.sonatype.plexus#plexus-cipher;1.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.maven#maven-repository-metadata;3.2.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.maven#maven-artifact;3.2.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.maven#maven-plugin-api;3.2.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.eclipse.sisu#org.eclipse.sisu.plexus;0.0.0.M5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving javax.enterprise#cdi-api;1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving javax.annotation#jsr250-api;1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving javax.inject#javax.inject;1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.google.guava#guava;14.0.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.sonatype.sisu#sisu-guice;3.1.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving aopalliance#aopalliance;1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.eclipse.sisu#org.eclipse.sisu.inject;0.0.0.M5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.codehaus.plexus#plexus-classworlds;2.5.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.maven#maven-model-builder;3.2.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.maven#maven-aether-provider;3.2.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.eclipse.aether#aether-api;0.9.0.M2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.eclipse.aether#aether-spi;0.9.0.M2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.eclipse.aether#aether-util;0.9.0.M2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.eclipse.aether#aether-impl;0.9.0.M2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.ant#ant;1.9.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.ant#ant-launcher;1.9.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.bouncycastle#bcpg-jdk15on;1.51 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.bouncycastle#bcprov-jdk15on;1.51 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#sbt;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#main;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#actions;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#classpath;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#launcher-interface;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#interface;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#io;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#control;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#completion;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#collections;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving jline#jline;2.11 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#api;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-integration;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#incremental-compiler;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#logging;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#process;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#relation;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compile;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#persist;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-tools.sbinary#sbinary_2.10;0.4.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#classfile;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-ivy-integration;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#ivy;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#cross;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt.ivy#ivy;2.3.0-sbt-fccfbd44c9f64523b61398a0155784dcbaeae28f ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.jcraft#jsch;0.1.46 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.spire-math#jawn-parser_2.10;0.6.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.spire-math#json4s-support_2.10;0.6.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#run;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#task-system;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#tasks;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#tracking;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#cache;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#testing;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-agent;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-interface;1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#main-settings;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#apply-macro;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#command;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#logic;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#compiler-interface;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_8_2;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_9_2;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#precompiled-2_9_3;0.13.7 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#jline;2.10.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.fusesource.jansi#jansi;1.4 ...[0m
+[0m[[0minfo[0m] [0mDone updating.[0m
+[canve] sbt canve plugin loaded - enter `canve` in sbt, to run canve for your project
+[0m[[0minfo[0m] [0mSet current project to pipeline (in build file:/repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/classes/integration-test-projects/pipeline/)[0m
+[0m[[0minfo[0m] [0mSet current project to pipeline (in build file:/repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/classes/integration-test-projects/pipeline/)[0m
+[0m[[0minfo[0m] [0mSet current project to pipeline (in build file:/repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/classes/integration-test-projects/pipeline/)[0m
+[0m[[0minfo[0m] [0mscalastyle using config /repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/classes/integration-test-projects/pipeline/target/scalastyle/scalastyle-config.xml[0m
+[0m[[0minfo[0m] [0mUpdating {file:/repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/classes/integration-test-projects/pipeline/}pipeline...[0m
+[0m[[0minfo[0m] [0mUpdating {file:/repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/classes/integration-test-projects/pipeline/}pipeline...[0m
+[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-library;2.11.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving io.spray#spray-json_2.11;1.3.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving commons-io#commons-io;2.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.allenai.common#common-core_2.11;1.0.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.typesafe#config;1.2.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#slf4j-api;1.7.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving ch.qos.logback#logback-core;1.1.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving ch.qos.logback#logback-classic;1.1.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-reflect;2.11.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.amazonaws#aws-java-sdk-s3;1.9.40 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.amazonaws#aws-java-sdk-kms;1.9.40 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.amazonaws#aws-java-sdk-core;1.9.40 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving commons-logging#commons-logging;1.1.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.httpcomponents#httpclient;4.3.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.httpcomponents#httpcore;4.3.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving commons-codec#commons-codec;1.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.fasterxml.jackson.core#jackson-databind;2.3.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.fasterxml.jackson.core#jackson-annotations;2.3.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.fasterxml.jackson.core#jackson-core;2.3.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving joda-time#joda-time;[2.2,) ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving joda-time#joda-time;[2.2,) ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.commons#commons-lang3;3.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.commons#commons-compress;1.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.allenai.common#common-testkit_2.11;2015.04.01-0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#log4j-over-slf4j;1.7.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#jcl-over-slf4j;1.7.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.typesafe.akka#akka-testkit_2.11;2.3.9 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.typesafe.akka#akka-actor_2.11;2.3.9 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalacheck#scalacheck_2.11;1.11.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-interface;1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalatest#scalatest_2.11;2.2.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-xml_2.11;1.0.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.pegdown#pegdown;1.4.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.parboiled#parboiled-java;1.1.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.parboiled#parboiled-core;1.1.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.ow2.asm#asm;4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.ow2.asm#asm-tree;4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.ow2.asm#asm-analysis;4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.ow2.asm#asm-util;4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-compiler;2.11.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-xml_2.11;1.0.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving jline#jline;2.12 ...[0m
+[0m[[0minfo[0m] [0mDone updating.[0m
+[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-library;2.11.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving io.spray#spray-json_2.11;1.3.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving commons-io#commons-io;2.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.allenai.common#common-core_2.11;1.0.1 ...[0m
+[0m[[0minfo[0m] [0mGenerating artifact.conf managed resource... (name|version: pipeline|1.4.10-SNAPSHOT)[0m
+[0m[[0minfo[0m] [0mResolving com.typesafe#config;1.2.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#slf4j-api;1.7.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving ch.qos.logback#logback-core;1.1.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving ch.qos.logback#logback-classic;1.1.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-reflect;2.11.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.amazonaws#aws-java-sdk-s3;1.9.40 ...[0m
+[0m[[0minfo[0m] [0mGenerating git.conf managed resource... (sha1: a0f34f2c8e0df5552732e7176ac9661a0283926c)[0m
+[0m[[0minfo[0m] [0mResolving com.amazonaws#aws-java-sdk-kms;1.9.40 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.amazonaws#aws-java-sdk-core;1.9.40 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving commons-logging#commons-logging;1.1.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.httpcomponents#httpclient;4.3.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.httpcomponents#httpcore;4.3.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving commons-codec#commons-codec;1.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.fasterxml.jackson.core#jackson-databind;2.3.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.fasterxml.jackson.core#jackson-annotations;2.3.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.fasterxml.jackson.core#jackson-core;2.3.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving joda-time#joda-time;[2.2,) ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving joda-time#joda-time;[2.2,) ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-parser-combinators_2.11;1.0.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.commons#commons-lang3;3.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.apache.commons#commons-compress;1.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.allenai.common#common-testkit_2.11;2015.04.01-0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#log4j-over-slf4j;1.7.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.slf4j#jcl-over-slf4j;1.7.10 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.typesafe.akka#akka-testkit_2.11;2.3.9 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving com.typesafe.akka#akka-actor_2.11;2.3.9 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalacheck#scalacheck_2.11;1.11.4 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-sbt#test-interface;1.0 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scalatest#scalatest_2.11;2.2.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-xml_2.11;1.0.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.pegdown#pegdown;1.4.2 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.parboiled#parboiled-java;1.1.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.parboiled#parboiled-core;1.1.6 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.ow2.asm#asm;4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.ow2.asm#asm-tree;4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.ow2.asm#asm-analysis;4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.ow2.asm#asm-util;4.1 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang#scala-compiler;2.11.5 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-xml_2.11;1.0.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving org.scala-lang.modules#scala-parser-combinators_2.11;1.0.3 ...[0m
+M[2K[0m[[0minfo[0m] [0mResolving jline#jline;2.12 ...[0m
+[0m[[0minfo[0m] [0mDone updating.[0m
+[0m[[0minfo[0m] [0mscalastyle using config /repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/classes/integration-test-projects/pipeline/target/scalastyle/scalastyle-config.xml[0m
+ArraySeq()
+2.11
+2.11
+java.lang.Exception: Fatal: canve sbt plugin failed injecting its compiler plugin: compiler plugin artifact not found among project's dependency resolved dependencies
+	at canve.sbt.Plugin$$anonfun$canve$sbt$Plugin$$canve$1$$anonfun$4$$anonfun$pluginScalacOptions$lzycompute$1$1.apply(sbtPlugin.scala:137)
+	at canve.sbt.Plugin$$anonfun$canve$sbt$Plugin$$canve$1$$anonfun$4$$anonfun$pluginScalacOptions$lzycompute$1$1.apply(sbtPlugin.scala:94)
+	at scala.Function1$$anonfun$compose$1.apply(Function1.scala:47)
+	at sbt.$tilde$greater$$anonfun$$u2219$1.apply(TypeFunctions.scala:40)
+	at sbt.std.Transform$$anon$4.work(System.scala:63)
+	at sbt.Execute$$anonfun$submit$1$$anonfun$apply$1.apply(Execute.scala:226)
+	at sbt.Execute$$anonfun$submit$1$$anonfun$apply$1.apply(Execute.scala:226)
+	at sbt.ErrorHandling$.wideConvert(ErrorHandling.scala:17)
+	at sbt.Execute.work(Execute.scala:235)
+	at sbt.Execute$$anonfun$submit$1.apply(Execute.scala:226)
+	at sbt.Execute$$anonfun$submit$1.apply(Execute.scala:226)
+	at sbt.ConcurrentRestrictions$$anon$4$$anonfun$1.apply(ConcurrentRestrictions.scala:159)
+	at sbt.CompletionService$$anon$2.call(CompletionService.scala:28)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+[0m[[31merror[0m] [0m(pipeline/*:[31mscalacOptions[0m) java.lang.Exception: Fatal: canve sbt plugin failed injecting its compiler plugin: compiler plugin artifact not found among project's dependency resolved dependencies[0m
+canve task aborted as it could not successfully compile the project (or due to its own internal error)

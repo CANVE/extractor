@@ -1,0 +1,15 @@
+< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/IOUtils.scala >
+
+  def invoked(files: Seq[File]): Set[Int] = {
+    val acc = mutable.Set[Int]()
+    files.foreach { file =>
+      val reader = Source.fromFile(file)
+      for ( line <- reader.getLines() ) {
+        if (!line.isEmpty) {
+          acc += line.toInt
+        }
+      }
+      reader.close()
+    }
+    acc
+  }

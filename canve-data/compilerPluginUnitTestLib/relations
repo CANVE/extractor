@@ -1,0 +1,324 @@
+id1,relation,id2
+5520,declares member,26904
+55242,uses,55243
+55242,uses,55235
+55870,declares member,55871
+64187,is of type,17057
+1770,declares member,8047
+30453,is of type,252
+8463,is of type,1789
+58732,is of type,31849
+4578,declares member,26659
+4578,declares member,26657
+8466,declares member,25588
+8466,uses,26659
+8466,uses,21194
+30438,declares member,30439
+30438,declares member,30440
+30438,declares member,30452
+5873,declares member,16835
+5873,declares member,17057
+5873,declares member,17059
+32268,declares member,58519
+55236,is of type,252
+32017,declares member,61193
+32986,declares member,33126
+3531,declares member,17265
+3531,declares member,17739
+3531,declares member,17777
+3531,declares member,17767
+61597,uses,61472
+8457,uses,17265
+8457,uses,8458
+55239,uses,17739
+55239,declares member,55871
+55239,uses,55584
+55239,uses,55617
+55239,declares member,55870
+61465,uses,61466
+61474,declares member,61595
+61474,uses,61595
+3471,declares member,30167
+58316,declares member,61436
+58316,uses,29309
+58316,uses,28299
+58316,declares member,61435
+58316,uses,17265
+58316,uses,58314
+59303,declares member,59316
+61746,is of type,54403
+8247,declares member,8252
+8247,declares member,8261
+8247,declares member,8263
+8247,declares member,8264
+11,declares member,62
+11,declares member,51
+11,declares member,63
+11,declares member,76
+58310,is of type,60074
+2774,declares member,8405
+2774,declares member,8450
+58292,is of type,3531
+5484,declares member,25375
+31852,declares member,54403
+61468,uses,61469
+2,declares member,11
+2,declares member,25
+2,declares member,8247
+58319,declares member,58732
+58319,declares member,58733
+58319,uses,59149
+58319,uses,17261
+58319,uses,25375
+58319,uses,17777
+58319,uses,59316
+58301,is of type,252
+8456,uses,3138
+61175,is of type,32017
+61435,declares member,61436
+61471,is of type,1465
+58313,uses,58314
+58313,uses,58315
+58519,declares member,59122
+8465,is of type,252
+55238,is of type,252
+61303,is of type,3531
+3327,declares member,30153
+8459,uses,19952
+30440,is of type,8405
+3399,declares member,30292
+32351,declares member,61459
+8450,declares member,19783
+58244,declares member,58245
+8405,declares member,19952
+64183,is of type,54403
+1129,declares member,21194
+2780,declares member,5169
+2780,declares member,5873
+2780,declares member,5520
+2780,declares member,5268
+2780,declares member,5881
+2780,declares member,5862
+2780,declares member,5484
+2780,declares member,5471
+2780,declares member,4578
+2780,declares member,5880
+8468,declares member,30439
+8468,declares member,30453
+8468,declares member,30353
+8468,uses,26218
+8468,uses,20024
+8468,uses,30989
+8468,uses,25104
+8468,declares member,30440
+8468,uses,19783
+8468,uses,28194
+8468,declares member,30438
+5268,declares member,28194
+30452,declares member,30453
+30353,is of type,23006
+55241,declares member,58292
+55241,uses,20024
+55241,uses,30292
+55241,uses,14497
+5169,declares member,25104
+17057,declares member,55584
+17057,declares member,55605
+8462,uses,8463
+55235,uses,55236
+55235,declares member,55257
+55235,uses,26659
+55235,uses,19957
+55235,uses,26657
+55235,uses,7606
+58303,is of type,3531
+61470,uses,61471
+5881,declares member,23006
+5881,declares member,22550
+55244,declares member,58319
+55244,declares member,58320
+55244,uses,58312
+58312,uses,32444
+61595,uses,61565
+2788,declares member,31248
+2788,declares member,31249
+3533,declares member,17261
+58216,is of type,17057
+61473,is of type,252
+5471,declares member,29309
+58315,declares member,61303
+58315,uses,8467
+58315,uses,17767
+25,declares member,2780
+25,declares member,763
+25,declares member,2773
+25,declares member,1789
+25,declares member,2772
+25,declares member,2779
+25,declares member,2774
+25,declares member,2788
+25,declares member,1770
+25,declares member,2551
+25,declares member,859
+25,declares member,1129
+25,declares member,2776
+25,declares member,1465
+8261,extends,150
+8261,declares member,32432
+8252,declares member,8463
+8252,extends,150
+8252,declares member,8460
+8252,declares member,8464
+8252,declares member,8456
+8252,declares member,8458
+8252,declares member,8461
+8252,declares member,8459
+8252,declares member,8465
+8252,declares member,8466
+8252,declares member,8468
+8252,declares member,8467
+8252,declares member,8457
+8252,declares member,8462
+2950,declares member,38283
+2950,declares member,35355
+54403,declares member,54414
+58300,is of type,252
+31510,declares member,32444
+31510,declares member,32986
+61467,uses,61459
+252,declares member,7606
+252,declares member,7668
+252,declares member,7810
+58318,declares member,64187
+58318,uses,55605
+58318,uses,76441
+61745,declares member,61746
+58309,is of type,31849
+8264,declares member,58312
+8264,declares member,58316
+8264,declares member,58311
+8264,declares member,58314
+8264,declares member,58313
+8264,declares member,58309
+8264,declares member,58317
+8264,declares member,58315
+8264,declares member,58318
+8264,declares member,58310
+8264,extends,31510
+183,declares member,19957
+2776,declares member,28911
+5862,declares member,28299
+22550,declares member,30989
+28911,declares member,60667
+55234,uses,3138
+55243,declares member,58300
+55243,uses,20024
+55243,uses,14497
+55243,declares member,58301
+55243,declares member,58302
+55243,uses,30292
+55243,declares member,58303
+8464,uses,8465
+55871,is of type,3531
+16835,declares member,26218
+58733,is of type,252
+17059,declares member,55617
+859,declares member,76441
+150,declares member,3138
+32260,declares member,60059
+32260,declares member,60074
+30134,is of type,3327
+61598,uses,28194
+61598,declares member,64182
+61598,uses,7810
+61598,declares member,64183
+61598,declares member,61601
+61598,uses,54414
+61598,uses,32432
+61598,uses,61465
+61598,uses,8047
+8467,declares member,30134
+8467,uses,30167
+8467,uses,30153
+55237,uses,55238
+30439,is of type,3531
+8458,uses,19397
+64182,declares member,64183
+59122,declares member,59149
+404,declares member,19397
+63,declares member,3399
+63,declares member,3531
+63,declares member,3327
+63,declares member,3471
+63,declares member,3533
+8461,is of type,1789
+58317,declares member,61473
+58317,declares member,61472
+58317,declares member,61474
+58317,declares member,61466
+58317,extends,32351
+58317,declares member,61470
+58317,declares member,61467
+58317,declares member,61468
+58317,declares member,61465
+58317,declares member,61471
+58317,declares member,61469
+31249,declares member,32260
+31249,declares member,32265
+31249,declares member,32017
+31249,declares member,31510
+31249,declares member,31849
+31249,declares member,32268
+31249,declares member,32266
+31249,declares member,31852
+61601,uses,7668
+61601,uses,60667
+61601,uses,26904
+61601,declares member,61746
+61601,declares member,61745
+763,declares member,14497
+59286,declares member,59303
+38283,declares member,59286
+25588,is of type,1129
+55240,declares member,58216
+55240,declares member,58244
+55240,uses,55242
+55240,uses,55584
+55240,declares member,58245
+55240,uses,55617
+32266,declares member,32351
+61595,extends,35355
+61595,declares member,61597
+61595,declares member,61598
+61469,is of type,17057
+2551,declares member,20024
+58320,is of type,60059
+58302,is of type,252
+58311,is of type,8261
+58314,declares member,61175
+58314,uses,33126
+58314,uses,61193
+51,declares member,150
+51,declares member,404
+51,declares member,252
+51,declares member,183
+61436,is of type,252
+61472,uses,61473
+35355,declares member,61565
+2772,declares member,2950
+8460,uses,8461
+61466,is of type,31510
+58245,is of type,252
+8263,declares member,55240
+8263,declares member,55239
+8263,declares member,55238
+8263,declares member,55236
+8263,declares member,55235
+8263,extends,150
+8263,declares member,55244
+8263,declares member,55242
+8263,declares member,55243
+8263,declares member,55234
+8263,declares member,55241
+8263,declares member,55237
+55257,is of type,252

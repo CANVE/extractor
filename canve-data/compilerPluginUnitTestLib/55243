@@ -1,0 +1,11 @@
+< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
+
+  private def findIvyJar(groupId: String, artifactId: String, version: String): File = {
+    val userHome = System.getProperty("user.home")
+    val sbtHome = userHome + "/.ivy2"
+    val jarPath = sbtHome + "/cache/" + groupId + "/" + artifactId + "/jars/" + artifactId + "-" + version + ".jar"
+    val file = new File(jarPath)
+    if (!file.exists)
+      throw new FileNotFoundException(s"Could not locate [$jarPath].")
+    file
+  }

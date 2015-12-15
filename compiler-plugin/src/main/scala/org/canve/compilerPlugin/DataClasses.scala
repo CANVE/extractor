@@ -116,6 +116,9 @@ object CodeLocation extends SerializationUtil {
   def apply(s: String): CodeLocation = { /* a deserializing constructor */
     s.split(',').toList match {
       case head :: tail =>
+        println(head)
+        println(tail.mkString(","))
+        println(toStringOption(tail.mkString(",")))
         new CodeLocation(head, toStringOption(tail.mkString(",")).map(s => Position(s)))
       case _ => throw new Exception(s"failed deserializing $getClass from $s.")
     }

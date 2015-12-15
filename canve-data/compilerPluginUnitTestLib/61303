@@ -1,0 +1,3 @@
+< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
+
+    val file = File.createTempFile("canve-compiler-plugin-unit-test-tmp", ".scala")

@@ -2,6 +2,7 @@ package org.canve.compilerPlugin.normalization
 import org.canve.compilerPlugin._
 import scala.tools.nsc.Global
 import org.canve.logging.loggers._
+import io.circe.Encoder
 
 /*
  * Merge symbols per source file
@@ -75,6 +76,32 @@ trait NormalizeBySpans extends MergeStrategies {
       .toList 
       .groupBy(s => (s.start, s.end))
       
+    
+    import io.circe._, io.circe.generic.auto._, io.circe.parse._, io.circe.syntax._
+    import cats.data.Xor
+      
+    implicit object SymbolNameSerialization extends Encoder[SymbolName] {
+      def apply(o: SymbolName) = o.name.asJson
+    }
+    
+    implicit object ExtractedSymbolSerialization extends Encoder[ExtractedSymbol] {
+      def apply(o: ExtractedSymbol) = o.name.asJson  
+    }
+    
+    implicit object SymbolHavingSpanPositionSerialization extends Encoder[SymbolHavingSpanPosition] {
+      def apply(o: SymbolHavingSpanPosition) = {
+        o.vertex.data.asJson
+      }
+    }
+    
+    implicit object SymbolHavingSpanPositionSpecialization extends Encoder[Map[(Int, Int),List[SymbolHavingSpanPosition]]] {
+      def apply(o: Map[(Int, Int),List[SymbolHavingSpanPosition]]) = {
+        val toJsonKeys: Map[String, List[SymbolHavingSpanPosition]] = 
+          o.map(tuple => (List(tuple._1._1, tuple._1._2).mkString(",") -> tuple._2))
+        toJsonKeys.asJson
+      }
+    }
+
     objectLogger(symbolsBySpan, "symbolsBySpan")
     
     /* 
@@ -102,7 +129,7 @@ trait NormalizeBySpans extends MergeStrategies {
       .groupBy(s => (s.start, s.end))
       .groupBy(_._1._1)
 
-    objectLogger(symbolBySpanAndStart, "symbolBySpanAndStart")  
+    //objectLogger(symbolBySpanAndStart, "symbolBySpanAndStart")  
       
     /* all symbols having point positions */
     val points: Iterator[SymbolHavingPointPosition] =

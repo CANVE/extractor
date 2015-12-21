@@ -62,7 +62,7 @@ object Plugin extends AutoPlugin {
       libraryDependencies in projRef += 
         compilerPluginOrg % (compilerPluginArtifact + "_" + projectScalaVersion.value) % compilerPluginVersion
     }
-
+  addCompilerPlugin
     val appendedState = extracted.append(enrichedLibDepSettings, state)
 
     val pluginFetching = (for (projRef <- extracted.structure.allProjectRefs.toStream) yield {
@@ -144,7 +144,10 @@ object Plugin extends AutoPlugin {
                 }
             }
             
-          case None => throw new Exception(s"Fatal: canve sbt plugin failed injecting its compiler plugin: compiler plugin artifact not found among project's dependency resolved dependencies")
+          case None =>
+            // Observed for akka-2.4.1. Assuming (but not confirmed) it might happen if sub-project overrides (and therefore lacks) root project's librarySettings
+            println(s"Warn: skipping instrumentation for sub-project $projectName: compiler plugin artifact not available among project's resolved dependencies")
+            Seq()
         }
       }
       scalacOptions in projRef ++= pluginScalacOptions.value

@@ -4,6 +4,7 @@ import org.canve.util.CanveDataIO._
 import com.github.tototoshi.csv._
 import java.io.File
 import org.canve.simpleGraph._
+import scala.util.{Try, Success, Failure}
 
 /*
  * Aggregate symbols across projects, while de-duplicating
@@ -29,22 +30,44 @@ trait DataReader {
     /*
      * load symbol file to graph 
      */
-    graph ++ {
+    val extractedSymbols: Iterable[graph.Vertex] = {
       
-      val symbols: List[ExtractedSymbol] = 
-        CSVReader.open(new File(dir + File.separator + "symbols")).allWithHeaders
-        .map(inputRowMap => ExtractedSymbol(projectName, inputRowMap))
-        
-      val asVertices: Iterable[graph.Vertex] = symbols.map(s => graph.Vertex(s.symbolCompilerId, s)).toIterable
+      val fileRows = Try(CSVReader.open(new File(dir + File.separator + "symbols")))
       
-      asVertices
+      fileRows match {
+        case Failure(ex) => 
+          println(s"directory $projectName has no symbols data file")
+          Iterable.empty[graph.Vertex]
+        case Success(rows) =>   
+          rows.allWithHeaders
+          .map(inputRowMap => ExtractedSymbol(projectName, inputRowMap))
+          .map(s => graph.Vertex(s.symbolCompilerId, s)).toIterable
+      }
+      
     }
     
     /*
-     * load symbol relation file to graph
+     * load symbol relations file to graph
      */
-    CSVReader.open(new File(dir + File.separator + "relations")).allWithHeaders
-      .map(inputRowMap => graph.addIfUnique(graph.Edge(inputRowMap("id1").toInt, inputRowMap("id2").toInt, inputRowMap("relation").toString)))
+
+    val extractedRelations = {
+      
+      val fileRows = Try(CSVReader.open(new File(dir + File.separator + "relations")))
+    
+      fileRows match {
+        case Failure(ex) => 
+          println(s"directory $projectName has no relations data file")
+          Iterable.empty[graph.Edge]
+        case Success(rows) => rows.allWithHeaders
+          .map(inputRowMap => graph.Edge(
+            inputRowMap("id1").toInt, 
+            inputRowMap("id2").toInt, 
+            inputRowMap("relation").toString))   
+        }
+    }    
+
+    graph ++ extractedSymbols
+    graph ++ extractedRelations  
       
     graph
   }

@@ -1,7 +1,7 @@
 package org.canve.simpleGraph
 import collection.mutable.HashMap
-import scala.scalajs.js.annotation._
-import scala.scalajs.js.JSApp
+//import scala.scalajs.js.annotation._
+//import scala.scalajs.js.JSApp
 
 /*
  * The concrete graph implementation

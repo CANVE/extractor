@@ -28,8 +28,9 @@ trait DataReader {
     val graph = new LoadedGraph
 
     /*
-     * load symbol file to graph 
+     * load symbols file to graph 
      */
+    
     val extractedSymbols: Iterable[graph.Vertex] = {
       
       val fileRows = Try(CSVReader.open(new File(dir + File.separator + "symbols")))
@@ -47,7 +48,7 @@ trait DataReader {
     }
     
     /*
-     * load symbol relations file to graph
+     * load relations file to graph
      */
 
     val extractedRelations = {

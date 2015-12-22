@@ -23,7 +23,7 @@ import com.scalapenos.sbt.prompt.SbtPrompt.autoImport._
 /*
  * allow overriding the org name
  */
-lazy val org = sys.props.getOrElse("org", "canve") 
+lazy val org = sys.props.getOrElse("org", "canve")
 
 /*
  * Optional 2.12 milestone building
@@ -132,7 +132,7 @@ lazy val canveSbtPlugin = (project in file("sbt-plugin"))
     buildInfoKeys := Seq[BuildInfoKey](organization),
     buildInfoObject := "BuildInfo",
     buildInfoPackage := "buildInfo"
-    
+
     //resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     //libraryDependencies ++= Seq("com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT")
   )
@@ -174,19 +174,21 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
 /*
  * And these depenency projects are developed (generally speaking) as generic libraries
  */
-lazy val simpleGraph: Project = (project in file("simple-graph")).settings(
-  name := "simple-graph",
-  organization := org,
-  version := "0.0.1",
-  promptTheme := Scalapenos,
-  isSnapshot := true, // to enable overwriting the existing artifact version
-  scalaVersion := "2.11.7",
-  crossScalaVersions := commonCrossScalaVersions,
-  resolvers += Resolver.sonatypeRepo("snapshots"),
-  resolvers += Resolver.sonatypeRepo("releases"),
-  libraryDependencies ++= Seq("com.lihaoyi" %% "utest" % "0.3.1" % "test"),
-  testFrameworks += new TestFramework("utest.runner.Framework")
-)
+lazy val simpleGraph: Project = (project in file("simple-graph"))
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    name := "simple-graph",
+    organization := org,
+    version := "0.0.1",
+    promptTheme := Scalapenos,
+    isSnapshot := true, // to enable overwriting the existing artifact version
+    scalaVersion := "2.11.7",
+    crossScalaVersions := commonCrossScalaVersions,
+    resolvers += Resolver.sonatypeRepo("snapshots"),
+    resolvers += Resolver.sonatypeRepo("releases"),
+    libraryDependencies ++= Seq("com.lihaoyi" %% "utest" % "0.3.1" % "test"),
+    testFrameworks += new TestFramework("utest.runner.Framework")
+  )
 
 lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib")).settings(
   organization := org,

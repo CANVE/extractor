@@ -1,5 +1,7 @@
 package org.canve.simpleGraph
 import collection.mutable.HashMap
+import scala.scalajs.js.annotation._
+import scala.scalajs.js.JSApp
 
 /*
  * The concrete graph implementation
@@ -9,6 +11,8 @@ import collection.mutable.HashMap
  * the other by the second, so that all edges touching a node can be retrieved in O(1).
  */
 
+//@JSExport
+//@JSExportAll
 class SimpleGraph[VertexID, VertexData, EdgeData] 
   extends AbstractGraph[VertexID, VertexData, EdgeData] {
 
@@ -86,8 +90,10 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
   }
   
   def addIfUnique (edge: Edge): SimpleGraph[VertexID, VertexData, EdgeData] = {
-    List(edge.v1, edge.v2).foreach(id => 
-      if (vertex(id).isEmpty) throw SimpleGraphInvalidEdge(s"will not add edge $edge because there is no vertex with id $id"))  
+    List(edge.v1, edge.v2).foreach { id => 
+      println(s"will not add edge $edge because there is no vertex with id $id")
+      if (vertex(id).isEmpty) throw SimpleGraphInvalidEdge(s"will not add edge $edge because there is no vertex with id $id")
+    }
     
     if (vertexEdges(edge.v1).filter(_ == edge).isEmpty) { // efficient check for whether new edge is a duplicate one 
       edgeIndex.add(edge.v1, edge)

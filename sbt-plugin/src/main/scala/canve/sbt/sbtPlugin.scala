@@ -62,7 +62,7 @@ object Plugin extends AutoPlugin {
       libraryDependencies in projRef += 
         compilerPluginOrg % (compilerPluginArtifact + "_" + projectScalaVersion.value) % compilerPluginVersion
     }
-  addCompilerPlugin
+
     val appendedState = extracted.append(enrichedLibDepSettings, state)
 
     val pluginFetching = (for (projRef <- extracted.structure.allProjectRefs.toStream) yield {
@@ -183,7 +183,7 @@ object Plugin extends AutoPlugin {
     successfulProjects.length == extracted.structure.allProjectRefs.length match {
       case true =>
         println("normalizing data across subprojects...")
-        val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.apply
+        val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.apply()
         println("canve task done")
         state
       case false =>

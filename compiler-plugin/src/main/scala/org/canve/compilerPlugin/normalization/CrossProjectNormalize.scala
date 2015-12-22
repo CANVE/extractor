@@ -52,13 +52,18 @@ trait DataReader {
 
 object CrossProjectNormalizer extends DataReader with MergeStrategies {
   
-  def apply = normalize
+  def apply(path: Option[String] = None) = normalize(path)
   
-  def normalize: ReIndexedGraph = {
+  def normalize(path: Option[String]): ReIndexedGraph = {
+    
+    val dataRootPath = path match {
+      case None => canveRoot
+      case Some(path) => path
+    }
     
     /* iterator of tuples (directory name, read graph) */
     val projectGraphs = 
-      getSubDirectories(canveRoot).toIterator.map(subDirectory => (subDirectory.getName, readCanveDirData(subDirectory)))
+      getSubDirectories(dataRootPath).toIterator.map(subDirectory => (subDirectory.getName, readCanveDirData(subDirectory)))
 
     val aggregateGraph = new ReIndexedGraph 
     

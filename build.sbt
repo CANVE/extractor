@@ -47,7 +47,7 @@ val integrationTest = taskKey[Unit]("Executes integration tests.")
  * the root project definition
  */
 lazy val root = (project in file("."))
-  .aggregate(simpleLogging, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, canveSbtPlugin, integrationTestProject)
+  .aggregate(simpleLogging, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, dataNormalizer, canveSbtPlugin, integrationTestProject)
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
   .settings(
     promptTheme := Scalapenos,
@@ -72,7 +72,7 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
     organization := org,
     version := "0.0.1",
     promptTheme := Scalapenos,
-    isSnapshot := true, // to enable overwriting the existing artifact version
+    isSnapshot := true, // to enable overwriting the existing artifact version during dev
     scalaVersion := "2.11.7",
     //scalacOptions ++= Seq("-Ymacro-debug-lite"),
     crossScalaVersions := commonCrossScalaVersions,
@@ -122,7 +122,7 @@ lazy val canveSbtPlugin = (project in file("sbt-plugin"))
   .settings(
     organization := org,
     name := "sbt-plugin",
-    isSnapshot := true, // to enable overwriting the existing artifact version
+    isSnapshot := true, // to enable overwriting the existing artifact version during dev
     promptTheme := Scalapenos,
     scalaVersion := "2.10.4",
     crossScalaVersions := Seq("2.10.4"),
@@ -135,6 +135,21 @@ lazy val canveSbtPlugin = (project in file("sbt-plugin"))
 
     //resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
     //libraryDependencies ++= Seq("com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT")
+  )
+
+/*
+ * Data normalization module
+ */
+lazy val dataNormalizer = (project in file("data-normalizer"))
+  .dependsOn(canveCompilerPlugin)
+  .enablePlugins(CrossPerProjectPlugin)
+  .settings(
+    organization := org,
+    name := "data-normalizer",
+    isSnapshot := true, // to enable overwriting the existing artifact version during dev
+    promptTheme := Scalapenos,
+    scalaVersion := "2.10.4", // because the sbt plugin needs to run it
+    crossScalaVersions := Seq("2.10.4")
   )
 
 /*
@@ -181,7 +196,7 @@ lazy val simpleGraph: Project = (project in file("simple-graph"))
     organization := org,
     version := "0.0.1",
     promptTheme := Scalapenos,
-    isSnapshot := true, // to enable overwriting the existing artifact version
+    isSnapshot := true, // to enable overwriting the existing artifact version during dev
     scalaVersion := "2.11.7",
     crossScalaVersions := commonCrossScalaVersions,
     resolvers += Resolver.sonatypeRepo("snapshots"),
@@ -194,7 +209,7 @@ lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test
   organization := org,
   name := "compiler-plugin-unit-test-lib",
   promptTheme := Scalapenos,
-  isSnapshot := true, // to enable overwriting the existing artifact version
+  isSnapshot := true, // to enable overwriting the existing artifact version during dev
   scalaVersion := "2.11.7",
   crossScalaVersions := commonCrossScalaVersions,
   libraryDependencies ++= Seq(
@@ -216,7 +231,7 @@ lazy val simpleLogging = (project in file("simple-logging")).settings(
   organization := org,
   version := "0.0.1",
   promptTheme := Scalapenos,
-  isSnapshot := true, // to enable overwriting the existing artifact version
+  isSnapshot := true, // to enable overwriting the existing artifact version during dev
   scalaVersion := "2.11.7",
   crossScalaVersions := commonCrossScalaVersions,
   libraryDependencies ++= Seq(

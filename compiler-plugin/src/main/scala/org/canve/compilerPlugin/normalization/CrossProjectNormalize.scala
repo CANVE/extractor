@@ -52,13 +52,11 @@ trait DataReader {
 
 object CrossProjectNormalizer extends DataReader with MergeStrategies {
   
-  def apply(path: Option[String] = None) = normalize(path)
-  
-  def normalize(path: Option[String]): ReIndexedGraph = {
+  def normalize(path: Option[String] = None): ReIndexedGraph = {
     
     val dataRootPath = path match {
-      case None => canveRoot
-      case Some(path) => path
+      case None => canveRoot  // suitable for a run as part of the sbt plugin
+      case Some(path) => path // suitable for a stand-alone run
     }
     
     /* iterator of tuples (directory name, read graph) */

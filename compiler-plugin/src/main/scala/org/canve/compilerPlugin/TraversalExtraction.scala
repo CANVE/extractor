@@ -81,6 +81,10 @@ object TraversalExtraction {
             val symbol = tree.symbol
             
             extractedModel.add(global)(symbol)
+            if (defParent.get.id != symbol.owner.id) println("parent is not owner")
+            if (symbol.owner.id == 325220) println("found!")
+            if (defParent.get.id == 325220) println("found as parent!")
+
             extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
 
             // Capturing the defined val's type (not kind) while at it
@@ -96,6 +100,9 @@ object TraversalExtraction {
             val symbol = tree.symbol
 
             extractedModel.add(global)(symbol)
+            if (symbol.owner.id == 325220) println("found!")
+            if (defParent.get.id == 325220) println("found as parent!")
+            if (defParent.get.id != symbol.owner.id) println("parent is not owner")
             extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
             println
             println(s"Method definition. Symbol owner chain: ${symbol.ownerChain.reverse}, \nParams: ${symbol.paramss}")

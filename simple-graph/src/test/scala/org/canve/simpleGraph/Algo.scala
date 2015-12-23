@@ -19,7 +19,7 @@ class Algo {
   def egressFilter: graph.WalkStepFilter[Int, graph.Edge] = (v, e) => graph.direction(v, e) == Egress
   
   def testEqual(resultPaths: Option[List[List[Int]]], expected: Option[List[List[Int]]]) {
-    println(resultPaths)
+    //println(resultPaths)
     assert(resultPaths == expected)
   }
   

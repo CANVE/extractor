@@ -1,30 +1,152 @@
 [0m[[0minfo[0m] [0mLoading global plugins from /home/matan/.sbt/0.13/plugins[0m
 [0m[[0minfo[0m] [0mLoading project definition from /repos/canve/extractor/project[0m
 [0m[[0minfo[0m] [0mSet current project to root (in build file:/repos/canve/extractor/)[0m
+[0m[[0minfo[0m] [0mSetting version to 2.11.7[0m
+[0m[[0minfo[0m] [0mReapplying settings...[0m
+[0m[[0minfo[0m] [0mSet current project to root (in build file:/repos/canve/extractor/)[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/simple-logging/target/scala-2.11/simple-logging_2.11-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#simple-logging_2.11;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:25 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/simple-logging/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#simple-graph_2.11;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:25 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/simple-graph/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#compiler-plugin-unit-test-lib_2.11;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:25 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.11/compiler-plugin-unit-test-lib_2.11-0.0.1.pom[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/simple-graph/target/scala-2.11/simple-graph_2.11-0.0.1.pom[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/compiler-plugin/target/scala-2.11/compiler-plugin_2.11-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#compiler-plugin_2.11;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:25 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/compiler-plugin/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#sbt-plugin-test-lib_2.11;0.0.1 :: 0.0.1 :: release :: Tue Dec 22 23:24:25 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/sbt-plugin-integration-test/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#data-normalizer_2.11;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:25 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/data-normalizer/target/scala-2.11/ivy-0.0.1.xml[0m
+[0m[[33mwarn[0m] [0mAttempting to overwrite /home/matan/.ivy2/local/canve/sbt-plugin-test-lib_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[33mwarn[0m] [0m	This usage is deprecated and will be removed in sbt 1.0.[0m
+[0m[[33mwarn[0m] [0mAttempting to overwrite /home/matan/.ivy2/local/canve/sbt-plugin-test-lib_2.11/0.0.1/ivys/ivy.xml.sha1[0m
+[0m[[33mwarn[0m] [0m	This usage is deprecated and will be removed in sbt 1.0.[0m
+[0m[[33mwarn[0m] [0mAttempting to overwrite /home/matan/.ivy2/local/canve/sbt-plugin-test-lib_2.11/0.0.1/ivys/ivy.xml.md5[0m
+[0m[[33mwarn[0m] [0m	This usage is deprecated and will be removed in sbt 1.0.[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/sbt-plugin-test-lib_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/data-normalizer_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-graph/target/scala-2.11/simple-graph_2.11-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-logging/target/scala-2.11/simple-logging_2.11-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.11/compiler-plugin-unit-test-lib_2.11-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.11 to /home/matan/.ivy2/local/canve/simple-logging_2.11/0.0.1/poms/simple-logging_2.11.pom[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.11 to /home/matan/.ivy2/local/canve/simple-logging_2.11/0.0.1/jars/simple-logging_2.11.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/simple-logging_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.11/0.0.1/poms/compiler-plugin-unit-test-lib_2.11.pom[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.11/0.0.1/jars/compiler-plugin-unit-test-lib_2.11.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.11 to /home/matan/.ivy2/local/canve/simple-graph_2.11/0.0.1/poms/simple-graph_2.11.pom[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.11 to /home/matan/.ivy2/local/canve/simple-graph_2.11/0.0.1/jars/simple-graph_2.11.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/simple-graph_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.11/compiler-plugin_2.11-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-parse_2.11-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: macro-compat_2.11-1.0.4.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: export-hook_2.11-1.0.2.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: algebra-std_2.11-0.3.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: simulacrum_2.11-0.4.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: cats-macros_2.11-0.2.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: machinist_2.11-0.4.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-core_2.11-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: jawn-parser_2.11-0.8.3.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: derive_2.11-0.3.6.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-jawn_2.11-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-generic_2.11-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: pprint_2.11-0.3.6.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: scala-csv_2.11.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: cats-core_2.11-0.2.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: shapeless_2.11-2.2.5.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: algebra_2.11-0.3.1.jar[0m
+[0m[[0minfo[0m] [0mChecking every *.class/*.jar file's SHA-1.[0m
+[0m[[0minfo[0m] [0mMerging files...[0m
+[0m[[33mwarn[0m] [0mMerging 'META-INF/MANIFEST.MF' with strategy 'discard'[0m
+[0m[[33mwarn[0m] [0mStrategy 'discard' was applied to a file[0m
+[0m[[0minfo[0m] [0mSHA-1: a95cb324f7db5252a9af7fe80ae80a88d14a9b6a[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.11/compiler-plugin_2.11.7-0.0.1-assembly.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+Using sbt-assembly to package library dependencies into a fat jar for publication
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin_2.11/0.0.1/poms/compiler-plugin_2.11.pom[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.11 to /home/matan/.ivy2/local/canve/compiler-plugin_2.11/0.0.1/jars/compiler-plugin_2.11.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/compiler-plugin_2.11/0.0.1/ivys/ivy.xml[0m
+[0m[[32msuccess[0m] [0mTotal time: 2 s, completed Dec 22, 2015 11:24:27 PM[0m
+[0m[[0minfo[0m] [0mSetting version to 2.10.4[0m
+[0m[[0minfo[0m] [0mReapplying settings...[0m
+[0m[[0minfo[0m] [0mSet current project to root (in build file:/repos/canve/extractor/)[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/simple-logging/target/scala-2.10/simple-logging_2.10-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#simple-graph_2.10;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:28 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/simple-graph/target/scala-2.10/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#compiler-plugin-unit-test-lib_2.10;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:28 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.10/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-graph/target/scala-2.10/simple-graph_2.10-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/simple-graph/target/scala-2.10/simple-graph_2.10-0.0.1.pom[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.10/compiler-plugin-unit-test-lib_2.10-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#simple-logging_2.10;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:28 IST 2015[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/simple-logging/target/scala-2.10/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/simple-logging/target/scala-2.10/simple-logging_2.10-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.10 to /home/matan/.ivy2/local/canve/simple-graph_2.10/0.0.1/poms/simple-graph_2.10.pom[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin-unit-test-lib/target/scala-2.10/compiler-plugin-unit-test-lib_2.10-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0m	published simple-graph_2.10 to /home/matan/.ivy2/local/canve/simple-graph_2.10/0.0.1/jars/simple-graph_2.10.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/simple-graph_2.10/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.10 to /home/matan/.ivy2/local/canve/simple-logging_2.10/0.0.1/poms/simple-logging_2.10.pom[0m
+[0m[[0minfo[0m] [0m	published simple-logging_2.10 to /home/matan/.ivy2/local/canve/simple-logging_2.10/0.0.1/jars/simple-logging_2.10.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/simple-logging_2.10/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.10/0.0.1/poms/compiler-plugin-unit-test-lib_2.10.pom[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin-unit-test-lib_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.10/0.0.1/jars/compiler-plugin-unit-test-lib_2.10.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/compiler-plugin-unit-test-lib_2.10/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/compiler-plugin/target/scala-2.10/compiler-plugin_2.10-0.0.1.pom[0m
+[0m[[0minfo[0m] [0mWrote /repos/canve/extractor/sbt-plugin/target/scala-2.10/sbt-0.13/sbt-plugin-0.0.1.pom[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#compiler-plugin_2.10;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:28 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/compiler-plugin/target/scala-2.10/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0m:: delivering :: canve#sbt-plugin;0.0.1 :: 0.0.1 :: integration :: Tue Dec 22 23:24:28 IST 2015[0m
+[0m[[0minfo[0m] [0m	delivering ivy file to /repos/canve/extractor/sbt-plugin/target/scala-2.10/sbt-0.13/ivy-0.0.1.xml[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.10/compiler-plugin_2.10-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mIncluding from cache: machinist_2.10-0.4.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-parse_2.10-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: pprint_2.10-0.3.6.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-jawn_2.10-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-generic_2.10-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: macro-compat_2.10-1.0.4.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: export-hook_2.10-1.0.2.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: simulacrum_2.10-0.4.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: circe-core_2.10-0.2.1.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: jawn-parser_2.10-0.8.3.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: algebra-std_2.10-0.3.1.jar[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0mIncluding from cache: scala-csv_2.10.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: cats-macros_2.10-0.2.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: derive_2.10-0.3.6.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: quasiquotes_2.10-2.1.0-M5.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: cats-core_2.10-0.2.0.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: shapeless_2.10-2.2.5.jar[0m
+[0m[[0minfo[0m] [0mIncluding from cache: algebra_2.10-0.3.1.jar[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/sbt-plugin/target/scala-2.10/sbt-0.13/sbt-plugin-0.0.1.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+[0m[[0minfo[0m] [0m	published sbt-plugin to /home/matan/.ivy2/local/canve/sbt-plugin/scala_2.10/sbt_0.13/0.0.1/poms/sbt-plugin.pom[0m
+[0m[[0minfo[0m] [0m	published sbt-plugin to /home/matan/.ivy2/local/canve/sbt-plugin/scala_2.10/sbt_0.13/0.0.1/jars/sbt-plugin.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/sbt-plugin/scala_2.10/sbt_0.13/0.0.1/ivys/ivy.xml[0m
+[0m[[0minfo[0m] [0mChecking every *.class/*.jar file's SHA-1.[0m
+[0m[[0minfo[0m] [0mMerging files...[0m
+[0m[[33mwarn[0m] [0mMerging 'META-INF/MANIFEST.MF' with strategy 'discard'[0m
+[0m[[33mwarn[0m] [0mStrategy 'discard' was applied to a file[0m
+[0m[[0minfo[0m] [0mSHA-1: ac8340a184fc68d70d28833a0afb66e5d4eab051[0m
+[0m[[0minfo[0m] [0mPackaging /repos/canve/extractor/compiler-plugin/target/scala-2.10/compiler-plugin_2.10.4-0.0.1-assembly.jar ...[0m
+[0m[[0minfo[0m] [0mDone packaging.[0m
+Using sbt-assembly to package library dependencies into a fat jar for publication
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin_2.10/0.0.1/poms/compiler-plugin_2.10.pom[0m
+[0m[[0minfo[0m] [0m	published compiler-plugin_2.10 to /home/matan/.ivy2/local/canve/compiler-plugin_2.10/0.0.1/jars/compiler-plugin_2.10.jar[0m
+[0m[[0minfo[0m] [0m	published ivy to /home/matan/.ivy2/local/canve/compiler-plugin_2.10/0.0.1/ivys/ivy.xml[0m
+[0m[[32msuccess[0m] [0mTotal time: 2 s, completed Dec 22, 2015 11:24:29 PM[0m
+[0m[[0minfo[0m] [0mSetting version to 2.11.7[0m
+[0m[[0minfo[0m] [0mReapplying settings...[0m
+[0m[[0minfo[0m] [0mSet current project to root (in build file:/repos/canve/extractor/)[0m
 [0m[[0minfo[0m] [0mSet current project to data-normalizer (in build file:/repos/canve/extractor/)[0m
-[0m[[0minfo[0m] [0mRunning org.canve.dataNormalizer.StandAloneRun integration/akka-2.4.1/canve-data[0m
-[0m[[31merror[0m] [0m(run-main-0) java.lang.Exception: API usage error: cannot invoke this function on a non-existant directory (integration/akka-2.4.1/canve-data)[0m
-java.lang.Exception: API usage error: cannot invoke this function on a non-existant directory (integration/akka-2.4.1/canve-data)
-	at org.canve.util.CanveDataIO$.getSubDirectories(dataIO.scala:47)
-	at org.canve.compilerPlugin.normalization.CrossProjectNormalizer$.normalize(CrossProjectNormalize.scala:87)
-	at org.canve.dataNormalizer.StandAloneRun$.delayedEndpoint$org$canve$dataNormalizer$StandAloneRun$1(StandAloneRun.scala:11)
-	at org.canve.dataNormalizer.StandAloneRun$delayedInit$body.apply(StandAloneRun.scala:3)
-	at scala.Function0$class.apply$mcV$sp(Function0.scala:34)
-	at scala.runtime.AbstractFunction0.apply$mcV$sp(AbstractFunction0.scala:12)
-	at scala.App$$anonfun$main$1.apply(App.scala:76)
-	at scala.App$$anonfun$main$1.apply(App.scala:76)
-	at scala.collection.immutable.List.foreach(List.scala:381)
-	at scala.collection.generic.TraversableForwarder$class.foreach(TraversableForwarder.scala:35)
-	at scala.App$class.main(App.scala:76)
-	at org.canve.dataNormalizer.StandAloneRun$.main(StandAloneRun.scala:3)
-	at org.canve.dataNormalizer.StandAloneRun.main(StandAloneRun.scala)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:497)
-[0m[[31mtrace[0m] [0mStack trace suppressed: run [34mlast dataNormalizer/compile:run[0m for the full output.[0m
-java.lang.RuntimeException: Nonzero exit code: 1
-	at scala.sys.package$.error(package.scala:27)
-[0m[[31mtrace[0m] [0mStack trace suppressed: run [34mlast dataNormalizer/compile:run[0m for the full output.[0m
-[0m[[31merror[0m] [0m(dataNormalizer/compile:[31mrun[0m) Nonzero exit code: 1[0m
-[0m[[31merror[0m] [0mTotal time: 1 s, completed Dec 22, 2015 9:36:19 PM[0m
+[0m[[0minfo[0m] [0mRunning org.canve.dataNormalizer.StandAloneRun ./integration/akka-2.4.1/canve-data/[0m
+[0m[[32msuccess[0m] [0mTotal time: 0 s, completed Dec 22, 2015 11:24:30 PM[0m

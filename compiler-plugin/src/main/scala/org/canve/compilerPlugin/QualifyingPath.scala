@@ -29,8 +29,8 @@ object QualifyingPath {
     val kindNameList: List[QualificationUnit] = 
       s.ownerChain.reverse.map(owner => QualificationUnit(global)(owner))
    
-    assert(kindNameList.head.kind == "package")
-    assert(kindNameList.head.name.name == "<root>")
+      assert(kindNameList.head.kind == "package")
+      assert(kindNameList.head.name.name == "<root>")
     
     QualifyingPath(kindNameList)   
   }

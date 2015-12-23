@@ -21,7 +21,8 @@ trait MergeStrategies {
   
   // FIXME: this will not remove edges between given s2, s3 in List(s1,s2,s3)
   
-  def reduceSymbols(extractedModel: ExtractedModel)(group: List[extractedModel.graph.Vertex]) = 
+  def reduceSymbols(extractedModel: ExtractedModel)(group: List[extractedModel.graph.Vertex]) = {
+    println(s"reducing ${group.size} symbols: $group")
     group.reduce { (s1, s2) => 
       
       require(s1.data.symbolCompilerId != s2.data.symbolCompilerId)
@@ -29,11 +30,14 @@ trait MergeStrategies {
       val ids = (s1.data.symbolCompilerId, s2.data.symbolCompilerId)
      
       extractedModel.graph -= extractedModel.graph edgesBetween(ids._1, ids._2)
-      extractedModel.graph.vertexEdges(ids._2) foreach (e => 
-        extractedModel.graph.edgeReWire(e, to = ids._1, from = ids._2)
-      )
+      extractedModel.graph.vertexEdges(ids._2) foreach { e =>
+        println(s"rewiring edge $e")
+        extractedModel.graph.edgeReWire(e, from = ids._2, to = ids._1)
+      }
+      
       extractedModel.graph -- ids._2
      
       s1
+    }
   }
 }

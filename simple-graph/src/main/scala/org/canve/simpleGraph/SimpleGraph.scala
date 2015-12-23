@@ -33,7 +33,7 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
       index.get(key) match {
         case Some(set) => 
           set.contains(edge) match {
-            case true  => throw SimpleGraphDuplicate(s"edge $edge already exists in edge index $this")
+            case true  => DataWarning(s"edge $edge already exists in edge index $this")
             case false => index.put(key, set + edge)
         }
         case None => index.put(key, Set(edge))
@@ -48,9 +48,9 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
             case true =>
               val newSet: Set[Edge] = index.remove(key).get - edge
               if (!newSet.isEmpty) index.put(key, newSet)
-            case false  => throw SimpleGraphDuplicate("edge $edge cannot be removed from edge index $this - it is not found in it")
+            case false  => throw SimpleGraphDuplicate(s"edge $edge cannot be removed from edge index $this - it is not found in it")
           }
-        case None => throw SimpleGraphDuplicate("edge $edge cannot be removed from edge index $this - it is not found in it")
+        case None => throw SimpleGraphDuplicate(s"edge $edge cannot be removed from edge index $this - it is not found in it")
       }
     }   
     
@@ -64,11 +64,11 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
    */
   
   def ++ (vertex: Vertex): SimpleGraph[VertexID, VertexData, EdgeData] = {    
-      vertexIndex.get(vertex.key) match {      
+    vertexIndex.get(vertex.key) match {      
       case Some(vertex) => throw SimpleGraphDuplicate("node with id $id already exists in the graph") 
       case None => vertexIndex += ((vertex.key, vertex)) // TODO: switch to put? 
-      }
-      this
+    }
+    this
   }
 
   // TODO: this is just a convenience wrapper, should probably not be part of the abstract api but rather an extra optional api trait
@@ -80,26 +80,26 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
     this
   }
   
-  def ++ (edge: Edge): SimpleGraph[VertexID, VertexData, EdgeData] = {
-    List(edge.v1, edge.v2).foreach(id => 
-      if (vertex(id).isEmpty) throw SimpleGraphInvalidEdge(s"will not add edge $edge because there is no vertex with id $id"))  
-      
+  private def doAdd (edge: Edge) {
     edgeIndex.add(edge.v1, edge)
     reverseEdgeIndex.add(edge.v2, edge)  
+  }
+  
+  private def requireVerticesExists(edge: Edge) {
+    List(edge.v1, edge.v2).foreach(id =>  
+      if (vertex(id).isEmpty) throw SimpleGraphInvalidEdge(s"will not add edge $edge because there is no vertex with id $id"))  
+  }
+  
+  def ++ (edge: Edge): SimpleGraph[VertexID, VertexData, EdgeData] = {
+    requireVerticesExists(edge)  
+    doAdd(edge)
     this
   }
   
   def addIfUnique (edge: Edge): SimpleGraph[VertexID, VertexData, EdgeData] = {
-    List(edge.v1, edge.v2).foreach { id => 
-      println(s"will not add edge $edge because there is no vertex with id $id")
-      if (vertex(id).isEmpty) throw SimpleGraphInvalidEdge(s"will not add edge $edge because there is no vertex with id $id")
-    }
-    
-    if (vertexEdges(edge.v1).filter(_ == edge).isEmpty) { // efficient check for whether new edge is a duplicate one 
-      edgeIndex.add(edge.v1, edge)
-      reverseEdgeIndex.add(edge.v2, edge)
-    } 
-  
+    requireVerticesExists(edge)      
+    // add if new edge is not already in the graph, otherwise do nothing 
+    if (vertexEdges(edge.v1).filter(_ == edge).isEmpty) doAdd(edge) 
     this
   }
   
@@ -122,19 +122,21 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
   
   /*
    * Switch this edge to point to vertex `to` wherever it currently points to `from`.
-   * This method may thus change either of the edge's connections, or even both.
+   * This method may handle either of the edge's connections, or both.
    */
   def edgeReWire(edge: Edge, from: VertexID, to:VertexID): SimpleGraph[VertexID, VertexData, EdgeData] = {
 
-    /* replaces an edge's vertex connection, if needed */
-    def replaceOrKeep(vertexId: VertexID): VertexID = {
-      if (vertexId == from) to
-      else vertexId
+    if (edge.v1 == from) {
+      edgeIndex.remove(edge.v1, edge)
+      edge.v1 = to
+      edgeIndex.add(edge.v1, edge)
     }
     
-    edge.v1 = replaceOrKeep(edge.v1)
-    edge.v2 = replaceOrKeep(edge.v2)
-    
+    if (edge.v2 == from) {
+      reverseEdgeIndex.remove(edge.v2, edge)
+      edge.v2 = to
+      reverseEdgeIndex.add(edge.v2, edge)
+    }
     this
   }
   

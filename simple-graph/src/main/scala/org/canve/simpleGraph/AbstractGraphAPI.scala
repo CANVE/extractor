@@ -43,7 +43,7 @@ abstract class AbstractGraph[VertexID, VertexData, EdgeData]
   def -- (edge: Edge): This 
   
   def addIfNew (vertex: Vertex): This
-    
+
   def vertex(id: VertexID): Option[Vertex]
   
   def vertexEdges(id: VertexID): Set[Edge] 
@@ -72,6 +72,8 @@ abstract class AbstractGraph[VertexID, VertexData, EdgeData]
   
   def -- (inputs: Addable*): This = this -= (inputs.toIterable)
   def ++ (inputs: Addable*): This = this ++ (inputs.toIterable)
+
+  def hasEdge(edge: Edge): Boolean
   
   def direction(id: VertexID, edge: Edge): EdgeDirection = { 
     (id == edge.v1, id == edge.v2) match {

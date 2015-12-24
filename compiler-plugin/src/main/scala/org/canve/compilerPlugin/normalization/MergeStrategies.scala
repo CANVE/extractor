@@ -30,6 +30,7 @@ trait MergeStrategies {
       val ids = (s1.data.symbolCompilerId, s2.data.symbolCompilerId)
      
       extractedModel.graph -= extractedModel.graph edgesBetween(ids._1, ids._2)
+      println("edges to rewire: " + extractedModel.graph.vertexEdges(ids._2))
       extractedModel.graph.vertexEdges(ids._2) foreach { e =>
         println(s"rewiring edge $e")
         extractedModel.graph.edgeReWire(e, from = ids._2, to = ids._1)

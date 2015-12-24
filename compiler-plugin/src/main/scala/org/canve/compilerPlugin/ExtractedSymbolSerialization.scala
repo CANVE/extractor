@@ -10,6 +10,8 @@ trait ExtractedSymbolSerialization {
   def escapeQuotes(s: String): String = {
     s.replace("\"", "\"\"")
   }
+  
+  def quoteWrap(a: Any) = "\"" + a + "\"" 
     
   def toCsvRow(implicit extractedModel: ExtractedModel): String = {
     // Note: escaping for csv is for now handled by hand (likely a tad faster).
@@ -19,11 +21,11 @@ trait ExtractedSymbolSerialization {
         case ExternallyDefined => "external" },
       nonSynthetic,
       symbolCompilerId, 
-      name, 
+      quoteWrap(name), 
       kind,
-      "\"" + codeLocation + "\"",
-      qualifyingPath,
-      "\"" + escapeQuotes(signatureString.toString) + "\"" // escaped as it contains, typically, commas
+      quoteWrap(codeLocation),
+      quoteWrap(qualifyingPath),
+      quoteWrap(escapeQuotes(signatureString.toString)) 
     ).mkString(",")
   }
 }

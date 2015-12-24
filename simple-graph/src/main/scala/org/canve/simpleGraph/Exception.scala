@@ -14,6 +14,6 @@ case class SimpleGraphApiException(errorText: String) extends SimpleGraphExcepti
 
 object DataWarning {
   def apply(warning: String) {
-    println(s"[canve data warning] $warning")
+    println(s"[canve simple-graph data warning] $warning")
   }
 }

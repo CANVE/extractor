@@ -132,7 +132,9 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
   
   /*
    * Switch this edge to point to vertex `to` wherever it currently points to `from`.
-   * This method may handle either of the edge's connections, or both.
+   * This method may handle either of the edge's connections, or both. It rewires the edge
+   * rather than create an entirely new one, to avoid having to reflect the instantiated 
+   * type of the supplied edge.
    */
   def edgeReWire(edge: Edge, from: VertexID, to:VertexID): SimpleGraph[VertexID, VertexData, EdgeData] = {
 

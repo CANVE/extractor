@@ -1,6 +1,6 @@
 package org.canve.compilerPlugin.normalization
 import org.canve.compilerPlugin._
-import org.canve.simpleGraph._
+import org.canve.simpleGraph.{DataWarning => _, _}
 
 /*
  * a home for various vertices merger strategies
@@ -22,6 +22,7 @@ trait MergeStrategies {
   // FIXME: this will not remove edges between given s2, s3 in List(s1,s2,s3)
   
   def reduceSymbols(extractedModel: ExtractedModel)(group: List[extractedModel.graph.Vertex]) = {
+    if (group.size > 2) DataWarning("merging more than two symbols is only partially supported")
     println(s"reducing ${group.size} symbols: $group")
     group.reduce { (s1, s2) => 
       
@@ -30,7 +31,7 @@ trait MergeStrategies {
       val ids = (s1.data.symbolCompilerId, s2.data.symbolCompilerId)
      
       extractedModel.graph -= extractedModel.graph edgesBetween(ids._1, ids._2)
-      println("edges to rewire: " + extractedModel.graph.vertexEdges(ids._2))
+
       extractedModel.graph.vertexEdges(ids._2) foreach { e =>
         println(s"rewiring edge $e")
         extractedModel.graph.edgeReWire(e, from = ids._2, to = ids._1)

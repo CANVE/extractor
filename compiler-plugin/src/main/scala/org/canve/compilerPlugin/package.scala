@@ -24,6 +24,12 @@ package object compilerPlugin {
       new ManagedExtractedGraph
         with GetPathsBetween[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation] 
   }
+
+  object DataWarning {
+    def apply(warning: String) {
+      println(s"[canve data warning] $warning")
+    }
+  }
   
   def getUniqueName(global: Global)(s: global.Symbol): SymbolName = {
 

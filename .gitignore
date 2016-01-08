@@ -42,3 +42,4 @@ integration-test-projects/
 ###########################################
 *.txt
 *.out
+*.old

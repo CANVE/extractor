@@ -30,4 +30,5 @@ credentials.sbt
 
 # project-specific
 out/
+github-cruncher-out/
 *.txt

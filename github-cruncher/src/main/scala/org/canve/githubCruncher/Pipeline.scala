@@ -10,7 +10,7 @@ object Pipeline extends ImplicitPersistenceSerializations {
   
   object PipelineImpl extends Pipeline {
     override def rootOutputUrl = {
-        new File("out").toURI // AIP outputs directory
+        new File("github-cruncher-out").toURI // AIP outputs directory
     }
   }
 

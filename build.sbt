@@ -39,7 +39,7 @@ lazy val commonCrossScalaVersions = scala12 match {
 }
 
 lazy val commonSettings = Seq(
-  promptTheme := Scalapenos,    
+  promptTheme := Scalapenos,
   organization := org,
   publishArtifact in (Compile, packageDoc) := false,
   // disable publishing the main sources jar
@@ -55,14 +55,22 @@ val integrationTest = taskKey[Unit]("Executes integration tests.")
  * the root project definition
  */
 lazy val root = (project in file("."))
-  .aggregate(simpleLogging, simpleGraph, compilerPluginUnitTestLib, canveCompilerPlugin, dataNormalizer, canveSbtPlugin, integrationTestProject)
+  .aggregate(
+    simpleLogging,
+    simpleGraph,
+    compilerPluginUnitTestLib,
+    canveCompilerPlugin,
+    dataNormalizer,
+    canveSbtPlugin,
+    integrationTestProject,
+    githubCruncher)
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
   .settings(commonSettings).settings(
     scalaVersion := "2.11.7",
     crossScalaVersions := commonCrossScalaVersions,
     publishArtifact := false, // no artifact to publish for the virtual root project
     integrationTest := (run in Compile in integrationTestProject).toTask("").value
-)
+  )
 
 /*
  * The compiler plugin module. Note we cannot call it simply
@@ -187,6 +195,69 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
   )
 
 /*
+ * Github crunching pipeline
+ */
+lazy val githubCruncher = (project in file("github-cruncher"))
+ .enablePlugins(CrossPerProjectPlugin)
+ .settings(commonSettings).settings(
+   scalaVersion := "2.11.7",
+   publishArtifact := false,
+
+   /* allenai pipeline */
+   resolvers += Resolver.bintrayRepo("allenai", "maven"),
+   libraryDependencies += "org.allenai" %% "pipeline" % "1.4.24",
+
+   libraryDependencies ++= Seq(
+
+     "com.github.nscala-time" %% "nscala-time" % "2.6.0",
+
+     /* slick */
+     "com.typesafe.slick" %% "slick" % "3.1.1",
+     "org.slf4j" % "slf4j-nop" % "1.6.4",
+     "com.typesafe.slick" %% "slick-codegen" % "3.1.1",
+     "mysql" % "mysql-connector-java" % "5.1.38",
+     "com.zaxxer" % "HikariCP-java6" % "2.3.9",
+
+     /* json */
+     "com.typesafe.play" %% "play-json" % "2.4.6",
+
+     /* http client */
+     "org.scalaj" %% "scalaj-http" % "2.2.0"
+  ),
+
+  /* storm */
+  resolvers ++= Seq("clojars" at "http://clojars.org/repo/",
+                    "clojure-releases" at "http://build.clojure.org/releases"),
+  libraryDependencies += "org.apache.storm" % "storm-core" % "0.10.0" % "provided",
+
+  /* register slick sbt command */
+  slickAutoGenerate <<= slickCodeGenTask
+  // sourceGenerators in Compile <+= slickCodeGenTask // register automatic code generation on every compile
+)
+
+ // slick code generation task - from https://github.com/slick/slick-codegen-example/blob/master/project/Build.scala
+ lazy val slickAutoGenerate = TaskKey[Seq[File]]("slick-gen")
+
+ lazy val slickCodeGenTask = (sourceManaged, dependencyClasspath in Compile, runner in Compile, streams) map { (dir, cp, r, s) =>
+
+   val dbName = "github_crawler"
+   val (user, password) = ("canve", "") // no password for this user
+
+   val jdbcDriver = "com.mysql.jdbc.Driver"
+   val slickDriver = "slick.driver.MySQLDriver"
+   val url = s"jdbc:mysql://localhost:3306/$dbName?user=$user"
+
+   val targetDir = "src/main/scala"
+   val pkg = "org.canve.githubCruncher.mysql"
+
+   toError(r.run("slick.codegen.SourceCodeGenerator", cp.files, Array(slickDriver, jdbcDriver, url, targetDir, pkg), s.log))
+
+   val outputSourceFile = s"$targetDir/org/canve/githubCruncher/mysql/Tables.scala"
+   println(scala.Console.GREEN + s"[info] slick code now auto-generated at $outputSourceFile" + scala.Console.RESET)
+   Seq(file(outputSourceFile))
+ }
+
+/*
  * And these depenency projects are developed (generally speaking) as generic libraries
  */
 lazy val simpleGraph: Project = (project in file("simple-graph"))
@@ -204,7 +275,7 @@ lazy val simpleGraph: Project = (project in file("simple-graph"))
   )
 
 lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib")).settings(commonSettings).settings(
-  
+
   name := "compiler-plugin-unit-test-lib",
   isSnapshot := true, // to enable overwriting the existing artifact version during dev
   scalaVersion := "2.11.7",

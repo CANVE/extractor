@@ -3,6 +3,18 @@ import tools.nsc.Global
 import performance._
 import org.canve.simpleGraph._
 import org.canve.simpleGraph.algo.impl.GetPathsBetween
+import scala.annotation.tailrec
+
+/*
+class IsNoSymbol extends scala.reflect.internal.SymbolTable with scala.reflect.internal.Symbols {
+  def apply(s: Symbol): Boolean = 
+    s match {
+      case NoSymbol => true
+      case _ => false
+  }
+}
+*/
+
 
 /*
  * a class representing a single and complete model extracted for the project being compiled, 
@@ -72,7 +84,42 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
               case("<_>") => None
               case signatureString@_ => Some(signatureString)
             })
-            
+
+        def symString(s: global.Symbol) = s"$s (${s.id})"    
+        
+        def getSetter(symbol: global.Symbol): Option[global.Symbol] = {
+          
+          @tailrec
+          def impl(symbolOrOwner: global.Symbol): Option[global.Symbol] = {
+            (symbolOrOwner.nameString == "<root>") match {
+              case true => None
+              case false =>
+                val maybeSetter = s.setter(symbolOrOwner)
+                if (IsSymbol(maybeSetter))
+                  Some(maybeSetter)
+                else 
+                  impl(symbolOrOwner.owner)
+            }
+          }
+          
+          impl(s)
+        }
+        
+        def IsSymbol(s: global.Symbol) = s.toString != "<none>" // the scala.reflect.internal class hierarchy doesn't easily succumb to getting a handle to the original NoSymbol class, otherwise we'd use that instead.
+        
+        //if (s.setter(s).id.toString != "1") println(s"${s.id} has setter: ${s.setter(s).id} (${s.setter})")
+        //if (s.getter(s).id.toString != "1") println(s"${symString(s)} has getter: ${s.getter(s).id} (${s.getter})")
+        if (s.isSetter) println(s"symbol ${symString(s)} is setter") 
+        if (s.isGetter) println(s"symbol ${symString(s)} is getter") 
+        if (s.companionSymbol.toString != "<none>") println(s"${symString(s)} has companion: ${symString(s.companionSymbol)}") 
+        //if (IsNoSymbol(s))
+        if (s.isParameter) println(s"symbol ${symString(s)} is a parameter")
+        
+        getSetter(s) match {
+          case None => println(s"${symString(s)} has no setter")
+          case Some(setter) => println(s"${symString(s)} has setter ${symString(setter)}")
+        }
+        
         graph ++ graph.Vertex(extractedSymbol.symbolCompilerId, extractedSymbol) 
             
         normalization.CompleteOwnerChain(global)(extractedSymbol, s, this)

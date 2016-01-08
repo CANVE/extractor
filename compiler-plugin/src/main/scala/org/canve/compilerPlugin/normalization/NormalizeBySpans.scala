@@ -173,6 +173,8 @@ trait NormalizeBySpans extends MergeStrategies {
     
   }
 
+  //TODO: if this module stands, revive checking for the conditions these logging classes are for:
+  
   /* Logging classes */
   
   case class SpansDefer(extractedSymbols: (ExtractedSymbol, ExtractedSymbol))(implicit extractedModel: ExtractedModel) {

@@ -30,4 +30,4 @@ credentials.sbt
 
 # project-specific
 out/
-out.txt
+*.txt

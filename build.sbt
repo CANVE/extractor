@@ -39,7 +39,7 @@ lazy val commonCrossScalaVersions = scala12 match {
 }
 
 lazy val commonSettings = Seq(
-  promptTheme := Scalapenos,    // disable publishing the main API jar
+  promptTheme := Scalapenos,    
   organization := org,
   publishArtifact in (Compile, packageDoc) := false,
   // disable publishing the main sources jar

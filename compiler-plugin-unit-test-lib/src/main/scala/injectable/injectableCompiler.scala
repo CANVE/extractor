@@ -85,7 +85,11 @@ object InjectingCompilerFactory {
 
 /*
  * class that manages compilation of code provided to it,
- * invoking an @injectable after the compilation.
+ * invoking an @injectable after the compilation. 
+ * 
+ * Note: it might be possible to avoid using real files - 
+ * 			 https://eknet.org/main/dev/runtimecompilescala.html
+ *       https://github.com/twitter/util/blob/master/util-eval/src/main/scala/com/twitter/util/Eval.scala
  */
 class InjectingCompiler(settings: scala.tools.nsc.Settings, 
                        reporter: scala.tools.nsc.reporters.Reporter,

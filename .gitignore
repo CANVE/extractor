@@ -1,6 +1,6 @@
-##################
-# build and ide  #
-##################
+#################
+# build and ide #
+#################
 
 # sbt
 dist/*
@@ -37,7 +37,7 @@ out/
 # integration tests nested test repos
 integration-test-projects/
 
-###############################
-# typical manual output files #
-###############################
+###########################################
+# typically manually created output files #
+###########################################
 *.txt

@@ -1,12 +1,6 @@
-*.class
-*.log
-
-# projects used for integration tests nested repo
-integration-test-projects/
-
-# IntelliJ
-.idea
-.idea_modules
+##################
+# build and ide  #
+##################
 
 # sbt
 dist/*
@@ -18,6 +12,10 @@ project/plugins/project/
 credentials.sbt
 *.icode
 
+# IntelliJ
+.idea
+.idea_modules
+
 # eclipse / Scala-IDE
 .classpath
 .project
@@ -28,7 +26,18 @@ credentials.sbt
 *.iml
 /bin/
 
-# project-specific
-out/
+####################
+# project-specific #
+####################
+
+canve.log
 github-cruncher-out/
+out/
+
+# integration tests nested test repos
+integration-test-projects/
+
+###############################
+# typical manual output files #
+###############################
 *.txt

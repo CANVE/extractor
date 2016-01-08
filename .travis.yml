@@ -5,6 +5,6 @@
 language: scala
 
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 
 script: sbt +compile +test

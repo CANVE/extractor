@@ -41,3 +41,4 @@ integration-test-projects/
 # typically manually created output files #
 ###########################################
 *.txt
+*.out

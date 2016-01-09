@@ -1,8 +1,0 @@
-< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
-
-  private def writeCodeSnippetToTempFile(code: String): File = {
-    val file = File.createTempFile("canve-compiler-plugin-unit-test-tmp", ".scala")
-    IOUtils.writeToFile(file, code)
-    file.deleteOnExit()
-    file
-  }

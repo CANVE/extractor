@@ -1,3 +1,0 @@
-< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
-
-    val command = new scala.tools.nsc.CompilerCommand(files.map(_.getAbsolutePath).toList, settings)

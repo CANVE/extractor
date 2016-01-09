@@ -1,6 +1,0 @@
-< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
-
-  private def getScalaJars: List[File] = {
-    val scalaJars = List("scala-compiler", "scala-library", "scala-reflect")
-    scalaJars.map(findScalaJar)
-  }

@@ -43,3 +43,8 @@ integration-test-projects/
 *.txt
 *.out
 *.old
+
+#######################
+# data of run on self #
+#######################
+canve-data/

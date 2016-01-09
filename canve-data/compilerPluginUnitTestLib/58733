@@ -1,3 +1,0 @@
-< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
-
-      val path = s"./target/scala-$ShortScalaVersion/test-generated-classes"

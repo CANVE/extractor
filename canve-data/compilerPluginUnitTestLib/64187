@@ -1,9 +1,0 @@
-< definition from source file: /repos/canve/extractor/compiler-plugin-unit-test-lib/src/main/scala/injectable/injectableCompiler.scala >
-
-    val phs = List(
-      syntaxAnalyzer -> "parse source into ASTs, perform simple desugaring",
-      analyzer.namerFactory -> "resolve names, attach symbols to named trees",
-      analyzer.packageObjects -> "load package objects",
-      analyzer.typerFactory -> "the meat and potatoes: type the trees",
-      new Plugin(this) -> "the plugin injector"
-    )

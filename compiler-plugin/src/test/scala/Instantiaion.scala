@@ -26,7 +26,7 @@ class TraversalExtractionTester extends compilerPluginUnitTest.Injectable {
  */
 trait NodeSearch { 
   def search(graph: ManagedExtractedGraph, name: String, kind: String) = {
-    graph.vertexIterator.filter(node => node.data.name == name && node.data.kind == kind).toList
+    graph.vertexIterator.filter(node => node.data.name.name == name && node.data.kind == kind).toList
   }
   
  def findUnique(graph: ManagedExtractedGraph, name: String, kind: String) = { 
@@ -101,7 +101,7 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
    * utility function for compact printing of symbols' qualified id
    */
   def shortDescription(symbol: ExtractedSymbol) = {
-    val shortenedQualifiedId = (symbol.qualifyingPath.value.head.name match {
+    val shortenedQualifiedId = (symbol.qualifyingPath.value.head.name.name match {
       case "<empty>" => symbol.qualifyingPath.value.drop(1)
       case _ => symbol.qualifyingPath.value
     }).map(_.name).mkString(".")
@@ -111,11 +111,13 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
   
 }
 
+/* Does this test still bear relevance ? 
+
 object MyTestSuite extends TestSuite {
   val compiler = InjectingCompilerFactory(InstantiationTester)
   
   assert(!compiler.reporter.hasErrors)
-  
+ 
   val tests = TestSuite {
     
     "instantiation is reasonably captured" - { 
@@ -166,3 +168,4 @@ object MyTestSuite extends TestSuite {
   //println(results.leaves.count(_.value.isSuccess)) // 1
 }
 
+*/

@@ -43,7 +43,11 @@ lazy val commonSettings = Seq(
   organization := org,
   publishArtifact in (Compile, packageDoc) := false,
   // disable publishing the main sources jar
-  publishArtifact in (Compile, packageSrc) := false
+  publishArtifact in (Compile, packageSrc) := false,
+
+  /* workaround for failed snapshot resolution https://github.com/sbt/sbt/issues/1780 */
+  resolvers += Resolver.sonatypeRepo("releases"),
+  resolvers += Resolver.sonatypeRepo("snapshots")
 )
 
 /*
@@ -89,7 +93,8 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
     scalaVersion := "2.11.7",
     //scalacOptions ++= Seq("-Ymacro-debug-lite"),
     crossScalaVersions := commonCrossScalaVersions,
-    resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
+    resolvers += Resolver.sonatypeRepo("releases"),
+    resolvers += Resolver.sonatypeRepo("snapshots"),
 
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
@@ -177,12 +182,6 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
      * and there is no need whatsoever to provided a cross-compilation of it for older scala.
      */
     scalaVersion := "2.11.7",
-
-    /*
-     * The following resolver is added as a workaround: the `update task` of this subproject,
-     * may oddly enough try to resolve scala-csv, which in turn may fail if the resolver for it is not in scope here.
-     */
-    resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
 
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided", // otherwise cannot use scala.tools.nsc.io.File

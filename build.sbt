@@ -46,7 +46,6 @@ lazy val commonSettings = Seq(
   publishArtifact in (Compile, packageSrc) := false,
 
   /* workaround for failed snapshot resolution https://github.com/sbt/sbt/issues/1780 */
-  resolvers += Resolver.sonatypeRepo("releases"),
   resolvers += Resolver.sonatypeRepo("snapshots")
 )
 

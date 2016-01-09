@@ -1,10 +1,10 @@
-package org.canve.sbtPluginTestLib
+package org.canve.shared.Execution
 
 import java.io.{PrintWriter, BufferedWriter, OutputStreamWriter, FileOutputStream, Closeable, Flushable}
 import org.fusesource.jansi.AnsiOutputStream
 import scala.sys.process._
 import java.io.File
-import util.PrintUtil._
+import org.canve.shared.PrintUtil._
 
 /*
  * Takes care of routing a process's stdout and stderr to a file, being a proper 

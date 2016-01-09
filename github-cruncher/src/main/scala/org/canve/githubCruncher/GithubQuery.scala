@@ -22,12 +22,12 @@ import LimitingApiCaller._
  * applicable to the type of query which they respond to.
  */
 
-trait GithubCrawler {  
+trait GithubQuery {  
 
   /*
    * get a relevant scala projects list from github api
    */
-  def getProjectsList: Future[List[JsValue]] = {
+  def go: Future[List[JsValue]] = {
     
     lazy val initialApiCall: HttpRequest = 
       WithUserAgent("https://api.github.com/search/repositories")

@@ -1,4 +1,4 @@
-package org.canve.sbtPluginTestLib.util
+package org.canve.shared
 
 import java.io.File
 

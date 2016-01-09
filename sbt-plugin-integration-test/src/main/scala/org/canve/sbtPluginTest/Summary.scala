@@ -1,4 +1,5 @@
-package org.canve.sbtPluginTestLib
+package org.canve.sbtPluginTest
+import org.canve.shared.Execution._
 
 /*
  * Summary Output formatter

@@ -1,4 +1,4 @@
-package org.canve.sbtPluginTestLib.util
+package org.canve.shared.Execution
 
 case class TimedExecutionResult[T](result: T, elapsed: Long)
 

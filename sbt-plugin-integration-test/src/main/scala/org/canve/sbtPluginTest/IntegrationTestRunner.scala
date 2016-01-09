@@ -1,10 +1,9 @@
-package org.canve.sbtPluginTestLib
+package org.canve.sbtPluginTest
 
-import org.canve.util.CanveDataIO
+import org.canve.shared.CanveDataIO
 import java.io.{File}
-import scala.sys.process._
-import util.TimedExecution
-import util.ReadyOutFile
+import org.canve.shared.ReadyOutFile
+import org.canve.shared.Execution._
 
 /*
  * Runs canve for each project included under the designated directory, 
@@ -71,11 +70,14 @@ object Runner extends App {
     val outStream = new FilteringOutputWriter(RedirectionMapper(project), (new java.util.Date).toString)
     
     val result = TimedExecution {
+      import scala.sys.process._
       Process(Seq("sbt", "-Dsbt.log.noformat=true", "canve"), project.dirObj) ! outStream == 0 match {
         case true  => Okay
         case false => Failure
       }
-    }; outStream.close
+    }
+    
+    outStream.close
     
     result
   }

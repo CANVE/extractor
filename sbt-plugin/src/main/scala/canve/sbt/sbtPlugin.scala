@@ -87,7 +87,7 @@ object Plugin extends AutoPlugin {
    */
   private def canve(): State => State = { state =>
 
-    org.canve.util.CanveDataIO.clearAll
+    org.canve.shared.CanveDataIO.clearAll
 
     val extracted: Extracted = Project.extract(state)
 

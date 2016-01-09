@@ -1,4 +1,4 @@
-package org.canve.util
+package org.canve.shared
 
 /*
  * Note:
@@ -7,9 +7,9 @@ package org.canve.util
  * may be used; external libraries will not work even though the compiler plugin itself will compile  
  */
 import java.io.{File}
-import java.nio.file.{Path, Paths, Files}
-import java.nio.charset.StandardCharsets
+import java.nio.file.{Paths, Files}
 import java.nio.file.FileAlreadyExistsException
+import scala.reflect.io.Path.string2path
 
 object CanveDataIO {  
   

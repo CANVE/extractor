@@ -1,6 +1,6 @@
-package org.canve.sbtPluginTestLib
+package org.canve.sbtPluginTest
 
-import util.ReadyOutFile
+import org.canve.shared.ReadyOutFile
 /*
  * Mapping between project names and the file path
  * where their output will be redirected into

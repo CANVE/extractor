@@ -60,6 +60,7 @@ val integrationTest = taskKey[Unit]("Executes integration tests.")
 lazy val root = (project in file("."))
   .aggregate(
     simpleLogging,
+    canveShared,
     simpleGraph,
     compilerPluginUnitTestLib,
     canveCompilerPlugin,
@@ -84,7 +85,7 @@ lazy val root = (project in file("."))
  * missing at compile time.
  */
 lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
-  .dependsOn(simpleLogging, simpleGraph, compilerPluginUnitTestLib % "test")
+  .dependsOn(canveShared, simpleLogging, simpleGraph, compilerPluginUnitTestLib % "test")
   .settings(commonSettings).settings(
     name := "compiler-plugin",
     version := "0.0.1",
@@ -99,7 +100,7 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
       "org.scala-lang" % "scala-library" % scalaVersion.value % "provided",
       //"com.github.tototoshi" %% "scala-csv" % "1.2.2",
-      "com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT", // snapshot version might be causing sbt/ivy going crazy
+      "com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT", // snapshot version might summon some sbt bugs
       //"org.apache.tinkerpop" % "tinkergraph-gremlin" % "3.0.1-incubating",
       //"canve" %% "simple-graph" % "0.0.1",
       //"canve" %% "compiler-plugin-unit-test-lib" % "0.0.1" % "test",
@@ -148,9 +149,6 @@ lazy val canveSbtPlugin = (project in file("sbt-plugin"))
     buildInfoObject := "BuildInfo",
     buildInfoPackage := "buildInfo",
     EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed
-
-    //resolvers += "Sonatype OSS Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots",
-    //libraryDependencies ++= Seq("com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT")
   )
 
 /*
@@ -163,17 +161,36 @@ lazy val dataNormalizer = (project in file("data-normalizer"))
     name := "data-normalizer",
     isSnapshot := true, // to enable overwriting the existing artifact version during dev
     scalaVersion := "2.11.7",
+    crossScalaVersions := Seq("2.11.7"),
     publishArtifact := false
+  )
+
+/*
+ * Library for shared low-level components and utility functions
+ */
+lazy val canveShared = (project in file("canve-shared"))
+  .settings(commonSettings).settings(
+    name := "canve-shared",
+    version := "0.0.1",
+    isSnapshot := true, // to enable overwriting the existing artifact version during dev
+    publishArtifact := false,
+    scalaVersion := "2.11.7",
+    crossScalaVersions := commonCrossScalaVersions,
+
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided", // otherwise cannot use scala.tools.nsc.io.File
+      "org.fusesource.jansi" % "jansi" % "1.4"
+    )
   )
 
 /*
  * Integration testing module, that runs our sbt module on select projects
  */
 lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"))
-  .dependsOn(canveCompilerPlugin) // TODO: This is currently just for a util object - we can do better.
+  .dependsOn(canveShared)
   .enablePlugins(CrossPerProjectPlugin)
   .settings(commonSettings).settings(
-    name := "sbt-plugin-test-lib",
+    name := "sbt-plugin-integration-test",
     version := "0.0.1",
 
     /*
@@ -196,9 +213,11 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
  * Github crunching pipeline
  */
 lazy val githubCruncher = (project in file("github-cruncher"))
+ .dependsOn(canveShared)
  .enablePlugins(CrossPerProjectPlugin)
  .settings(commonSettings).settings(
    scalaVersion := "2.11.7",
+   crossScalaVersions := Seq("2.11.7"),
    publishArtifact := false,
 
    /* allenai pipeline */
@@ -259,7 +278,6 @@ lazy val githubCruncher = (project in file("github-cruncher"))
  * And these depenency projects are developed (generally speaking) as generic libraries
  */
 lazy val simpleGraph: Project = (project in file("simple-graph"))
-  //.enablePlugins(ScalaJSPlugin)
   .settings(commonSettings).settings(
     name := "simple-graph",
     version := "0.0.1",
@@ -283,14 +301,6 @@ lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test
     "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided"
 ))
 
-/*
- * Not really a dependency, for now
- */
-lazy val scalaPlus = (project in file("scala-plus")).settings(commonSettings).settings(
-  scalaVersion := "2.11.7",
-  publishArtifact := false
-)
-
 lazy val simpleLogging = (project in file("simple-logging")).settings(commonSettings).settings(
   name := "simple-logging",
   version := "0.0.1",
@@ -310,9 +320,9 @@ lazy val simpleLogging = (project in file("simple-logging")).settings(commonSett
 )
 
 /*
- * Sound notifications for the patient - not yet working
-
- sound.play(compile in Compile, Sounds.Blow, Sounds.Tink)
- sound.play(test in Test, Sounds.Blow, Sounds.Ping)
- sound.play(publishLocal, Sounds.Blow, Sounds.Ping)
+ * Not really a dependency, for now
  */
+lazy val scalaPlus = (project in file("scala-plus")).settings(commonSettings).settings(
+  scalaVersion := "2.11.7",
+  publishArtifact := false
+)

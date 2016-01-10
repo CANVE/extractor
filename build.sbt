@@ -146,8 +146,8 @@ lazy val canveSbtPlugin = (project in file("sbt-plugin"))
 
     /* Generate source code that includes the organization name, to be included in compilation */
     buildInfoKeys := Seq[BuildInfoKey](organization),
-    buildInfoObject := "BuildInfo",
     buildInfoPackage := "buildInfo",
+    buildInfoObject := "BuildInfo",
     EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed
   )
 
@@ -215,7 +215,15 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
 lazy val githubCruncher = (project in file("github-cruncher"))
  .dependsOn(canveShared)
  .enablePlugins(CrossPerProjectPlugin)
- .settings(commonSettings).settings(
+ .enablePlugins(BuildInfoPlugin).settings(
+   /* Generate source code that includes the organization name, to be included in compilation */
+   buildInfoKeys := Seq[BuildInfoKey](baseDirectory),
+   buildInfoPackage := "SbtOwnBuildInfo",
+   buildInfoObject  := "info",
+   EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed
+ )
+ .settings(commonSettings)
+ .settings(
    scalaVersion := "2.11.7",
    crossScalaVersions := Seq("2.11.7"),
    publishArtifact := false,

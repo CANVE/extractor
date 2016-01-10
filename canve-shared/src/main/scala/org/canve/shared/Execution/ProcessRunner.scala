@@ -9,18 +9,18 @@ object Failure extends TaskResultType
 object Skipped extends TaskResultType
 
 case class ProcessRunner(
-  outputRedirectionPath: String, 
+  outputRedirectionDir: String, 
   outputRedirectionFile: String,
   command: Seq[String],
-  workingDirectoryAsString: String) {
+  workingDirectoryAsString: String = "./") {
   
-  def apply = {
+  def run = {
   
     val outStream = new FilteringOutputWriter(
-      ReadyOutFile(outputRedirectionPath, outputRedirectionFile),
+      ReadyOutFile(outputRedirectionDir, outputRedirectionFile),
       (new java.util.Date).toString)
       
-    val result: TimedExecutionResult[TaskResultType] = TimedExecution {
+    val result: TimedExecutionReport[TaskResultType] = TimedExecution {
       Process(command, new java.io.File(workingDirectoryAsString)) ! outStream == 0 match {
         case true  => Okay
         case false => Failure

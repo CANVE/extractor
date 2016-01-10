@@ -5,6 +5,6 @@ object app extends App with GithubQuery {
   
   val db = DB
   
-  PipelineWrapper.run
+  PipelineDef.run
   
 }

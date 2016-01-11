@@ -12,7 +12,7 @@ import org.canve.shared.PrintUtil._
  * the original FileProcessorLogger in scala.sys.process.
  */
 
-class FilteringOutputWriter(outFile: File, timeString: String) 
+class FilteringOutputWriter(outFile: File, timeString: String, liftError: Boolean = false) 
   extends ProcessLogger with Closeable with Flushable {
   
   val fileOutputStream = new FileOutputStream(outFile, true)
@@ -27,7 +27,7 @@ class FilteringOutputWriter(outFile: File, timeString: String)
     )
   )  
   
-  writer.println(wrap("Following is the stdout and stderr output of the sbt process started on " + timeString))
+  writer.println(wrap("Following is the stdout and stderr output of the process started on " + timeString))
   
   def out(s: ⇒ String): Unit = {
     writer.println(s)
@@ -35,8 +35,13 @@ class FilteringOutputWriter(outFile: File, timeString: String)
   }
   
   def err(s: ⇒ String): Unit = {
-    writer.println("<error> " + s)
-    print("..error..")  
+    writer.println("[stderr:] " + s)
+    
+    // avoids error indication for commands where stderr is used for information rather than errors
+    liftError match {
+      case false => print("<error>")
+      case true => print(".")
+    }
   }
   
   def buffer[T](f: => T): T = f

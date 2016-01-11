@@ -19,7 +19,7 @@ import LimitingApiCaller._
  * 
  * However some behavior is not documented, e.g. the way the link headers provide information about
  * your rate limit. Specifically at the time of writing, the link headers will report the rate limit
- * applicable to the type of query which they respond to.
+ * applicable to the type of query in the request, to which they are part of the response to.
  */
 
 trait GithubQuery {  

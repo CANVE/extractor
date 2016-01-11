@@ -46,7 +46,9 @@ lazy val commonSettings = Seq(
   publishArtifact in (Compile, packageSrc) := false,
 
   /* workaround for failed snapshot resolution https://github.com/sbt/sbt/issues/1780 */
-  resolvers += Resolver.sonatypeRepo("snapshots")
+  resolvers += Resolver.sonatypeRepo("snapshots"),
+
+  cancelable in Global := true // makes ctrl+c stop the current task rather than quit sbt
 )
 
 /*

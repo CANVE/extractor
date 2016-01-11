@@ -46,9 +46,7 @@ lazy val commonSettings = Seq(
   publishArtifact in (Compile, packageSrc) := false,
 
   /* workaround for failed snapshot resolution https://github.com/sbt/sbt/issues/1780 */
-  resolvers += Resolver.sonatypeRepo("snapshots"),
-
-  cancelable in Global := true // makes ctrl+c stop the current task rather than quit sbt
+  resolvers += Resolver.sonatypeRepo("snapshots")
 )
 
 /*
@@ -151,6 +149,12 @@ lazy val canveSbtPlugin = (project in file("sbt-plugin"))
     buildInfoPackage := "buildInfo",
     buildInfoObject := "BuildInfo",
     EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed
+
+    /*
+     * Workaround the `sbt eclipse` error: "Conflicting cross-version suffixes in: org.spire-math:jawn-parse"
+     * `sbt dependencyTree` (from https://github.com/jrudolph/sbt-dependency-graph) would not even show 2.11 being pulled in.
+     */
+    //libraryDependencies += "io.circe" %% "circe-parse" % "0.2.1" exclude("org.spire-math", "jawn-parser_2.11")
   )
 
 /*
@@ -336,3 +340,8 @@ lazy val scalaPlus = (project in file("scala-plus")).settings(commonSettings).se
   scalaVersion := "2.11.7",
   publishArtifact := false
 )
+
+/*
+ * makes ctrl+c stop the current task rather than quit sbt
+ */
+cancelable in Global := true

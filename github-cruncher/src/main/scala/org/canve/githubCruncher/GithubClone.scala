@@ -5,12 +5,14 @@ import org.canve.shared.ReadyOutDir
 
 trait GithubClone {
   
-  val cloneOutputPath = outDirectory + File.separator + "clone-logs"
+  val cloneOutputPath = outDirectory + File.separator + "clone-logs" // directory to write stdout & stderr into 
+  val clonesPath = outDirectory + File.separator + "clones"          // directory to clone under
   
   def go(cloneUrl: String) = {
     
-    val cloneFolder = cloneUrl.split("/").last.dropRight(4) // naive derivation of the clone-to directory
-    println(s"about to clone $cloneFolder")  
+    val projectName = cloneUrl.split("/").last.dropRight(4) // rather than this derivation, can get it directly from the github query response that leads to here
+    
+    println(s"about to clone $projectName")  
     
     /*
      * Note: git clone writes its normal output to stdout
@@ -22,10 +24,10 @@ trait GithubClone {
     val outcome = 
       new ProcessRun(
         outputRedirectionDir  = cloneOutputPath, 
-        outputRedirectionFile = cloneFolder,
+        outputRedirectionFile = projectName,
         command = Seq("git", "clone", cloneUrl),
-        ReadyOutDir(outDirectory + File.separator + "clones").toString, errorLift = true).run
+        ReadyOutDir(clonesPath).toString, errorLift = true).run
 
-    cloneFolder
+    projectName + File.separator + projectName
   }
 }

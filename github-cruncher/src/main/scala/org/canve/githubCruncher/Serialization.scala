@@ -14,9 +14,9 @@ trait ImplicitPersistenceSerializations {
   
   @deprecated("not currently in use", "")
   implicit object ProjectSerialize 
-    extends org.allenai.pipeline.StringSerializable[Project] {
+    extends org.allenai.pipeline.StringSerializable[ProjectDetails] {
     
-    def fromString(s: String): org.canve.githubCruncher.Project = ???
-    def toString(p: Project): String = p.toString()
+    def fromString(s: String): org.canve.githubCruncher.ProjectDetails = ???
+    def toString(p: ProjectDetails): String = p.toString()
   } 
 }

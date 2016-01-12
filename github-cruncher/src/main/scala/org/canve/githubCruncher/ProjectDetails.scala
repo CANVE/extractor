@@ -1,6 +1,6 @@
 package org.canve.githubCruncher
 
-case class Project(
+case class ProjectDetails(
   searchScore: Float,
   isFork: Boolean,
   forksCount: Int,
@@ -12,9 +12,9 @@ case class Project(
   languagesApiUrl: String) {
 }
 
-object Project {
+object ProjectDetails {
   def apply(item: play.api.libs.json.JsValue) = 
-    new Project(
+    new ProjectDetails(
       searchScore = (item \ "score").as[Float],
       isFork = (item \ "fork").as[Boolean],
       forksCount = (item \ "forks").as[Int],

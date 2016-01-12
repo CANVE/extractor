@@ -20,7 +20,7 @@ object Runner extends App {
   println(new File(".").getAbsolutePath)
   println(CanveDataIO.getSubDirectories(testProjectsRoot))
   val results = CanveDataIO.getSubDirectories(testProjectsRoot) map { projectDirObj =>
-    val project = Project(projectDirObj, projectDirObj.getName)
+    val project = Project(projectDirObj)
     
     /*
      * if there's no main args provided execute all tests,

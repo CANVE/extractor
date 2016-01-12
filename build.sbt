@@ -85,6 +85,7 @@ lazy val root = (project in file("."))
  * missing at compile time.
  */
 lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
+  .enablePlugins(CrossPerProjectPlugin)
   .dependsOn(canveShared, simpleLogging, simpleGraph, compilerPluginUnitTestLib % "test")
   .settings(commonSettings).settings(
     name := "compiler-plugin",
@@ -175,6 +176,7 @@ lazy val dataNormalizer = (project in file("data-normalizer"))
  * Library for shared low-level components and utility functions
  */
 lazy val canveShared = (project in file("canve-shared"))
+  .enablePlugins(CrossPerProjectPlugin)
   .settings(commonSettings).settings(
     name := "canve-shared",
     version := "0.0.1",
@@ -292,6 +294,7 @@ lazy val githubCruncher = (project in file("github-cruncher"))
  * And these depenency projects are developed (generally speaking) as generic libraries
  */
 lazy val simpleGraph: Project = (project in file("simple-graph"))
+  .enablePlugins(CrossPerProjectPlugin)
   .settings(commonSettings).settings(
     name := "simple-graph",
     version := "0.0.1",
@@ -304,42 +307,47 @@ lazy val simpleGraph: Project = (project in file("simple-graph"))
     testFrameworks += new TestFramework("utest.runner.Framework")
   )
 
-lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib")).settings(commonSettings).settings(
+lazy val compilerPluginUnitTestLib = (project in file("compiler-plugin-unit-test-lib"))
+  .enablePlugins(CrossPerProjectPlugin)
+  .settings(commonSettings).settings(
+    name := "compiler-plugin-unit-test-lib",
+    isSnapshot := true, // to enable overwriting the existing artifact version during dev
+    scalaVersion := "2.11.7",
+    crossScalaVersions := commonCrossScalaVersions,
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-reflect" % scalaVersion.value % "provided",
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided"
+  ))
 
-  name := "compiler-plugin-unit-test-lib",
-  isSnapshot := true, // to enable overwriting the existing artifact version during dev
-  scalaVersion := "2.11.7",
-  crossScalaVersions := commonCrossScalaVersions,
-  libraryDependencies ++= Seq(
-    "org.scala-lang" % "scala-reflect" % scalaVersion.value % "provided",
-    "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided"
-))
-
-lazy val simpleLogging = (project in file("simple-logging")).settings(commonSettings).settings(
-  name := "simple-logging",
-  version := "0.0.1",
-  isSnapshot := true, // to enable overwriting the existing artifact version during dev
-  scalaVersion := "2.11.7",
-  crossScalaVersions := commonCrossScalaVersions,
-  libraryDependencies ++= Seq(
-    "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
-    //"org.scala-lang.modules" %% "scala-pickling" % "0.10.1",
-    //"com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.0-1",
-    "io.circe" %% "circe-core" % "0.2.1",
-    "io.circe" %% "circe-generic" % "0.2.1",
-    "io.circe" %% "circe-parse" % "0.2.1",
-    "com.lihaoyi" %% "pprint" % "0.3.6",
-    "com.lihaoyi" %% "utest" % "0.3.1" % "test"),
-  testFrameworks += new TestFramework("utest.runner.Framework")
-)
+lazy val simpleLogging = (project in file("simple-logging"))
+  .enablePlugins(CrossPerProjectPlugin)
+  .settings(commonSettings).settings(
+    name := "simple-logging",
+    version := "0.0.1",
+    isSnapshot := true, // to enable overwriting the existing artifact version during dev
+    scalaVersion := "2.11.7",
+    crossScalaVersions := commonCrossScalaVersions,
+    libraryDependencies ++= Seq(
+      "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
+      //"org.scala-lang.modules" %% "scala-pickling" % "0.10.1",
+      //"com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.0-1",
+      "io.circe" %% "circe-core" % "0.2.1",
+      "io.circe" %% "circe-generic" % "0.2.1",
+      "io.circe" %% "circe-parse" % "0.2.1",
+      "com.lihaoyi" %% "pprint" % "0.3.6",
+      "com.lihaoyi" %% "utest" % "0.3.1" % "test"),
+    testFrameworks += new TestFramework("utest.runner.Framework")
+  )
 
 /*
  * Not really a dependency, for now
  */
-lazy val scalaPlus = (project in file("scala-plus")).settings(commonSettings).settings(
-  scalaVersion := "2.11.7",
-  publishArtifact := false
-)
+lazy val scalaPlus = (project in file("scala-plus"))
+  .enablePlugins(CrossPerProjectPlugin)
+  .settings(commonSettings).settings(
+    scalaVersion := "2.11.7",
+    publishArtifact := false
+  )
 
 /*
  * makes ctrl+c stop the current task rather than quit sbt

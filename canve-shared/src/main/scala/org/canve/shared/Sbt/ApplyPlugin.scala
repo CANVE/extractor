@@ -6,7 +6,9 @@ import org.canve.shared.ReadyOutFile
 import org.canve.shared.Execution._
 import org.canve.shared.Execution.TaskResultType
 
-case class Project(dirObj: java.io.File, name: String)
+case class Project(projectDirObj: java.io.File) {
+  val name: String = projectDirObj.getName
+}
 
 /*
  * Runs canve for an sbt project located in a given directory,
@@ -26,7 +28,7 @@ object ApplyPlugin {
      * add the plugin to the project's sbt setup
      */
     
-    val sbtProjectDir = project.dirObj.toString + File.separator + "project"
+    val sbtProjectDir = project.projectDirObj.toString + File.separator + "project"
     
     scala.tools.nsc.io.File(ReadyOutFile(sbtProjectDir, "canve.sbt"))
       .writeAll("""addSbtPlugin("canve" % "sbt-plugin" % "0.0.1")""" + "\n")      
@@ -37,9 +39,10 @@ object ApplyPlugin {
     
     val outStream = new FilteringOutputWriter(ReadyOutFile("out", project.name + ".out"), (new java.util.Date).toString)
     
+    // TODO: optionally use -no-color instead of -Dsbt.log.... 
     val result = TimedExecution {
       import scala.sys.process._
-      Process(Seq("sbt", "-Dsbt.log.noformat=true", "canve"), project.dirObj) ! outStream == 0 match {
+      Process(Seq("sbt", "-Dsbt.log.noformat=true", "canve"), project.projectDirObj) ! outStream == 0 match {
         case true  => Okay
         case false => Failure
       }

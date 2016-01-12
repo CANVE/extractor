@@ -3,6 +3,7 @@ import org.allenai.pipeline._
 import org.allenai.pipeline.IoHelpers._
 import java.io.File
 import scala.concurrent.ExecutionContext.Implicits.global
+import org.canve.shared.Sbt._
 
 /* 
  * adds a clone step to a pipeline per github project 
@@ -12,7 +13,8 @@ object AddProjects {
     
     githubQuery.get.foreach { projectDescription =>  
       val cloneUrl: String = (projectDescription \ "clone_url").as[String]
-      pipeline.Persist.Singleton.asText(ProjectProcessor(cloneUrl))
+      val clonedFolder = pipeline.Persist.Singleton.asText(ProjectProcessor(cloneUrl))
+      ApplyPlugin(Project(new File(clonedFolder.get)))
     }
   }
 }

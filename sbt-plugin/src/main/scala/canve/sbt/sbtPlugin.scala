@@ -38,14 +38,15 @@ object Plugin extends AutoPlugin {
   override lazy val projectSettings = Seq(
 
     libraryDependencies += compilerPluginOrg % (compilerPluginArtifact + "_" + scalaBinaryVersion.value) % compilerPluginVersion % "provided",  
-      
-    commands += Command.command(
+
+    commands += Command.args(
       sbtCommandName,
-      "Instruments all projects in the current build definition such that they run canve during compilation",
+      ("Instrument all projects in the current build definition such that they run canve during compilation",
+      "Instrument all projects in the current build definition such that they run canve during compilation"),
+      "Instrument all projects in the current build definition such that they run canve during compilation",
       "Instrument all projects in the current build definition such that they run canve during compilation")
       (canve())
-      // if only not https://github.com/CANVE/extractor/issues/12: 
-      //(perProjectInject().andThen(canve()))
+      // if only not https://github.com/CANVE/extractor/issues/12: (perProjectInject().andThen(canve()))
   )
 
   /*
@@ -85,9 +86,16 @@ object Plugin extends AutoPlugin {
   /*
    * Implementation of the `canve` command
    */
-  private def canve(): State => State = { state =>
+  private def canve(): (State, Seq[String]) => State = { (state, args) =>
 
-    org.canve.shared.CanveDataIO.clearAll
+    if (args.length > 1) throw new Exception("too many arguments supplied to the sbt canve command ― zero or one arguments expected") 
+    
+    val ResultDataPath = args.isEmpty match {
+      case true  => "aaa"
+      case false => args.head 
+    }
+    
+    org.canve.shared.DataIO.clearAll
 
     val extracted: Extracted = Project.extract(state)
 
@@ -131,7 +139,10 @@ object Plugin extends AutoPlugin {
                     // hooks in the compiler plugin
                     Some(s"-Xplugin:${pluginPath.getAbsolutePath}"),
                     // passes the name of the project being compiled, to the plugin
-                    Some(s"-P:$compilerPluginNameProperty:projectName:$projectName")).flatten 
+                    Some(s"-P:$compilerPluginNameProperty:projectName:$projectName"),
+                    // passes the data output path argument
+                    Some(s"-P:$compilerPluginNameProperty:ResultDataPath:$ResultDataPath")
+                  ).flatten 
                 
                 val fullCompilerOptions =  
                   // enables obtaining accurate source ranges in the compiler plugin,

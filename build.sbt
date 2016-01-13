@@ -101,7 +101,8 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
       "org.scala-lang" % "scala-library" % scalaVersion.value % "provided",
       //"com.github.tototoshi" %% "scala-csv" % "1.2.2",
-      "com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT", // snapshot version might summon some sbt bugs
+      //"com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT", // snapshot version might summon some sbt bugs
+      "com.github.tototoshi" %% "scala-csv" % "1.3.0", // snapshot version might summon some sbt bugs
       //"org.apache.tinkerpop" % "tinkergraph-gremlin" % "3.0.1-incubating",
       //"canve" %% "simple-graph" % "0.0.1",
       //"canve" %% "compiler-plugin-unit-test-lib" % "0.0.1" % "test",
@@ -238,7 +239,7 @@ lazy val githubCruncher = (project in file("github-cruncher"))
 
    /* allenai pipeline */
    resolvers += Resolver.bintrayRepo("allenai", "maven"),
-   libraryDependencies += "org.allenai" %% "pipeline" % "1.4.24",
+   libraryDependencies += "canve" %% "pipeline" % "1.4.25-SNAPSHOT", // "org.allenai" %% "pipeline" % "1.4.24",
 
    libraryDependencies ++= Seq(
 

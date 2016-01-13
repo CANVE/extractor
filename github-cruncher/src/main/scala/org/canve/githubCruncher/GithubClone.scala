@@ -28,6 +28,6 @@ trait GithubClone {
         command = Seq("git", "clone", cloneUrl),
         ReadyOutDir(clonesPath).toString, errorLift = true).run
 
-    projectName + File.separator + projectName
+    clonesPath + File.separator + projectName
   }
 }

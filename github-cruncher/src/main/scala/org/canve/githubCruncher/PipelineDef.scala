@@ -6,15 +6,21 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import org.canve.shared.Sbt._
 
 /* 
- * adds a clone step to a pipeline per github project 
+ * adds processing steps to a pipeline per github project 
  */
 object AddProjects {
   def apply(pipeline: Pipeline, githubQuery: Producer[Iterable[play.api.libs.json.JsValue]]) { 
     
     githubQuery.get.foreach { projectDescription =>  
-      val cloneUrl: String = (projectDescription \ "clone_url").as[String]
-      val clonedFolder = pipeline.Persist.Singleton.asText(ProjectProcessor(cloneUrl))
-      ApplyPlugin(Project(new File(clonedFolder.get)))
+      
+      val projectFullName = (projectDescription \ "full_name").as[String]
+      val cloneUrl        = (projectDescription \ "clone_url").as[String]
+
+      val stepName = projectFullName.replaceAll("/",".") 
+      
+      val clonedFolder = pipeline.Persist.Singleton.asText(Clone(cloneUrl),     stepName = s"Clone.$stepName").get
+      val isSbtProject = pipeline.Persist.Singleton.asText(IsSBT(clonedFolder), stepName = s"IsSbt.$stepName").get
+      if (isSbtProject) pipeline.Persist.Singleton.asText(Canve(clonedFolder),  stepName = s"Canve.$stepName")
     }
   }
 }

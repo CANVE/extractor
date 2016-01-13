@@ -1,6 +1,6 @@
 package org.canve.compilerPlugin.normalization
 import org.canve.compilerPlugin._
-import org.canve.shared.CanveDataIO._
+import org.canve.shared.DataIO._
 import com.github.tototoshi.csv._
 import java.io.File
 import org.canve.simpleGraph._

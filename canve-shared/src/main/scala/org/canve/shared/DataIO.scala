@@ -10,30 +10,31 @@ import java.io.{File}
 import java.nio.file.{Paths, Files}
 import java.nio.file.FileAlreadyExistsException
 import scala.reflect.io.Path.string2path
+import java.nio.file.Path
 
-object CanveDataIO {  
+object DataIO {  
   
   val canveRoot = "canve-data"
   
-  createDir(canveRoot)
+  createDirIfNotExists(canveRoot)
   
   /*
    * write string to file, overwriting if file already exists
    */
   def writeOutputFile(dir: String, fileName: String, fileText: String) {
-    createDir(canveRoot + File.separator + dir)
+    createDirIfNotExists(canveRoot + File.separator + dir)
     scala.tools.nsc.io.File(canveRoot + File.separator + dir + File.separator + fileName).writeAll(fileText)
   }
 
   /*
    * create target folder, if it doesn't already exist
    */
-  def createDir(outDir: String) = {
+  def createDirIfNotExists(outDir: String) : Path = {
     val outDirObj = Paths.get(outDir)
     try {
       Files.createDirectory(outDirObj)
     } catch { // ignore if directory already exists
-      case e: FileAlreadyExistsException =>
+      case e: FileAlreadyExistsException => outDirObj
       case e: Throwable => throw(e)  
     }
   }

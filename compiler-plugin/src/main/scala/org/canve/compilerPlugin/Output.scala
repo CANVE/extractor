@@ -1,6 +1,6 @@
 package org.canve.compilerPlugin
 
-import org.canve.shared.CanveDataIO._
+import org.canve.shared.DataIO._
 
 object Output {
   

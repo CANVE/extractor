@@ -1,6 +1,6 @@
 package org.canve.sbtPluginTest
 
-import org.canve.shared.CanveDataIO
+import org.canve.shared.DataIO
 import java.io.{File}
 import org.canve.shared.ReadyOutFile
 import org.canve.shared.Execution._
@@ -18,8 +18,8 @@ object Runner extends App {
   val testProjectsRoot: String = getClass.getResource("/integration-test-projects").getFile
   
   println(new File(".").getAbsolutePath)
-  println(CanveDataIO.getSubDirectories(testProjectsRoot))
-  val results = CanveDataIO.getSubDirectories(testProjectsRoot) map { projectDirObj =>
+  println(DataIO.getSubDirectories(testProjectsRoot))
+  val results = DataIO.getSubDirectories(testProjectsRoot) map { projectDirObj =>
     val project = Project(projectDirObj)
     
     /*

@@ -198,6 +198,13 @@ lazy val canveShared = (project in file("canve-shared"))
 lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"))
   .dependsOn(canveShared)
   .enablePlugins(CrossPerProjectPlugin)
+  .enablePlugins(BuildInfoPlugin).settings(
+    /* Generate source code that includes the organization name, to be included in compilation */
+    buildInfoKeys := Seq[BuildInfoKey](baseDirectory),
+    buildInfoPackage := "SbtOwnBuildInfo",
+    buildInfoObject  := "info",
+    EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed
+  )
   .settings(commonSettings).settings(
     name := "sbt-plugin-integration-test",
     version := "0.0.1",

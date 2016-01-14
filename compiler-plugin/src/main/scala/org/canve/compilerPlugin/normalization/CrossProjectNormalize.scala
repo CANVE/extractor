@@ -1,6 +1,6 @@
 package org.canve.compilerPlugin.normalization
 import org.canve.compilerPlugin._
-import org.canve.shared.DataIO._
+import org.canve.shared._
 import com.github.tototoshi.csv._
 import java.io.File
 import org.canve.simpleGraph._
@@ -76,16 +76,11 @@ trait DataReader {
 
 object CrossProjectNormalizer extends DataReader with MergeStrategies {
   
-  def normalize(path: Option[String] = None): ReIndexedGraph = {
-    
-    val dataRootPath = path match {
-      case None => canveRoot  // suitable for a run as part of the sbt plugin
-      case Some(path) => path // suitable for a stand-alone run
-    }
+  def normalize(dataRootPath: String): ReIndexedGraph = {
     
     /* iterator of tuples (directory name, read graph) */
     val projectGraphs = 
-      getSubDirectories(dataRootPath).toIterator.map(subDirectory => (subDirectory.getName, readCanveDirData(subDirectory)))
+      IO.getSubDirectories(dataRootPath).toIterator.map(subDirectory => (subDirectory.getName, readCanveDirData(subDirectory)))
 
     val aggregateGraph = new ReIndexedGraph 
     

@@ -91,11 +91,11 @@ object Plugin extends AutoPlugin {
     if (args.length > 1) throw new Exception("too many arguments supplied to the sbt canve command ― zero or one arguments expected") 
     
     val ResultDataPath = args.isEmpty match {
-      case true  => "aaa"
+      case true  => "canve-data" // default value
       case false => args.head 
     }
     
-    org.canve.shared.DataIO.clearAll
+    new org.canve.shared.DataIO(ResultDataPath).clearAll
 
     val extracted: Extracted = Project.extract(state)
 
@@ -141,7 +141,7 @@ object Plugin extends AutoPlugin {
                     // passes the name of the project being compiled, to the plugin
                     Some(s"-P:$compilerPluginNameProperty:projectName:$projectName"),
                     // passes the data output path argument
-                    Some(s"-P:$compilerPluginNameProperty:ResultDataPath:$ResultDataPath")
+                    Some(s"-P:$compilerPluginNameProperty:outputDataPath:$ResultDataPath")
                   ).flatten 
                 
                 val fullCompilerOptions =  
@@ -194,7 +194,7 @@ object Plugin extends AutoPlugin {
     successfulProjects.length == extracted.structure.allProjectRefs.length match {
       case true =>
         println("normalizing data across subprojects...")
-        val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.normalize()
+        val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.normalize(ResultDataPath)
         println("canve task done")
         state
       case false =>

@@ -12,13 +12,13 @@ object Summary {
       Console.BOLD +  
       (result.result match {
         case Okay =>  
-          Console.GREEN + "Worked Ok for project " + result.project.name +
+          Console.GREEN + "Worked Ok for project " + result.projectName +
           Console.RESET + elapsed(result.elapsed)
         case Failure => 
-          Console.RED   + "Failed for project " + result.project.name +
+          Console.RED   + "Failed for project " + result.projectName +
           Console.RESET + elapsed(result.elapsed)
         case Skipped => 
-          Console.YELLOW  + "Skipped testing against project " + result.project.name
+          Console.YELLOW  + "Skipped testing against project " + result.projectName
       }) +
       Console.RESET
     }

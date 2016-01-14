@@ -8,5 +8,5 @@ object StandAloneRun extends App {
       args.head
   }
   
-  val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.normalize(Some(path))
+  val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.normalize(path)
 }

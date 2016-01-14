@@ -1,7 +1,12 @@
 package org.canve.githubCruncher
 
-trait ImplicitPersistenceSerializations {
+trait ImplicitConversions {
    
+  /* 
+   * Provides implicit conversion evidence for conversion between play and spray json,  
+   * the technique is similar but not the same as http://stackoverflow.com/a/34501231/1509695 
+   */
+  
   implicit object Serialize 
     extends spray.json.JsonFormat[play.api.libs.json.JsValue] {
 
@@ -9,10 +14,13 @@ trait ImplicitPersistenceSerializations {
     import play.api.libs.json.Json.{parse => parseToPlay} 
     
     def read(jsonObj: spray.json.JsValue): play.api.libs.json.JsValue = parseToPlay(jsonObj.toString)
-    def write(obj: play.api.libs.json.JsValue): spray.json.JsValue = parseToSpray(obj.toString)   
+    def write(obj: play.api.libs.json.JsValue): spray.json.JsValue = parseToSpray(obj.toString)              
   }
   
-  @deprecated("not currently in use", "")
+  /*
+   * Example implicit conversion for pipeline serialization
+   */
+  @deprecated("not currently needed", "")
   implicit object ProjectSerialize 
     extends org.allenai.pipeline.StringSerializable[ProjectDetails] {
     

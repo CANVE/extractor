@@ -1,18 +1,19 @@
 package org.canve.githubCruncher
 import org.canve.shared.Execution._
 import java.io.File
-import org.canve.shared.ReadyOutDir
+import org.canve.shared._
+import scala.reflect.io.Directory
 
 trait GithubClone {
   
-  val cloneOutputPath = outDirectory + File.separator + "clone-logs" // directory to write stdout & stderr into 
-  val clonesPath = outDirectory + File.separator + "clones"          // directory to clone under
+  //val cloneOutputPath = outDirectory + File.separator + "clone-logs" // directory to write stdout & stderr into 
+  //val clonesPath = outDirectory + File.separator + "clones"          // directory to clone under
   
-  def go(cloneUrl: String) = {
+  def go(cloneUrl: String, projectFullName: String): String = {
     
-    val projectName = cloneUrl.split("/").last.dropRight(4) // rather than this derivation, can get it directly from the github query response that leads to here
+    val out = new DataWithLog(outDirectory + File.separator + "clones" + File.separator + projectFullName)
     
-    println(s"about to clone $projectName")  
+    println(s"about to clone $projectFullName")  
     
     /*
      * Note: git clone writes its normal output to stdout
@@ -23,11 +24,12 @@ trait GithubClone {
     
     val outcome = 
       new ProcessRun(
-        outputRedirectionDir  = cloneOutputPath, 
-        outputRedirectionFile = projectName,
+        outputRedirectionDir  = out.logDir.toString, 
+        outputRedirectionFile = projectFullName,
+        workingDirectoryAsString = out.dataDir.toString, 
         command = Seq("git", "clone", cloneUrl),
-        ReadyOutDir(clonesPath).toString, errorLift = true).run
+        errorLift = true).run
 
-    clonesPath + File.separator + projectName
+    out.dataDir.toString
   }
 }

@@ -16,16 +16,16 @@ object AddProjects {
       val projectFullName = (projectDescription \ "full_name").as[String]
       val cloneUrl        = (projectDescription \ "clone_url").as[String]
 
-      val stepName = projectFullName.replaceAll("/",".") 
+      val escapedFullName = projectFullName.replaceAll("/",".") 
       
-      val clonedFolder = pipeline.Persist.Singleton.asText(Clone(cloneUrl),     stepName = s"Clone.$stepName").get
-      val isSbtProject = pipeline.Persist.Singleton.asText(IsSBT(clonedFolder), stepName = s"IsSbt.$stepName").get
-      if (isSbtProject) pipeline.Persist.Singleton.asText(Canve(clonedFolder),  stepName = s"Canve.$stepName")
+      val clonedFolder = pipeline.Persist.Singleton.asText(Clone(cloneUrl, escapedFullName), stepName = s"Clone.$escapedFullName").get
+      val isSbtProject = pipeline.Persist.Singleton.asText(IsSBT(clonedFolder), stepName = s"IsSbt.$escapedFullName").get
+      if (isSbtProject) pipeline.Persist.Singleton.asText(Canve(scala.reflect.io.Directory(clonedFolder), escapedFullName),  stepName = s"Canve.$escapedFullName")
     }
   }
 }
 
-object PipelineDef extends ImplicitPersistenceSerializations {
+object PipelineDef extends ImplicitConversions {
   
   /*
    * setup and expose a pipeline runner

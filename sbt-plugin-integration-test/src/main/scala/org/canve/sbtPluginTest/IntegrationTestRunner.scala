@@ -1,10 +1,12 @@
 package org.canve.sbtPluginTest
 
-import org.canve.shared.DataIO
+import org.canve.shared._
 import java.io.{File}
 import org.canve.shared.ReadyOutFile
 import org.canve.shared.Execution._
 import org.canve.shared.Sbt._
+import SbtOwnBuildInfo.info._
+import scala.reflect.io.Directory
 
 /*
  * Runs canve for each project included under the designated directory, 
@@ -17,32 +19,35 @@ object Runner extends App {
   //val testProjectsRoot = "test-projects"
   val testProjectsRoot: String = getClass.getResource("/integration-test-projects").getFile
   
-  println(new File(".").getAbsolutePath)
-  println(DataIO.getSubDirectories(testProjectsRoot))
-  val results = DataIO.getSubDirectories(testProjectsRoot) map { projectDirObj =>
-    val project = Project(projectDirObj)
-    
+  val outRoot = ReadyOutDir(baseDirectory.toString + File.separator + "out")
+  
+  //println(new File(".").getAbsolutePath)
+  //println(IO.getSubDirectories(testProjectsRoot))
+  
+  val results = IO.getSubDirectories(testProjectsRoot) map { projectDir =>
+        
     /*
      * if there's no main args provided execute all tests,
      * otherwise be selective according to a first main arg's value
      */
-    if ((args.isEmpty) || (args.nonEmpty && project.name.startsWith(args.head))) 
+    if ((args.isEmpty) || (args.nonEmpty && projectDir.getName.startsWith(args.head))) 
     {    
       
-      val projectPath = testProjectsRoot + File.separator + project.name 
-      print("\n" + Console.YELLOW + Console.BOLD + s"Running the sbt plugin for $projectPath..." + Console.RESET) 
+      print("\n" + Console.YELLOW + Console.BOLD + s"Running the sbt plugin for $projectDir..." + Console.RESET) 
       
-      val timedExecutionResult = ApplyPlugin(project)
+      val outDir = outRoot + File.separator + "canve" + File.separator + projectDir.getName
+      
+      val timedExecutionResult = ApplyPlugin(Directory(projectDir), outDir)
       println(timedExecutionResult.result match {
         case Okay    => "finished okay"
         case Failure => "failed"
       })
       
-      Result(project, timedExecutionResult.result, timedExecutionResult.elapsed)
+      Result(projectDir.getName, timedExecutionResult.result, timedExecutionResult.elapsed)
       
     } else {
       
-      Result(project, Skipped, 0)
+      Result(projectDir.getName, Skipped, 0)
       
     }    
   } 
@@ -50,4 +55,4 @@ object Runner extends App {
   Summary(results) 
 }
 
-case class Result(project: Project, result: TaskResultType, elapsed: Long)
+case class Result(projectName: String, result: TaskResultType, elapsed: Long)

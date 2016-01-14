@@ -8,8 +8,8 @@ import org.allenai.pipeline.IoHelpers._
 import scala.concurrent.duration._
 import scala.concurrent.Await
 import org.canve.shared.Sbt.ApplyPlugin
-import org.canve.shared.Sbt.Project
 import java.io.File
+import scala.reflect.io.Directory
 
 /* Project list producer */
 case class GithubProjectList() extends Producer[List[play.api.libs.json.JsValue]] 
@@ -18,21 +18,22 @@ case class GithubProjectList() extends Producer[List[play.api.libs.json.JsValue]
 }
 
 /* Project clone producer */
-case class Clone(cloneUrl: String) extends Producer[String]
+case class Clone(cloneUrl: String, projectFullName: String) extends Producer[String]
   with Ai2StepInfo with GithubClone {
-    def create = go(cloneUrl)      
+    def create = go(cloneUrl, projectFullName)      
 }  
 
 /* Cloned project canve producer */
 case class IsSBT(clonedUrl: String) 
   extends Producer[Boolean] with Ai2StepInfo  {
-    def create = ApplyPlugin.canApply(Project(new File(clonedUrl)))
+    def create = ApplyPlugin.canApply(Directory(clonedUrl))
 }  
 
 /* Cloned project canve producer */
-case class Canve(clonedUrl: String) 
+case class Canve(projectClone: Directory, projectFullName: String) 
   extends Producer[String] with Ai2StepInfo  {
-    def create = ApplyPlugin(Project(new File(clonedUrl))).toString      
+    val resultsRootDir = outDirectory + File.separator + "canve" + File.separator + projectFullName 
+    def create = ApplyPlugin(projectClone, resultsRootDir).toString      
 }  
 
 

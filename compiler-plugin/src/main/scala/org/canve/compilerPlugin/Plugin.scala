@@ -1,10 +1,11 @@
 package org.canve.compilerPlugin
 import tools.nsc.Global
 import scala.collection.SortedSet
-
+import java.io.File
 
 object PluginArgs {
   var projectName: String = ""
+  var outputRootPath: String = "canve-data" // default value
 }  
 
 class RuntimePlugin(val global: Global) extends tools.nsc.plugins.Plugin {
@@ -21,16 +22,24 @@ class RuntimePlugin(val global: Global) extends tools.nsc.plugins.Plugin {
    */
   override def processOptions(opts: List[String], error: String => Unit) {
     val projNameArgPrefix = "projectName:"
+    val outputRootPathArgPrefix = "outputDataPath:" 
     
     for ( opt <- opts ) {
-      if (opt.startsWith(projNameArgPrefix)) {
-        PluginArgs.projectName = opt.substring(projNameArgPrefix.length)
-        Log("instrumenting project " + PluginArgs.projectName + "...") 
+      (opt.startsWith(projNameArgPrefix), opt.startsWith(outputRootPathArgPrefix)) match {
+        case (true, _) =>
+          PluginArgs.projectName = opt.substring(projNameArgPrefix.length)
+          Log("instrumenting project " + PluginArgs.projectName + "...")
+        case (_, true) =>
+          PluginArgs.outputRootPath = opt.substring(outputRootPathArgPrefix.length)
+          Log("data will be written under " + PluginArgs.outputRootPath + File.separator + PluginArgs.projectName) 
+        case (false, false) =>
+          error("Unknown invocation parameter passed to the CANVE compiler plugin: " + opt)
+        case _ => throw new Exception("internal error")
       }
-      else
-        error("Unknown invocation parameter passed to the CANVE compiler plugin: " + opt)
     }
+
     if (!opts.exists(_.startsWith("projectName")))
       throw new RuntimeException("canve compiler plugin invoked without a project name argument")
+ 
   }
 }

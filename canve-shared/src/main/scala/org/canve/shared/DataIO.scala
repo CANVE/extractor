@@ -1,10 +1,8 @@
 package org.canve.shared
 
 /*
- * Note:
- * 
- * being a compiler plugin, only core scala or java libraries accessible to core scala,
- * may be used; external libraries will not work even though the compiler plugin itself will compile  
+ * Note: being a compiler plugin, only core scala or java libraries accessible to core scala can be
+ * used; external libraries will not work even though the compiler plugin itself will compile  
  */
 import java.io.{File}
 import java.nio.file.{Paths, Files}
@@ -12,9 +10,7 @@ import java.nio.file.FileAlreadyExistsException
 import scala.reflect.io.Path.string2path
 import java.nio.file.Path
 
-object DataIO {  
-  
-  val canveRoot = "canve-data"
+class DataIO(canveRoot: String = "canve-data") {  
   
   createDirIfNotExists(canveRoot)
   
@@ -40,19 +36,10 @@ object DataIO {
   }
   
   /*
-   * get sub-directories
-   * TODO: move to lower level util package / layer
-   */
-  def getSubDirectories(dir: String): List[File] = {
-    val directory = new File(dir) 
-    if (!directory.exists) throw new Exception(s"API usage error: cannot invoke this function on a non-existant directory ($dir)") // otherwise ugly java exception 
-    directory.listFiles.toList.filter(_.isDirectory())
-  }
-  
-  /*
    * clear the entire canve data directory, while leaving its root there
    */
   def clearAll = {
+    println(s"purging data directory $canveRoot") 
     clearRecursive(new File(canveRoot))
   }
   

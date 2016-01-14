@@ -6,10 +6,8 @@ import org.canve.shared.ReadyOutFile
 import org.canve.shared.Execution._
 import org.canve.shared.Execution.TaskResultType
 import org.canve.shared.DataIO._
-
-case class Project(projectDirObj: java.io.File) {
-  val name: String = projectDirObj.getName
-}
+import org.canve.shared.DataWithLog
+import scala.reflect.io.Directory
 
 /*
  * Runs canve for an sbt project located in a given directory,
@@ -19,14 +17,14 @@ case class Project(projectDirObj: java.io.File) {
  */
 object ApplyPlugin {
    
-  def canApply(project: Project) = isSbtProject(project)
+  def canApply(projectClone: Directory) = isSbtProject(projectClone)
   
-  private def isSbtProject(project: Project): Boolean = {
+  private def isSbtProject(projectClone: Directory): Boolean = {
 
-    val sbtProjectDir = project.projectDirObj.toString + File.separator + "project"
+    val sbtProjectDir = projectClone + File.separator + "project"
    
     /* heuristically determines whether it is an sbt project */
-    new File(project.projectDirObj + "build.sbt").exists ||
+    new File(projectClone + File.separator + "build.sbt").exists ||
     new File(sbtProjectDir).exists
   }
   
@@ -34,19 +32,19 @@ object ApplyPlugin {
    * runs `sbt canve` over a given project, first adding the canve sbt plugin to the project's sbt setup
    * for that sake.  
    */
-  def apply(project: Project): TimedExecutionReport[TaskResultType] = {
+  def apply(projectClone: Directory, outputDir: String): TimedExecutionReport[TaskResultType] = {
 
-    val sbtProjectDir = project.projectDirObj.toString + File.separator + "project"
+    val sbtProjectDir = projectClone + File.separator + "project"
     
     /*
      * add the plugin to the project's sbt setup
      */
 
-    if (!project.projectDirObj.exists)
-      throw new Exception(s"Cannot apply the canve sbt plugin to directory ${project.projectDirObj.toString} - the directory does not exist")
+    if (!projectClone.exists)
+      throw new Exception(s"Cannot apply the canve sbt plugin to directory $projectClone - the directory does not exist")
     
-    if (!isSbtProject(project)) 
-      throw new Exception(s"Will not apply the canve sbt plugin to directory ${project.projectDirObj.toString} as could not determine it is an sbt project")
+    if (!isSbtProject(projectClone)) 
+      throw new Exception(s"Will not apply the canve sbt plugin to directory $projectClone as could not determine it is an sbt project")
  
     scala.tools.nsc.io.File(ReadyOutFile(sbtProjectDir, "canve.sbt"))
       .writeAll("""addSbtPlugin("canve" % "sbt-plugin" % "0.0.1")""" + "\n")      
@@ -55,14 +53,15 @@ object ApplyPlugin {
      *  run sbt for the project and check for success exit code
      */
     
-    val outStream = new FilteringOutputWriter(ReadyOutFile("out", project.name + ".out"), (new java.util.Date).toString)
+    val out = new DataWithLog(outputDir)
+      
+    val outStream = new FilteringOutputWriter(ReadyOutFile(out.logDir, projectClone.name + ".out"), (new java.util.Date).toString)
     
     val result = TimedExecution {
-      import scala.sys.process._
       
-      Process(
-        Seq("sbt", "-Dsbt.log.noformat=true", "canve"), // may alternatively use the more recent -no-color instead of -Dsbt.log.... 
-        project.projectDirObj) ! outStream == 0 match {
+      scala.sys.process.Process(
+        Seq("sbt", "-Dsbt.log.noformat=true", s"canve ${out.dataDir}"), // may alternatively use the more recent -no-color instead of -Dsbt.log.... 
+        new File(projectClone.toString)) ! outStream == 0 match {
           case true  => Okay
           case false => Failure
       }

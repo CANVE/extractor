@@ -9,15 +9,13 @@ trait GithubClone {
   //val cloneOutputPath = outDirectory + File.separator + "clone-logs" // directory to write stdout & stderr into 
   //val clonesPath = outDirectory + File.separator + "clones"          // directory to clone under
   
-  def go(cloneUrl: String, projectFullName: String): String = {
+  def go(cloneUrl: String, escapedFullName: String): String = {
     
-    val out = new DataWithLog(outDirectory + File.separator + "clones" + File.separator + projectFullName)
-    
-    println(s"about to clone $projectFullName")  
+    val out = new DataWithLog(outDirectory + File.separator + "clones" + File.separator + escapedFullName)
     
     /*
      * Note: git clone writes its normal output to stdout
-     * Note: need to add "--progress", as per https://git-scm.com/docs/git-clone,
+     * Note: can add "--progress", as per https://git-scm.com/docs/git-clone,
      *       if you want the logging to contain the typical progress messages that 
      *       you see running git in a terminal  
      */
@@ -25,11 +23,12 @@ trait GithubClone {
     val outcome = 
       new ProcessRun(
         outputRedirectionDir  = out.logDir.toString, 
-        outputRedirectionFile = projectFullName,
+        outputRedirectionFile = escapedFullName,
         workingDirectoryAsString = out.dataDir.toString, 
-        command = Seq("git", "clone", cloneUrl),
+        command = Seq("git", "clone", cloneUrl, "."),
         errorLift = true).run
 
-    out.dataDir.toString
+    val projectName = escapedFullName.split('.').last // only the repo name, without the owner prefix
+    out.dataDir.toString 
   }
 }

@@ -21,6 +21,7 @@ object ApplyPlugin {
   
   private def isSbtProject(projectClone: Directory): Boolean = {
 
+    //println(Console.BLUE + projectClone + Console.RESET)
     val sbtProjectDir = projectClone + File.separator + "project"
    
     /* heuristically determines whether it is an sbt project */
@@ -60,7 +61,7 @@ object ApplyPlugin {
     val result = TimedExecution {
       
       scala.sys.process.Process(
-        Seq("sbt", "-Dsbt.log.noformat=true", s"canve ${out.dataDir}"), // may alternatively use the more recent -no-color instead of -Dsbt.log.... 
+        Seq("sbt", "-Dsbt.log.noformat=true", s"canve ${out.serialize}"), // may alternatively use the more recent -no-color instead of -Dsbt.log.... 
         new File(projectClone.toString)) ! outStream == 0 match {
           case true  => Okay
           case false => Failure
@@ -69,6 +70,6 @@ object ApplyPlugin {
     
     outStream.close
     
-    result
+    result // FIXME: return path to result data directory, not okay/failure. okay/failure may be one data item there.
   }
 }

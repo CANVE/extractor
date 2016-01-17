@@ -49,6 +49,12 @@ lazy val commonSettings = Seq(
   resolvers += Resolver.sonatypeRepo("snapshots")
 )
 
+/* ammonite REPL power-up */
+lazy val ammonite = Seq(
+  libraryDependencies += "com.lihaoyi" % "ammonite-repl" % "0.5.2" % "test" cross CrossVersion.full,
+  initialCommands in (Test, console) := """ammonite.repl.Main.run("import ammonite.ops._")"""
+)
+
 /*
  * the integration test custom task
  */
@@ -69,12 +75,14 @@ lazy val root = (project in file("."))
     integrationTestProject,
     githubCruncher)
   .enablePlugins(CrossPerProjectPlugin) // makes sbt recursively respect cross compilation subproject versions, thus skipping compilation for versions that should not be compiled. (this is an sbt-doge global idiom).
-  .settings(commonSettings).settings(
+  .settings(commonSettings)
+  .settings(
     scalaVersion := "2.11.7",
     crossScalaVersions := commonCrossScalaVersions,
     publishArtifact := false, // no artifact to publish for the virtual root project
     integrationTest := (run in Compile in integrationTestProject).toTask("").value
   )
+  .settings(ammonite)
 
 /*
  * The compiler plugin module. Note we cannot call it simply
@@ -239,6 +247,7 @@ lazy val githubCruncher = (project in file("github-cruncher"))
    EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed
  )
  .settings(commonSettings)
+ .settings(ammonite)
  .settings(
    scalaVersion := "2.11.7",
    crossScalaVersions := Seq("2.11.7"),
@@ -263,7 +272,10 @@ lazy val githubCruncher = (project in file("github-cruncher"))
      "com.typesafe.play" %% "play-json" % "2.4.6",
 
      /* http client */
-     "org.scalaj" %% "scalaj-http" % "2.2.0"
+     "org.scalaj" %% "scalaj-http" % "2.2.0",
+
+     /* better scala files IO */
+     "com.github.pathikrit" %% "better-files" % "2.14.0"
   ),
 
   /* storm */

@@ -33,9 +33,10 @@ object Runner extends App {
     if ((args.isEmpty) || (args.nonEmpty && projectDir.getName.startsWith(args.head))) 
     {    
       
-      print("\n" + Console.YELLOW + Console.BOLD + s"Running the sbt plugin for $projectDir..." + Console.RESET) 
+      print("\n" + Console.YELLOW + Console.BOLD + s"Running the sbt plugin for $projectDir... " + Console.RESET) 
       
       val outDir = outRoot + File.separator + "canve" + File.separator + projectDir.getName
+      print(Console.YELLOW + s"output being written to file://$outDir ..." + Console.RESET)
       
       val timedExecutionResult = ApplyPlugin(Directory(projectDir), outDir)
       println(timedExecutionResult.result match {

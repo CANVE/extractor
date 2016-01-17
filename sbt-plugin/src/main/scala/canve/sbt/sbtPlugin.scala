@@ -7,16 +7,18 @@
  * during plain `sbt compile`, whereas the idea is to avoid such "pollution" and 
  * leave ordinary `sbt compile` untouched).
  *
- * TODO: refactor this long sequential code into a more reasonably modular form.
+ * TODO: refactor this long sequential code into a reasonably more modular form.
  * TODO: consider simplifying injection per https://github.com/scala/scala-dist-smoketest/commit/b4a342a26883d7e10cc7a28918d30b664e23f466
+ * TODO: in case we want to add anything to the general cleanup task: http://www.scala-sbt.org/0.13.5/docs/Getting-Started/More-About-Settings.html#appending-with-dependencies-and
  */
 
 package canve.sbt
 
 import sbt.Keys._
 import sbt._
-
-// in case we want to add anything to the general cleanup task: http://www.scala-sbt.org/0.13.5/docs/Getting-Started/More-About-Settings.html#appending-with-dependencies-and
+import org.canve.shared.DataWithLog
+import org.canve.logging.loggers.StringLogger
+import java.io.File
 
 object Plugin extends AutoPlugin {
 
@@ -90,12 +92,16 @@ object Plugin extends AutoPlugin {
 
     if (args.length > 1) throw new Exception("too many arguments supplied to the sbt canve command ― zero or one arguments expected") 
     
-    val ResultDataPath = args.isEmpty match {
-      case true  => "canve-data" // default value
-      case false => args.head 
+    val outputPath = args.isEmpty match {
+      case true  => new DataWithLog("canve-data") // default value
+      case false => new DataWithLog(args.head) 
     }
     
-    new org.canve.shared.DataIO(ResultDataPath).clearAll
+    //println("in sbt plugin - outpath.logdir is " + outputPath.logDir)
+    
+    object Log extends StringLogger(outputPath.logDir + File.separator + "sbtPlugin.log")
+    
+    new org.canve.shared.DataIO(outputPath.dataDir.toString).clearAll
 
     val extracted: Extracted = Project.extract(state)
 
@@ -113,9 +119,9 @@ object Plugin extends AutoPlugin {
 
         // obtain the compiler plugin's file location to so it can be passed along to -Xplugin
         val providedDeps: Seq[File] = (update in projRef).value  matching configurationFilter("provided")
-        println(providedDeps)
-        println(projectScalaBinaryVersion.value)
-        println(scalaBinaryVersion.value)
+        Log(providedDeps.toString)
+        Log(projectScalaBinaryVersion.value)
+        Log(scalaBinaryVersion.value)
         val pluginPath = providedDeps.find(_.getAbsolutePath.contains(compilerPluginArtifact))
 
         pluginPath match {
@@ -128,7 +134,7 @@ object Plugin extends AutoPlugin {
                 // avoid injecting the compiler plugin for the particular project at hand..
                 // perhaps the user can still manually add the necessary compiler plugin for those skipped projects, 
                 // through http://www.scala-sbt.org/0.13/docs/Compiler-Plugins.html or otherwise.
-                println(
+                Log(
                   s"Warn: skipping instrumentation for sub-project $projectName (c.f. https://github.com/CANVE/extractor/issues/12)\n" + 
                   s"sub-project scala version is ${projectScalaBinaryVersion.value} while overall project version is ${scalaBinaryVersion.value}")
                 Seq() 
@@ -141,7 +147,7 @@ object Plugin extends AutoPlugin {
                     // passes the name of the project being compiled, to the plugin
                     Some(s"-P:$compilerPluginNameProperty:projectName:$projectName"),
                     // passes the data output path argument
-                    Some(s"-P:$compilerPluginNameProperty:outputDataPath:$ResultDataPath")
+                    Some(s"-P:$compilerPluginNameProperty:outputDataPath:${outputPath.serialize}")
                   ).flatten 
                 
                 val fullCompilerOptions =  
@@ -157,7 +163,7 @@ object Plugin extends AutoPlugin {
             
           case None =>
             // Observed for akka-2.4.1. Assuming (but not confirmed) it might happen if sub-project overrides (and therefore lacks) root project's librarySettings
-            println(s"Warn: skipping instrumentation for sub-project $projectName: compiler plugin artifact not available among project's resolved dependencies")
+            Log(s"Warn: skipping instrumentation for sub-project $projectName: compiler plugin artifact not available among project's resolved dependencies")
             Seq()
         }
       }
@@ -193,12 +199,12 @@ object Plugin extends AutoPlugin {
      */
     successfulProjects.length == extracted.structure.allProjectRefs.length match {
       case true =>
-        println("normalizing data across subprojects...")
-        val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.normalize(ResultDataPath)
-        println("canve task done")
+        Log("normalizing data across subprojects...")
+        val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.normalize(outputPath.dataDir.toString)
+        Log("canve task done")
         state
       case false =>
-        println("canve task aborted as it could not successfully compile the project (or due to its own internal error)")
+        Log("canve task aborted as it could not successfully compile the project (or due to its own internal error)")
         state.fail
     }
   }

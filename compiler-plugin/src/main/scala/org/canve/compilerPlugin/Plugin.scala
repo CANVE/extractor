@@ -2,11 +2,20 @@ package org.canve.compilerPlugin
 import tools.nsc.Global
 import scala.collection.SortedSet
 import java.io.File
+import org.canve.shared.DataWithLog
+import org.canve.logging.loggers.StringLogger
 
+/* compiler plugin arguments to be obtained */
 object PluginArgs {
+  var outputPath: DataWithLog = new DataWithLog("canve-data") // default value
   var projectName: String = ""
-  var outputRootPath: String = "canve-data" // default value
 }  
+
+/* object setting and providing access to a log */
+object Log {
+  val log = new StringLogger(PluginArgs.outputPath.logDir + File.separator + "compilerPlugin.log") 
+  def apply(s: String) = log(s)
+}
 
 class RuntimePlugin(val global: Global) extends tools.nsc.plugins.Plugin {
 
@@ -14,7 +23,7 @@ class RuntimePlugin(val global: Global) extends tools.nsc.plugins.Plugin {
   val description = "extracts type relationships and call graph during compilation"
 
   val components = List[tools.nsc.plugins.PluginComponent](
-    new PluginPhase(this.global) // TODO: is the `this` really required here?
+    new PluginPhase(this.global) 
   )
   
   /*
@@ -28,18 +37,21 @@ class RuntimePlugin(val global: Global) extends tools.nsc.plugins.Plugin {
       (opt.startsWith(projNameArgPrefix), opt.startsWith(outputRootPathArgPrefix)) match {
         case (true, _) =>
           PluginArgs.projectName = opt.substring(projNameArgPrefix.length)
-          Log("instrumenting project " + PluginArgs.projectName + "...")
         case (_, true) =>
-          PluginArgs.outputRootPath = opt.substring(outputRootPathArgPrefix.length)
-          Log("data will be written under " + PluginArgs.outputRootPath + File.separator + PluginArgs.projectName) 
+          PluginArgs.outputPath = new DataWithLog(opt.substring(outputRootPathArgPrefix.length))
+          println("outpath: " + PluginArgs.outputPath)
         case (false, false) =>
           error("Unknown invocation parameter passed to the CANVE compiler plugin: " + opt)
         case _ => throw new Exception("internal error")
       }
     }
-
+   
     if (!opts.exists(_.startsWith("projectName")))
       throw new RuntimeException("canve compiler plugin invoked without a project name argument")
- 
+    
+    
+    Log("instrumenting project " + PluginArgs.projectName + "...")
+    //Log(s"data for project ${PluginArgs.projectName} will be written in " + PluginArgs.outputPath + File.separator + PluginArgs.projectName) 
+    
   }
 }

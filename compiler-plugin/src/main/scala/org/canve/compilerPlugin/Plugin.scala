@@ -3,7 +3,8 @@ import tools.nsc.Global
 import scala.collection.SortedSet
 import java.io.File
 import org.canve.shared.DataWithLog
-import org.canve.logging.loggers.StringLogger
+import org.canve.logging.loggers._
+import play.api.libs.json._
 
 /* compiler plugin arguments to be obtained */
 object PluginArgs {
@@ -13,8 +14,13 @@ object PluginArgs {
 
 /* object setting and providing access to a log */
 object Log {
-  val log = new StringLogger(PluginArgs.outputPath.logDir + File.separator + "compilerPlugin.log") 
+  lazy private val log = new StringLogger(PluginArgs.outputPath.logDir + File.separator + "compilerPlugin.log") 
   def apply(s: String) = log(s)
+}
+
+object DataLog {
+  lazy private val log = new JsonLogger(PluginArgs.outputPath.logDir.toString)
+  def apply(path: String, jsonObj: JsValue) = log(path, jsonObj) 
 }
 
 class RuntimePlugin(val global: Global) extends tools.nsc.plugins.Plugin {

@@ -12,7 +12,7 @@ object NormalizeBySpans extends NormalizeBySpans
 
 trait NormalizeBySpans extends MergeStrategies {
 
-  private val objectLogger = new ObjectLogger
+  //private val objectLogger = new ObjectLogger
   
   def apply(implicit extractedModel: ExtractedModel) {
     

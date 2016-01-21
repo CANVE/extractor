@@ -20,7 +20,7 @@ object AddProjects extends ImplicitConversions {
       
       val clonedFolder = pipeline.Persist.Singleton.asText(Clone(cloneUrl, escapedFullName), stepName = s"Clone.$escapedFullName").get
       val isSbtProject = pipeline.Persist.Singleton.asText(IsSBT(clonedFolder), stepName = s"IsSbt.$escapedFullName").get
-      //if (isSbtProject) pipeline.Persist.Singleton.asText(Canve(scala.reflect.io.Directory(clonedFolder), escapedFullName),  stepName = s"Canve.$escapedFullName")
+      if (isSbtProject) pipeline.Persist.Singleton.asText(Canve(scala.reflect.io.Directory(clonedFolder), escapedFullName),  stepName = s"Canve.$escapedFullName")
     }
   }
 }

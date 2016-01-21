@@ -14,4 +14,6 @@ class FileTarget(name: String) extends AbstractTarget {
   val readyLogFile = maybeFile.createFile(false)
   
   def apply(lines: List[String]) = readyLogFile.appendAll(lines.mkString("\n"))
+  
+  def apply(s: String) = readyLogFile.appendAll(s)
 }

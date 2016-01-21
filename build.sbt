@@ -33,8 +33,8 @@ val scala12release = "2.12.0-M2" // pre-release scala 2.12 version to use
 lazy val scala12 = sys.props.getOrElse("scala12", "false")
 
 lazy val commonCrossScalaVersions = scala12 match {
-  case "false" => Seq("2.10.4", "2.11.7")
-  case "true"  => Seq("2.10.4", "2.11.7", scala12release)
+  case "false" => Seq("2.10.6", "2.11.7")
+  case "true"  => Seq("2.10.6", "2.11.7", scala12release)
   case _ => throw new Exception("invalid argument value supplied for scala12 (can only be \"true\", or unspecified altogether)")
 }
 
@@ -111,6 +111,7 @@ lazy val canveCompilerPlugin = (project in file("compiler-plugin"))
       //"com.github.tototoshi" %% "scala-csv" % "1.2.2",
       //"com.github.tototoshi" %% "scala-csv" % "1.3.0-SNAPSHOT", // snapshot version might summon some sbt bugs
       "com.github.tototoshi" %% "scala-csv" % "1.3.0", // snapshot version might summon some sbt bugs
+      "com.typesafe.play" %% "play-json" % "2.4.6",
       //"org.apache.tinkerpop" % "tinkergraph-gremlin" % "3.0.1-incubating",
       //"canve" %% "simple-graph" % "0.0.1",
       //"canve" %% "compiler-plugin-unit-test-lib" % "0.0.1" % "test",
@@ -147,18 +148,23 @@ lazy val canveSbtPlugin = (project in file("sbt-plugin"))
   .dependsOn(canveCompilerPlugin)
   .enablePlugins(CrossPerProjectPlugin)
   .enablePlugins(BuildInfoPlugin)
-  .settings(commonSettings).settings(
+  .settings(commonSettings)
+  .settings(
     name := "sbt-plugin",
     isSnapshot := true, // to enable overwriting the existing artifact version during dev
-    scalaVersion := "2.10.4",
-    crossScalaVersions := Seq("2.10.4"),
+    scalaVersion := "2.10.6",
+    crossScalaVersions := Seq("2.10.6"),
     sbtPlugin := true,
 
     /* Generate source code that includes the organization name, to be included in compilation */
     buildInfoKeys := Seq[BuildInfoKey](organization),
     buildInfoPackage := "buildInfo",
     buildInfoObject := "BuildInfo",
-    EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed
+    EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Managed,
+
+    libraryDependencies += "com.typesafe.play" %% "play-json" % "2.4.6",
+
+    libraryDependencies += "com.github.nscala-time" %% "nscala-time" % "2.6.0"
 
     /*
      * Workaround the `sbt eclipse` error: "Conflicting cross-version suffixes in: org.spire-math:jawn-parse"
@@ -349,6 +355,7 @@ lazy val simpleLogging = (project in file("simple-logging"))
     crossScalaVersions := commonCrossScalaVersions,
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided",
+      "com.typesafe.play" %% "play-json" % "2.4.6",
       //"org.scala-lang.modules" %% "scala-pickling" % "0.10.1",
       //"com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.6.0-1",
       "io.circe" %% "circe-core" % "0.2.1",

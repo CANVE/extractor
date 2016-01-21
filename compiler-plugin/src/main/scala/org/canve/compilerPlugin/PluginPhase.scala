@@ -31,19 +31,19 @@ class PluginPhase(val global: Global)
       
       Log(t.global.currentSettings.toString) // TODO: remove or move to new compiler plugin dedicated log file
       
-      units.foreach { unit =>
-        if (unit.source.path.endsWith(".scala")) {
+      units.foreach { compilationUnit =>
+        if (compilationUnit.source.path.endsWith(".scala")) {
           
-          if (sourceFilter(unit.source.path)) {
-            Log("examining source file" + unit.source.path + "...")
-            TraversalExtractionWriter(t.global)(unit, projectName, model)
-            Log("done examining source file" + unit.source.path + "...")
+          if (sourceFilter(compilationUnit.source.path)) {
+            Log("examining source file" + compilationUnit.source.path + "...")
+            TraversalExtractionWriter(t.global)(compilationUnit, projectName, model)
+            Log("done examining source file" + compilationUnit.source.path + "...")
             
             Log(model.graph.vertexCount + " symbols so far extracted for project " + projectName)
             Log(model.graph.edgeCount + " symbol relations so far extracted for project " + projectName)
           }
           
-        } else Log("skipping non-scala source file: " + unit.source.path)
+        } else Log("skipping non-scala source file: " + compilationUnit.source.path)
       }
       
       assertSourceFilterMatched

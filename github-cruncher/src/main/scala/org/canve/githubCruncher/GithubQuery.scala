@@ -105,4 +105,4 @@ trait GithubQuery {
 }
 
 /* to satisfy https://developer.github.com/v3/#user-agent-required */
-object WithUserAgent extends BaseHttp (userAgent = "matanster") 
+object WithUserAgent extends BaseHttp (userAgent = "matanster") // FIXME: move to sbt definition 

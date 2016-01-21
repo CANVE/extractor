@@ -17,8 +17,12 @@ package canve.sbt
 import sbt.Keys._
 import sbt._
 import org.canve.shared.DataWithLog
-import org.canve.logging.loggers.StringLogger
+import org.canve.logging.loggers._
 import java.io.File
+import play.api.libs.json._
+//import com.github.nscala_time.time.Imports._ crashes at runtime over java.lang.NoClassDefFoundError: com/github/nscala_time/time/Imports
+import org.canve.compilerPlugin.normalization.CrossProjectNormalizer.normalize
+import scala.util.{Try, Success, Failure}
 
 object Plugin extends AutoPlugin {
 
@@ -84,22 +88,34 @@ object Plugin extends AutoPlugin {
 
     state
   }
-  
+
   /*
    * Implementation of the `canve` command
    */
   private def canve(): (State, Seq[String]) => State = { (state, args) =>
-
+      
     if (args.length > 1) throw new Exception("too many arguments supplied to the sbt canve command ― zero or one arguments expected") 
+    
+    // val startTime: DateTime = DateTime.now 
     
     val outputPath = args.isEmpty match {
       case true  => new DataWithLog("canve-data") // default value
       case false => new DataWithLog(args.head) 
     }
     
-    //println("in sbt plugin - outpath.logdir is " + outputPath.logDir)
-    
     object Log extends StringLogger(outputPath.logDir + File.separator + "sbtPlugin.log")
+    object DataLog extends JsonLogger(outputPath.dataDir.toString)  
+
+    def dataLogResult(success: Boolean, reason: String = "") {
+      //val elapsed: Duration = (startTime to DateTime.now).toDuration
+      DataLog(
+        "result", 
+        success match {
+          case true  => Json.parse(s""" { "success" : true } """)
+          case false => Json.parse(s""" { "success" : false, "reason" = $reason } """)
+        }
+      )
+    }
     
     new org.canve.shared.DataIO(outputPath.dataDir.toString).clearAll
 
@@ -116,30 +132,44 @@ object Plugin extends AutoPlugin {
       val projectScalaBinaryVersion = (scalaBinaryVersion in projRef)
       
       lazy val pluginScalacOptions: Def.Initialize[Task[Seq[String]]] = Def.task {
+        
+        def datLogSubProjectHandling(handling: String) {
+          DataLog(
+            projectName, 
+            Json.parse(s"""
+              {
+                "overallScalaBinaryVersion" : ${scalaBinaryVersion.value},
+                "projectScalaBinaryVersion" : ${projectScalaBinaryVersion.value},
+                "handling" : "$handling"
+              }
+            """))
+        }
 
         // obtain the compiler plugin's file location to so it can be passed along to -Xplugin
         val providedDeps: Seq[File] = (update in projRef).value  matching configurationFilter("provided")
-        Log(providedDeps.toString)
-        Log(projectScalaBinaryVersion.value)
-        Log(scalaBinaryVersion.value)
+        //Log(providedDeps.toString)
+        //Log(projectScalaBinaryVersion.value)
+        //Log(scalaBinaryVersion.value)
         val pluginPath = providedDeps.find(_.getAbsolutePath.contains(compilerPluginArtifact))
-
+       
         pluginPath match {
 
           case Some(pluginPath) =>
-
+            
             (projectScalaBinaryVersion.value) == scalaBinaryVersion.value match {
               
               case false =>  
                 // avoid injecting the compiler plugin for the particular project at hand..
                 // perhaps the user can still manually add the necessary compiler plugin for those skipped projects, 
                 // through http://www.scala-sbt.org/0.13/docs/Compiler-Plugins.html or otherwise.
+                datLogSubProjectHandling("skip (compiler plugin version inconsistency)")
                 Log(
                   s"Warn: skipping instrumentation for sub-project $projectName (c.f. https://github.com/CANVE/extractor/issues/12)\n" + 
                   s"sub-project scala version is ${projectScalaBinaryVersion.value} while overall project version is ${scalaBinaryVersion.value}")
                 Seq() 
               
               case true =>
+                datLogSubProjectHandling("attempt")
                 val baseCompilerOptions =
                   Seq(
                     // hooks in the compiler plugin
@@ -162,11 +192,13 @@ object Plugin extends AutoPlugin {
             }
             
           case None =>
+            datLogSubProjectHandling("skip (compiler plugin unavailable)")
             // Observed for akka-2.4.1. Assuming (but not confirmed) it might happen if sub-project overrides (and therefore lacks) root project's librarySettings
             Log(s"Warn: skipping instrumentation for sub-project $projectName: compiler plugin artifact not available among project's resolved dependencies")
             Seq()
         }
       }
+      
       scalacOptions in projRef ++= pluginScalacOptions.value
     }
 
@@ -200,11 +232,20 @@ object Plugin extends AutoPlugin {
     successfulProjects.length == extracted.structure.allProjectRefs.length match {
       case true =>
         Log("normalizing data across subprojects...")
-        val normalizedData = org.canve.compilerPlugin.normalization.CrossProjectNormalizer.normalize(outputPath.dataDir.toString)
-        Log("canve task done")
+        val normalizedData: Unit = 
+          Try(normalize(outputPath.dataDir.toString)) match {
+            case Failure(e) => 
+              Log(s"canve task aborted during subprojects normalization: $e") 
+              dataLogResult(false, "failed at subprojects normalization")
+            case Success(_) => 
+              Log("canve task done")
+              dataLogResult(true)
+        }
         state
+        
       case false =>
-        Log("canve task aborted as it could not successfully compile the project (or due to its own internal error)")
+        Log("canve task aborted as it could not successfully compile the project, or due to its own internal error")
+        dataLogResult(false, "failed during compilation the project")
         state.fail
     }
   }

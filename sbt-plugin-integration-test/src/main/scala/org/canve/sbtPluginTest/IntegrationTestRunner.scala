@@ -32,28 +32,21 @@ object Runner extends App {
      */
     if ((args.isEmpty) || (args.nonEmpty && projectDir.getName.startsWith(args.head))) 
     {    
-      
       print("\n" + Console.YELLOW + Console.BOLD + s"Running the sbt plugin for $projectDir... " + Console.RESET) 
       
-      val outDir = outRoot + File.separator + "canve" + File.separator + projectDir.getName
+      val outDir = new DataWithLog(outRoot + File.separator + "canve" + File.separator + projectDir.getName)
       print(Console.YELLOW + s"output being written to file://$outDir ..." + Console.RESET)
       
-      val timedExecutionResult = ApplyPlugin(Directory(projectDir), outDir)
+      val timedExecutionResult = SbtPluginApplication(Directory(projectDir), outDir) 
       println(timedExecutionResult.result match {
-        case Okay    => "finished okay"
-        case Failure => "failed"
+        case true => "finished okay"
+        case false => "failed"
       })
-      
-      Result(projectDir.getName, timedExecutionResult.result, timedExecutionResult.elapsed)
-      
-    } else {
-      
-      Result(projectDir.getName, Skipped, 0)
-      
-    }    
+      ProjectResult(projectDir.getName, Okay, timedExecutionResult.elapsed)
+    } else ProjectResult(projectDir.getName, Skipped, 0)
   } 
   
   Summary(results) 
 }
 
-case class Result(projectName: String, result: TaskResultType, elapsed: Long)
+case class ProjectResult(projectName: String, result: TaskResultType, elapsed: Long)

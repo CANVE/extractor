@@ -5,7 +5,7 @@ import org.canve.shared.Execution._
  * Summary Output formatter
  */
 object Summary {
-  def apply(results: List[Result]) = {
+  def apply(results: List[ProjectResult]) = {
     println(Console.YELLOW + Console.BOLD + "\n\n  Summary  \n-----------")
     
     val output = results map { result => 

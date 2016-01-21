@@ -191,6 +191,7 @@ lazy val dataNormalizer = (project in file("data-normalizer"))
  * Library for shared low-level components and utility functions
  */
 lazy val canveShared = (project in file("canve-shared"))
+  .dependsOn(simpleLogging)
   .enablePlugins(CrossPerProjectPlugin)
   .settings(commonSettings).settings(
     name := "canve-shared",
@@ -202,7 +203,8 @@ lazy val canveShared = (project in file("canve-shared"))
 
     libraryDependencies ++= Seq(
       "org.scala-lang" % "scala-compiler" % scalaVersion.value % "provided", // otherwise cannot use scala.tools.nsc.io.File
-      "org.fusesource.jansi" % "jansi" % "1.4"
+      "org.fusesource.jansi" % "jansi" % "1.4",
+      "com.typesafe.play" %% "play-json" % "2.4.6"
     )
   )
 
@@ -243,7 +245,7 @@ lazy val integrationTestProject = (project in file("sbt-plugin-integration-test"
  * Github crunching pipeline
  */
 lazy val githubCruncher = (project in file("github-cruncher"))
- .dependsOn(canveShared)
+ .dependsOn(canveShared, simpleLogging)
  .enablePlugins(CrossPerProjectPlugin)
  .enablePlugins(BuildInfoPlugin).settings(
    /* Generate source code that includes the organization name, to be included in compilation */

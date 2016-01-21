@@ -10,6 +10,5 @@ import java.io.File
 class DataWithLog(val outputRootDir: String) {
   val dataDir = ReadyOutDir(outputRootDir + File.separator + "data")
   val logDir = ReadyOutDir(outputRootDir + File.separator + "creation-log")
-  //def get = (dataDir, logDir)
-  val serialize = outputRootDir  
+  val base = outputRootDir  
 }

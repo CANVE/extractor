@@ -109,10 +109,10 @@ object Plugin extends AutoPlugin {
     def dataLogResult(success: Boolean, reason: String = "") {
       //val elapsed: Duration = (startTime to DateTime.now).toDuration
       DataLog(
-        "result", 
+        "sbtPlugin", 
         success match {
-          case true  => Json.parse(s""" { "success" : true } """)
-          case false => Json.parse(s""" { "success" : false, "reason" = $reason } """)
+          case true  => Json.parse(s""" { "completion" : "normal" } """)
+          case false => Json.parse(s""" { "completion" : "abnormal", "reason" : "$reason" } """)
         }
       )
     }
@@ -133,14 +133,15 @@ object Plugin extends AutoPlugin {
       
       lazy val pluginScalacOptions: Def.Initialize[Task[Seq[String]]] = Def.task {
         
-        def datLogSubProjectHandling(handling: String) {
+        scala.tools.nsc.io.File(outputPath.dataDir + File.separator + "handling").createDirectory()        
+        def dataLogSubProjectHandling(handling: String) {
           DataLog(
-            projectName, 
+            s"handling/$projectName", 
             Json.parse(s"""
               {
-                "overallScalaBinaryVersion" : ${scalaBinaryVersion.value},
-                "projectScalaBinaryVersion" : ${projectScalaBinaryVersion.value},
-                "handling" : "$handling"
+                "handling" : "$handling",
+                "projectScalaBinaryVersion" : "${projectScalaBinaryVersion.value}",
+                "overallScalaBinaryVersion" : "${scalaBinaryVersion.value}"
               }
             """))
         }
@@ -162,14 +163,14 @@ object Plugin extends AutoPlugin {
                 // avoid injecting the compiler plugin for the particular project at hand..
                 // perhaps the user can still manually add the necessary compiler plugin for those skipped projects, 
                 // through http://www.scala-sbt.org/0.13/docs/Compiler-Plugins.html or otherwise.
-                datLogSubProjectHandling("skip (compiler plugin version inconsistency)")
+                dataLogSubProjectHandling("skip (compiler plugin version inconsistency)")
                 Log(
                   s"Warn: skipping instrumentation for sub-project $projectName (c.f. https://github.com/CANVE/extractor/issues/12)\n" + 
                   s"sub-project scala version is ${projectScalaBinaryVersion.value} while overall project version is ${scalaBinaryVersion.value}")
                 Seq() 
               
               case true =>
-                datLogSubProjectHandling("attempt")
+                dataLogSubProjectHandling("attempt")
                 val baseCompilerOptions =
                   Seq(
                     // hooks in the compiler plugin
@@ -177,7 +178,7 @@ object Plugin extends AutoPlugin {
                     // passes the name of the project being compiled, to the plugin
                     Some(s"-P:$compilerPluginNameProperty:projectName:$projectName"),
                     // passes the data output path argument
-                    Some(s"-P:$compilerPluginNameProperty:outputDataPath:${outputPath.serialize}")
+                    Some(s"-P:$compilerPluginNameProperty:outputDataPath:${outputPath.base}")
                   ).flatten 
                 
                 val fullCompilerOptions =  
@@ -192,7 +193,7 @@ object Plugin extends AutoPlugin {
             }
             
           case None =>
-            datLogSubProjectHandling("skip (compiler plugin unavailable)")
+            dataLogSubProjectHandling("skip (compiler plugin unavailable)")
             // Observed for akka-2.4.1. Assuming (but not confirmed) it might happen if sub-project overrides (and therefore lacks) root project's librarySettings
             Log(s"Warn: skipping instrumentation for sub-project $projectName: compiler plugin artifact not available among project's resolved dependencies")
             Seq()
@@ -245,7 +246,7 @@ object Plugin extends AutoPlugin {
         
       case false =>
         Log("canve task aborted as it could not successfully compile the project, or due to its own internal error")
-        dataLogResult(false, "failed during compilation the project")
+        dataLogResult(false, "failed during compilation of the project")
         state.fail
     }
   }

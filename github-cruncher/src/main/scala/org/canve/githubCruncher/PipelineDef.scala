@@ -5,22 +5,34 @@ import java.io.File
 import scala.concurrent.ExecutionContext.Implicits.global
 import org.canve.shared.Sbt._
 
+/*
+ * The identifier for a project used by this code, 
+ * deriving from the full name provided by github api.
+ */
+object GetEscapedFullName {
+  def apply(name: String) = name.replaceAll("/",".")
+}
+
 /* 
  * adds processing steps to a pipeline per github project 
  */
 object AddProjects extends ImplicitConversions {
-  def apply(pipeline: Pipeline, githubQuery: Producer[Iterable[play.api.libs.json.JsValue]]) { 
+  def apply(pipeline: Pipeline, githubProjectList: Producer[Iterable[play.api.libs.json.JsValue]]) { 
     
-    githubQuery.get.foreach { projectDescription =>  
+    githubProjectList.get.foreach { githubProject =>  
       
-      val projectFullName = (projectDescription \ "full_name").as[String]
-      val cloneUrl        = (projectDescription \ "clone_url").as[String]
+      val githubProjectFullName = (githubProject \ "full_name").as[String]
+      val cloneUrl        = (githubProject \ "clone_url").as[String]
 
-      val escapedFullName = projectFullName.replaceAll("/",".") 
+      val projectName = GetEscapedFullName(githubProjectFullName)
       
-      val clonedFolder = pipeline.Persist.Singleton.asText(Clone(cloneUrl, escapedFullName), stepName = s"Clone.$escapedFullName").get
-      val isSbtProject = pipeline.Persist.Singleton.asText(IsSBT(clonedFolder), stepName = s"IsSbt.$escapedFullName").get
-      if (isSbtProject) pipeline.Persist.Singleton.asText(Canve(scala.reflect.io.Directory(clonedFolder), escapedFullName),  stepName = s"Canve.$escapedFullName")
+      val clonedFolder = pipeline.Persist.Singleton.asText(
+        Clone(cloneUrl, projectName), stepName = s"Clone.$projectName").get
+      val isSbtProject = pipeline.Persist.Singleton.asText(
+        IsSBT(clonedFolder), stepName = s"IsSbt.$projectName").get
+      
+      if (isSbtProject) 
+        pipeline.Persist.Singleton.asText(Canve(scala.reflect.io.Directory(clonedFolder), projectName),  stepName = s"Canve.$projectName")
     }
   }
 }
@@ -35,8 +47,8 @@ object PipelineDef extends ImplicitConversions {
     override def rootOutputUrl = outDirectory.toURI // directory for AIP data outputs/cache
   }
   
-  private val projectList = Pipeline.Persist.Collection.asJson(GithubProjectList())
-  AddProjects(Pipeline, projectList)
+  private val githubProjectList = Pipeline.Persist.Collection.asJson(GithubProjectList())
+  AddProjects(Pipeline, githubProjectList)
   
   def run = {
     Pipeline.run(title = "github processing pipeline")

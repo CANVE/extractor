@@ -233,16 +233,17 @@ object Plugin extends AutoPlugin {
     successfulProjects.length == extracted.structure.allProjectRefs.length match {
       case true =>
         Log("normalizing data across subprojects...")
-        val normalizedData: Unit = 
-          Try(normalize(outputPath.dataDir.toString)) match {
-            case Failure(e) => 
-              Log(s"canve task aborted during subprojects normalization: $e") 
-              dataLogResult(false, "failed at subprojects normalization")
-            case Success(_) => 
-              Log("canve task done")
-              dataLogResult(true)
+      
+        Try(normalize(outputPath.dataDir.toString)) match {
+          case Failure(e) => 
+            Log(s"canve task aborted during subprojects normalization: $e") 
+            dataLogResult(false, "failed at subprojects normalization")
+            state.fail
+          case Success(_) => 
+            Log("canve task done")
+            dataLogResult(true)
+            state
         }
-        state
         
       case false =>
         Log("canve task aborted as it could not successfully compile the project, or due to its own internal error")

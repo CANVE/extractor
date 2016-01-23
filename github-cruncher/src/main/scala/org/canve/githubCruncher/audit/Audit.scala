@@ -72,8 +72,8 @@ object Audit extends App with IteratorAsOption with FileEnrichments {
     println(s"sbt command: normal completion ― ${sbtSuccess.size} | abnormal termination ― ${sbtFailure.size}")    
     println(s"sbt plugin : normal completion ― ${sbtPluginSuccess.size} | orderly failed ― ${sbtPluginFailure.size}")   
     println(s"sbt failures caused by the sbt plugin: ${sbtFailure.intersect(sbtPluginFailure).size}")
-    println(s"sbt failures not caused by the sbt plugin: ${sbtFailure.diff(sbtPluginFailure).size} (implying sbt could not load the project)")
-    println(s"sbt plugin failures that did not fail sbt: ${sbtPluginFailure.diff(sbtFailure).size} (typically should not happen..)")
+    println(s"sbt failures not caused or reported by the sbt plugin: ${sbtFailure.diff(sbtPluginFailure).size} (implying sbt could not load the project, or the plugin crashed in fatal ways)")
+    println(s"sbt plugin failures that did not fail sbt: ${sbtPluginFailure.diff(sbtFailure).size} (typically should not happen)")
     
     println
   }
@@ -102,12 +102,12 @@ trait FileEnrichments extends IteratorAsOption {
 }
 
 /* 
- * provide a couple of Option facades to iterator polling
+ * provide a couple of Option facades to an iterator
  */ 
 trait IteratorAsOption {
   implicit class IteratorEnrich[T](i: Iterator[T]) {
     
-    /* gets the next item, as an Option */
+    /* gets an Option for the next item */
     def get: Option[T] = i.hasNext match {
       case true  => Some(i.next)
       case false => None
@@ -123,10 +123,4 @@ trait IteratorAsOption {
       result
     }
   }
-}
-
-
-
-object AuditPipeline extends Pipeline {
-  override def rootOutputUrl = org.canve.githubCruncher.outDirectory.toURI 
 }

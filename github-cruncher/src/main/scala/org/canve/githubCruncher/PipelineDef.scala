@@ -32,7 +32,7 @@ object AddProjects extends ImplicitConversions {
         IsSBT(clonedFolder), stepName = s"IsSbt.$projectName").get
       
       if (isSbtProject) 
-        pipeline.Persist.Singleton.asText(Canve(scala.reflect.io.Directory(clonedFolder), projectName),  stepName = s"Canve.$projectName")
+        pipeline.Persist.Singleton.asText(SbtCanve(scala.reflect.io.Directory(clonedFolder), projectName), stepName = s"Canve.$projectName")
     }
   }
 }

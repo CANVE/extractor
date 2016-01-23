@@ -32,7 +32,7 @@ case class IsSBT(clonedUrl: String)
 }  
 
 /* Cloned project canve producer */
-case class Canve(projectClone: Directory, projectFullName: String) 
+case class SbtCanve(projectClone: Directory, projectFullName: String) 
   extends Producer[String] with Ai2StepInfo  {
     val resultsDir = new DataWithLog(outDirectory + File.separator + "canve" + File.separator + projectFullName) 
     def create = SbtPluginApplication(projectClone, resultsDir) match {

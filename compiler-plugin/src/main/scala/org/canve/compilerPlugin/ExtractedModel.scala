@@ -98,12 +98,12 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph with DataLog
           
           @tailrec
           def impl(symbolOrOwner: global.Symbol): Option[global.Symbol] = {
-            (symbolOrOwner.nameString == "<root>") match {
+            (symbolOrOwner.nameString == "<root>") match { // might possibly use .isRoot* instead..
               case true => None
               case false =>
-                val maybeSetter = s.setter(symbolOrOwner)
-                if (IsSymbol(maybeSetter))
-                  Some(maybeSetter)
+                val setter = s.setter(symbolOrOwner)
+                if (IsSymbol(setter))
+                  Some(setter)
                 else 
                   impl(symbolOrOwner.owner)
             }
@@ -130,12 +130,14 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph with DataLog
           case None => // println(s"${symString(s)} has no setter")
           case Some(setter) =>
             DataLogExtraRelation(symString(s), "has setter", symString(setter))
+            add(global)(setter) // maybe this is never needed with the current flow
+            add(setter.id, "is setter for" , s.id)
         }
         
         graph ++ graph.Vertex(extractedSymbol.symbolCompilerId, extractedSymbol) 
         
         /*
-         * Record overriding relationships 
+         * Record overriding relationships for symbols this symbol overrides 
          */
         s.allOverriddenSymbols.foreach { overriden => 
           add(global)(overriden)

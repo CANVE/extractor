@@ -1,9 +1,9 @@
 package org.canve.githubCruncher
 import mysql.DB
 
-object app extends App with GithubQuery {
+object GithubPipelineRun extends App with GithubQuery {
   
-  val db = DB
+  val db = DB // not used for now
   
   PipelineDef.run
   

@@ -18,8 +18,8 @@ object Log {
   def apply(s: String) = log(s)
 }
 
-object DataLog {
-  lazy private val log = new JsonLogger(PluginArgs.outputPath.logDir.toString)
+object MetaDataLog {
+  lazy private val log = new JsonLogger(PluginArgs.outputPath.metaDataDir.toString)
   def apply(path: String, jsonObj: JsValue) = log(path, jsonObj) 
 }
 

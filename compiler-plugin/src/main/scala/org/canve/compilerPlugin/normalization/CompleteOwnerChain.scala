@@ -7,7 +7,7 @@ import scala.tools.nsc.Global
  * this is needed for the case that the node is a library symbol, 
  * so we won't (necessarily) bump into its parents while compiling
  * the project being compiled. And also for ultimately merging symbols
- * from different projects
+ * from different projects.
  */
 
 object CompleteOwnerChain {

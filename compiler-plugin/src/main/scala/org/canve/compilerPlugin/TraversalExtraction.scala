@@ -1,5 +1,6 @@
 package org.canve.compilerPlugin
 import scala.tools.nsc.Global
+import org.canve.logging.loggers._
 import org.canve.compilerPlugin.Utility._
 
 object TraversalExtractionWriter {
@@ -23,7 +24,7 @@ object TraversalExtraction {
         // for the different cases, as well as the source of the types matched against
         tree match {
 
-          // capture member usage
+          /* capture member usage */
           case select: Select =>
             select.symbol.kindString match {
               case "method" | "constructor" =>
@@ -75,7 +76,7 @@ object TraversalExtraction {
            */
           case ident: Ident => Log("ignoring Ident: " + ident.symbol)
 
-          // Capture val definitions (rather than their automatic accessor methods..)
+          /* Capture val definitions (rather than their automatic accessor methods..) */
           case ValDef(mods: Modifiers, name: TermName, tpt: Tree, rhs: Tree) =>
 
             val symbol = tree.symbol
@@ -93,15 +94,15 @@ object TraversalExtraction {
             extractedModel.add(global)(valueType)
             extractedModel.add(symbol.id, "is of type", valueType.id)
 
-          // Capture defs of methods.
-          // Note this will also capture default constructors synthesized by the compiler
-          // and synthetic accessor methods defined by the compiler for vals
+          /* 
+           * Capture defs of methods.
+           * Note this will also capture default constructors synthesized by the compiler
+           * and synthetic accessor methods defined by the compiler for vals
+           */ 
           case DefDef(mods, name, tparams, vparamss, tpt, rhs) =>
             val symbol = tree.symbol
 
             extractedModel.add(global)(symbol)
-            if (symbol.owner.id == 325220) println("found!")
-            if (defParent.get.id == 325220) println("found as parent!")
             if (defParent.get.id != symbol.owner.id) println("parent is not owner")
             extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
             println
@@ -118,7 +119,7 @@ object TraversalExtraction {
             }
             traverser.traverse(rhs)
 
-          // Capture type definitions (classes, traits, objects)
+          /* Capture type definitions (classes, traits, objects) */
           case Template(parents, self, body) =>
 
             val typeSymbol = tree.tpe.typeSymbol
@@ -170,7 +171,7 @@ object TraversalExtraction {
     val traverser = new ExtractionTraversal(None)
     traverser.traverse(body)
 
-    performance.Counter.report((report: String) => Log(report))
+    performance.Counter.report
     
     extractedModel  
   }

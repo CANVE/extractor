@@ -36,8 +36,8 @@ package object compilerPlugin {
     (s.isAnonymousClass || 
         
      s.isAnonymousFunction ||
-     
-     s.nameString.startsWith("<local ") // as no method of global.Symbol seems to identify the same
+
+     s.nameString.startsWith("<local ") // could this rather use .isLocal*?
      
      ) match {
          case true =>

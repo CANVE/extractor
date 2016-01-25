@@ -16,7 +16,7 @@ object Audit extends App with IteratorAsOption with FileEnrichments {
   val initialOpenDescriptors = getOpenFilesCount  
   
   def projects: Iterator[String] = 
-    Path("github-cruncher/out/canve")                                   // base path
+    Path("github-cruncher/out/canve")                                  
     .children.map(_.name)                                                           
      
   def missingDataDirectories: Iterator[Path] = 

@@ -4,23 +4,30 @@ import performance._
 import org.canve.simpleGraph._
 import org.canve.simpleGraph.algo.impl.GetPathsBetween
 import scala.annotation.tailrec
+import play.api.libs.json._
 
-/*
-class IsNoSymbol extends scala.reflect.internal.SymbolTable with scala.reflect.internal.Symbols {
-  def apply(s: Symbol): Boolean = 
-    s match {
-      case NoSymbol => true
-      case _ => false
+trait DataLogger { 
+  def dataLogSpecialProperty(key: String, value: String) {
+    MetaDataLog(key, Json.parse(s""" { "is" : "$value" } """))
+  }
+  def DataLogExtraRelation(symbol1: String, specialRelation: String, symbol2: String) {
+    MetaDataLog(s"$symbol1&$symbol2" , 
+            Json.parse(s""" 
+              { "$specialRelation": {
+                   "symbol1" : "$symbol1",
+                   "symbol2" : "$symbol2"
+                 }
+              } 
+            """)
+           )
   }
 }
-*/
-
-
+        
 /*
  * a class representing a single and complete model extracted for the project being compiled, 
  * comprising symbol details and symbol relations 
  */
-class ExtractedModel(global: Global) extends ContainsExtractedGraph {
+class ExtractedModel(global: Global) extends ContainsExtractedGraph with DataLogger {
  
   val TraversalSymbolRevisit = Counter("TraversalSymbolRevisit")
   
@@ -106,22 +113,35 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph {
         }
         
         def IsSymbol(s: global.Symbol) = s.toString != "<none>" // the scala.reflect.internal class hierarchy doesn't easily succumb to getting a handle to the original NoSymbol class, otherwise we'd use that instead.
+        //if (IsNoSymbol(s))
         
         //if (s.setter(s).id.toString != "1") println(s"${s.id} has setter: ${s.setter(s).id} (${s.setter})")
         //if (s.getter(s).id.toString != "1") println(s"${symString(s)} has getter: ${s.getter(s).id} (${s.getter})")
-        if (s.isSetter) println(s"symbol ${symString(s)} is setter") 
-        if (s.isGetter) println(s"symbol ${symString(s)} is getter") 
-        if (s.companionSymbol.toString != "<none>") println(s"${symString(s)} has companion: ${symString(s.companionSymbol)}") 
-        //if (IsNoSymbol(s))
-        if (s.isParameter) println(s"symbol ${symString(s)} is a parameter")
-        
+           
+        if (s.isSetter) dataLogSpecialProperty(symString(s), "setter") 
+        if (s.isGetter) dataLogSpecialProperty(symString(s), "getter") 
+
+        if (s.companionSymbol.toString != "<none>") 
+          DataLogExtraRelation(symString(s), "has companion", symString(s.companionSymbol)) 
+        if (s.isParameter) dataLogSpecialProperty(symString(s), "a parameter")
+        if (s.isTypeParameter) dataLogSpecialProperty(symString(s), "a type parameter")
+               
         getSetter(s) match {
-          case None => println(s"${symString(s)} has no setter")
-          case Some(setter) => println(s"${symString(s)} has setter ${symString(setter)}")
+          case None => // println(s"${symString(s)} has no setter")
+          case Some(setter) =>
+            DataLogExtraRelation(symString(s), "has setter", symString(setter))
         }
         
         graph ++ graph.Vertex(extractedSymbol.symbolCompilerId, extractedSymbol) 
-            
+        
+        /*
+         * Record overriding relationships 
+         */
+        s.allOverriddenSymbols.foreach { overriden => 
+          add(global)(overriden)
+          add(s.id, "overrides", overriden.id)
+        }
+        
         normalization.CompleteOwnerChain(global)(extractedSymbol, s, this)
         
         extractedSymbol
@@ -150,3 +170,14 @@ class ExtractedCodes {
   
   def get = map
 }
+
+/*
+class IsNoSymbol extends scala.reflect.internal.SymbolTable with scala.reflect.internal.Symbols {
+  def apply(s: Symbol): Boolean = 
+    s match {
+      case NoSymbol => true
+      case _ => false
+  }
+}
+*/
+

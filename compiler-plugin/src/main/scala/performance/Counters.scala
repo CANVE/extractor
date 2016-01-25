@@ -1,4 +1,8 @@
 package performance
+import play.api.libs.json._
+import org.canve.compilerPlugin.MetaDataLog
+import org.canve.logging.loggers.JsonLogger
+import org.canve.compilerPlugin.PluginArgs
 
 /*
  * counters factory & manager that can provide the status of all counters
@@ -14,9 +18,11 @@ object Counter {
   }
   
   // invokes a supplied reporter function with the counts of all counters 
-  def report(func: String => Unit) = {
-    val counts = counters.map(counter => (counter.name, counter.get))
-    func(counts.mkString(": ")) 
+  def report = {
+    lazy val log = new JsonLogger(PluginArgs.outputPath.performanceDir.toString)
+    def PerformanceLog(path: String, jsonObj: JsValue) = log(path, jsonObj) 
+    
+    counters.foreach(counter => PerformanceLog(counter.name, Json.parse(s""" { "count" : "${counter.count}" } """)))
   }
 }
 

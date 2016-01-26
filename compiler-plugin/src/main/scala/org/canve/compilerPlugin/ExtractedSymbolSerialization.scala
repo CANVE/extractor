@@ -12,17 +12,21 @@ trait ExtractedSymbolSerialization {
   }
   
   def quoteWrap(a: Any) = "\"" + a + "\"" 
-    
+   
   def toCsvRow(implicit extractedModel: ExtractedModel): String = {
     // Note: escaping for csv is for now handled by hand (likely a tad faster).
     List(
       implementation match {
         case ProjectDefined    => "project"
         case ExternallyDefined => "external" },
-      nonSynthetic,
-      symbolCompilerId, 
       quoteWrap(name), 
       kind,
+      symbolCompilerId, 
+      nonSynthetic,
+      isParameter,
+      isTypeParameter,
+      isSetter,
+      isGetter,
       quoteWrap(codeLocation),
       quoteWrap(qualifyingPath),
       quoteWrap(escapeQuotes(signatureString.toString)) 
@@ -36,16 +40,21 @@ trait ExtractedSymbolSerialization {
 trait ExtractedSymbolDeserialization extends SerializationUtil {
   def apply(projectName: String, rowMap: Map[String, String]): ExtractedSymbol = { 
     ExtractedSymbol(
-      symbolCompilerId = rowMap("id").toInt,
-      name = SymbolName(rowMap("name")), 
-      kind = rowMap("kind"),
-      codeLocation = toStringOption(rowMap("codeLocation")).map(toClassArgs).map(s => CodeLocation(s)),
-      nonSynthetic = rowMap("nonSynthetic").toBoolean,
-      qualifyingPath = QualifyingPath(rowMap("qualifyingPath")),
-      signatureString = toStringOption(rowMap("signature")),
       implementation = rowMap("implementation") match {
         case "project" => ProjectDefined
         case "external" => ExternallyDefined
-      })
+      },        
+      name = SymbolName(rowMap("name")), 
+      kind = rowMap("kind"),
+      symbolCompilerId = rowMap("id").toInt,
+      nonSynthetic = rowMap("nonSynthetic").toBoolean,
+      isParameter = rowMap("isParameter").toBoolean,
+      isTypeParameter = rowMap("isTypeParameter").toBoolean,
+      isSetter = rowMap("isSetter").toBoolean,
+      isGetter = rowMap("isGetter").toBoolean,
+      codeLocation = toStringOption(rowMap("codeLocation")).map(toClassArgs).map(s => CodeLocation(s)),
+      qualifyingPath = QualifyingPath(rowMap("qualifyingPath")),
+      signatureString = toStringOption(rowMap("signature"))
+      )
   }
 }

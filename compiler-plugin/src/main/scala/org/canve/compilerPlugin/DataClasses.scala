@@ -10,6 +10,10 @@ case class ExtractedSymbolPlus(e: ExtractedSymbol, val implementingProject: Stri
     e.qualifyingPath,
     e.signatureString,
     e.nonSynthetic,
+    e.isParameter,
+    e.isTypeParameter,
+    e.isSetter,
+    e.isGetter,
     e.implementation) {
   
   override def toString = s"${super.toString}, $implementingProject}" 
@@ -45,7 +49,17 @@ class ExtractedSymbol(
    */
   val nonSynthetic: Boolean,
 
-  /* 
+  /* is the symbol a parameter */
+  val isParameter: Boolean,
+  
+  /* is the symbol further a type parameter */
+  val isTypeParameter: Boolean,
+  
+  val isSetter: Boolean,
+  
+  val isGetter: Boolean,
+  
+   /* 
    * says whether the symbol's implementation is defined in the current project, or externally to it.
    * for example a symbol may be one that has its implementation coming from a library, or from a depended-upon 
    * subproject summoned into the compilation classpath by sbt or other tool. In those cases, this marks that
@@ -65,7 +79,11 @@ class ExtractedSymbol(
            codeLocation,
            qualifyingPath, 
            signatureString, 
-           nonSynthetic, 
+           nonSynthetic,
+           isParameter,
+           isTypeParameter,
+           isSetter,
+           isGetter,
            implementation).map(_.toString).mkString(",")
        
     /* symbol and its code info joined into a string - for logging */
@@ -87,6 +105,10 @@ object ExtractedSymbol extends ExtractedSymbolDeserialization {
     qualifyingPath: QualifyingPath,
     signatureString: Option[String],   
     nonSynthetic: Boolean,
+    isParameter: Boolean,
+    isTypeParameter: Boolean,
+    isSetter: Boolean,
+    isGetter: Boolean,
     implementation: ImplementationLoc) = 
       new ExtractedSymbol(
         symbolCompilerId,
@@ -96,7 +118,12 @@ object ExtractedSymbol extends ExtractedSymbolDeserialization {
         qualifyingPath,
         signatureString,
         nonSynthetic,
-        implementation)
+        isParameter,
+        isTypeParameter,
+        isSetter,
+        isGetter,
+        implementation
+        )
 }
 
 /*

@@ -18,6 +18,10 @@ object TraversalExtraction {
   def apply(global: Global)(body: global.Tree)(extractedModel: ExtractedModel) : ExtractedModel = {
     import global._ // for having access to typed symbol methods
 
+    def logParentIsOwner(symbol: global.Symbol, parent: global.Symbol) {
+      if (symbol.owner.id != parent.id) println(s"parent is not owner for $symbol")  
+    }
+    
     class ExtractionTraversal(defParent: Option[global.Symbol]) extends Traverser {
       override def traverse(tree: Tree): Unit = {
 
@@ -35,10 +39,6 @@ object TraversalExtraction {
                 
                 if (defParent.isDefined) {
                   extractedModel.add(defParent.get.id, "uses", select.symbol.id)
-                  println
-                  println(s"Method call. Symbol owner chain: ${select.symbol.ownerChain.reverse}, \nParams: ${select.symbol.paramss}")
-                  println("signatureString: " + select.symbol.signatureString)
-                  println
                 }
                 
                 // record the source code location where the symbol is being used by the user 
@@ -54,8 +54,8 @@ object TraversalExtraction {
                       val source = callingSymbol.sourceFile.toString
                       val line = select.pos.line
                       val column = select.pos.column
-                      Log(s"""symbol ${select.symbol.nameString} is being used by $callingSymbol in $source ($line, $column):"
-                          |$source""".stripMargin) 
+                      //Log(s"""symbol ${select.symbol.nameString} is being used by $callingSymbol in $source ($line, $column):"
+                      //    |$source""".stripMargin) 
                   }
                 }
 
@@ -75,7 +75,7 @@ object TraversalExtraction {
            *    https://groups.google.com/d/topic/scala-internals/Ms9WUAtokLo/discussion
            *    https://groups.google.com/forum/#!topic/scala-internals/noaEpUb6uL4
            */
-          case ident: Ident => Log("ignoring Ident: " + ident.symbol)
+          case ident: Ident => // Log("ignoring Ident: " + ident.symbol)
 
           /* Capture val definitions (rather than their automatic accessor methods..) */
           case ValDef(mods: Modifiers, name: TermName, tpt: Tree, rhs: Tree) =>
@@ -83,7 +83,8 @@ object TraversalExtraction {
             val symbol = tree.symbol
             
             extractedModel.add(global)(symbol)
-            if (defParent.get.id != symbol.owner.id) println("parent is not owner")
+            
+            logParentIsOwner(symbol, parent = defParent.get)
 
             extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
 
@@ -102,7 +103,7 @@ object TraversalExtraction {
             val symbol = tree.symbol
 
             extractedModel.add(global)(symbol)
-            if (defParent.get.id != symbol.owner.id) println("parent is not owner")
+            logParentIsOwner(symbol, parent = defParent.get)
             extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
 
             /*
@@ -141,9 +142,8 @@ object TraversalExtraction {
             val parentTypeSymbols = parents.map(parent => parent.tpe.typeSymbol).toSet
             parentTypeSymbols.foreach { s => extractedModel.add(global)(s) }
 
-            // This has actually been seen in the console one time, so keep it for now
-            if (defParent.isDefined && defParent.get.id != typeSymbol.owner.id)
-              Warning.logParentNotOwner(global)(defParent.get, typeSymbol.owner)
+
+            if (defParent.isDefined) logParentIsOwner(typeSymbol, parent = defParent.get)
               
             parentTypeSymbols.foreach(s => {
               extractedModel.add(typeSymbol.id, "extends", s.id)

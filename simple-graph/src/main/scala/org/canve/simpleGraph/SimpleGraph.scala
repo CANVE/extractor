@@ -35,7 +35,7 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
           set.contains(edge) match {
             case true  => DataWarning(s"edge $edge already exists in edge index $this")
             case false =>
-              println("adding edge " + edge)
+              //println("adding edge " + edge)
               index.put(key, set + edge)
         }
         case None => index.put(key, Set(edge))
@@ -99,10 +99,6 @@ class SimpleGraph[VertexID, VertexData, EdgeData]
   }
   
   def hasEdge(edge: Edge): Boolean = {
-    if (edge.v2 == 55983 || edge.v1 == 55983) {
-      println("55983: " + edge)
-      println("55983: " + vertexEdges(edge.v1).filter(_ == edge))
-    }
     vertexEdges(edge.v1).filter(_ == edge).nonEmpty
   }
   

@@ -28,8 +28,9 @@ object AttemptCodeExtract {
 
   def apply(global: Global)(symbol: global.Symbol): Code = {
     
-    def logCantDetermine(reason: String) = {
-      println(s"Could not determine source definition for symbol ${symbol.nameString} (${symbol.id}) because $reason") 
+    def logCantDetermineReason(reason: String) = {
+      // disabled for now
+      // println(s"Could not determine source definition for symbol ${symbol.nameString} (${symbol.id}) because $reason") 
     }
     
     assert (symbol.sourceFile!=null)
@@ -42,7 +43,7 @@ object AttemptCodeExtract {
     if (symbol.pos.toString == "NoPosition") { 
       // the above can be the case for Scala 2.10 projects, 
       // or just when macros are involved.
-      logCantDetermine("pos property is NoPosition") 
+      logCantDetermineReason("pos property is NoPosition") 
       return Code(symbol.id, CodeLocation(symbol.sourceFile.toString, None), None)
     }
 
@@ -56,12 +57,12 @@ object AttemptCodeExtract {
       // the compiler provides a line position 0 sometimes,
       // whereas line numbers are confirmed to start from 1. 
       // Hence we can't extract source here.         
-      logCantDetermine("line=0")
+      logCantDetermineReason("line=0")
       return Code(symbol.id, CodeLocation(sourceFilePath, None), None)
     }
     
     if (start == end) {
-      logCantDetermine(s"start=end ($start)")
+      logCantDetermineReason(s"start=end ($start)")
       println(scala.io.Source.fromFile(sourceFilePath).mkString.slice(start, start+30))
       Code(
         symbol.id, 

@@ -9,16 +9,6 @@ import org.canve.simpleGraph._
 import org.canve.simpleGraph.algo.impl._
 
 /*
- * core injectable that activates this compiler plugin's core phase and no more
- */
-class TraversalExtractionTester extends compilerPluginUnitTest.Injectable {
-  def apply(global: Global)(body: global.Tree) = {
-    val model: ExtractedModel = new ExtractedModel(global)
-    TraversalExtraction(global)(body)(model)
-  }   
-}
-
-/*
  * Search functions
  *  
  * TODO: consider indexing later on
@@ -110,62 +100,3 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
   }
   
 }
-
-/* Does this test still bear relevance ? 
-
-object MyTestSuite extends TestSuite {
-  val compiler = InjectingCompilerFactory(InstantiationTester)
-  
-  assert(!compiler.reporter.hasErrors)
- 
-  val tests = TestSuite {
-    
-    "instantiation is reasonably captured" - { 
-      
-      "case class, with new keyword" - {  
-        compiler.compileCodeSnippet("""
-          case class Bar(a:Int) 
-          object Foo {
-            def get(g: Int) = {
-              new Bar(g)
-            }
-          }
-        """)
-        assert(!compiler.reporter.hasErrors)
-      }
-      
-      "case class, without new keyword" - {  
-        compiler.compileCodeSnippet("""
-          case class Bar(a:Int) 
-          object Foo {
-            def get(g: Int) = {
-              Bar(g)
-            }
-          }
-          """)
-        assert(!compiler.reporter.hasErrors)
-      }
-
-      "non-case class" - {  
-        compiler.compileCodeSnippet("""
-          class Bar(a:Int) 
-          object Foo {
-            def get(g: Int) = {
-              new Bar(g)
-            }
-          }
-          """)
-        assert(!compiler.reporter.hasErrors)
-      }
-    }
-  }
-  
-  //val results = tests.run().toSeq.foreach(println)
-
-  //println(results.toSeq.length) // 4
-  //println(results.leaves.length) // 3
-  //println(results.leaves.count(_.value.isFailure)) // 2
-  //println(results.leaves.count(_.value.isSuccess)) // 1
-}
-
-*/

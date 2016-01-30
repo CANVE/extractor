@@ -8,9 +8,7 @@ import scala.tools.nsc.{Settings, Global, Phase}
 import scala.tools.nsc.plugins.PluginComponent
 
 /*
- * a component to run over a compilation AST,
- * as the payload of compiler plugin which
- * will call it
+ * a component to be as a compiler phase
  */
 trait Injectable {
   def apply(global: Global)(body: global.Tree)
@@ -79,7 +77,9 @@ object InjectingCompilerFactory {
     
     val reporter = new scala.tools.nsc.reporters.ConsoleReporter(settings)
     
-    new InjectingCompiler(settings, reporter, unitTestObj)
+    val injectingCompiler = new InjectingCompiler(settings, reporter, unitTestObj)
+    assert(!injectingCompiler.reporter.hasErrors)
+    injectingCompiler
   }
 }
 
@@ -100,6 +100,7 @@ class InjectingCompiler(settings: scala.tools.nsc.Settings,
   private def compileSourceFiles(files: File*): InjectingCompiler = {
     val command = new scala.tools.nsc.CompilerCommand(files.map(_.getAbsolutePath).toList, settings)
     new Run().compile(command.files)
+    assert(!this.reporter.hasErrors)
     this
   }
 
@@ -115,8 +116,8 @@ class InjectingCompiler(settings: scala.tools.nsc.Settings,
   }
 
   /*
-   * a standard PluginComponent, which executes the component supplied
-   * to it, after the typical compiler plugin ceremony
+   * a standard PluginComponent, which executes the supplied injectable component, after the typer 
+   * phase of compilation.
    */
   private class Plugin(val global: Global) extends PluginComponent {
 
@@ -124,7 +125,7 @@ class InjectingCompiler(settings: scala.tools.nsc.Settings,
 
     override val runsRightAfter = Some("typer")
   
-    val phaseName = "canve-unit-tester"
+    val phaseName = "canve-unit-tester-injected-phase"
     
     
     override def newPhase(prev: Phase): Phase = new Phase(prev) {

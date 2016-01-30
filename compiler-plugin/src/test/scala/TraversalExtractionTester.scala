@@ -9,13 +9,12 @@ import org.canve.simpleGraph._
 import org.canve.simpleGraph.algo.impl._
 
 /*
- * Core injectable that activates this compiler plugin's core phase and no more.
+ * Injectable that activates this compiler plugin's core phase and no more.
  * It currently *does not* trigger writing the extracted model to files, rather
  * it is only returning it to the caller.
  */
-class TraversalExtractionTester extends compilerPluginUnitTest.Injectable {
+object PluginCoreRunner extends compilerPluginUnitTest.Injectable {
   def apply(global: Global)(body: global.Tree) = {
-    val model: ExtractedModel = new ExtractedModel(global)
-    TraversalExtraction(global)(body)(model)
+    val model: ExtractedModel = TraversalExtraction(global)(body)(new ExtractedModel(global))
   }   
 }

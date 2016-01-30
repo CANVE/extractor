@@ -12,12 +12,10 @@ import org.canve.simpleGraph.algo.impl._
  * injectable that activates this compiler's core phase, and then
  * does some testing with its output
  */
-object PluginRunner extends TraversalExtractionTester // for now adds no logic, only applies the plugin's core
 
 object MyTestSuite extends TestSuite {
   
-  val compiler = InjectingCompilerFactory(PluginRunner)
-  assert(!compiler.reporter.hasErrors)
+  val compiler = InjectingCompilerFactory(PluginCoreRunner)
  
   val tests = TestSuite {
     
@@ -32,7 +30,6 @@ object MyTestSuite extends TestSuite {
             }
           }
         """)
-        assert(!compiler.reporter.hasErrors)
       }
     }
   }

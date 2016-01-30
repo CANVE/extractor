@@ -12,7 +12,7 @@ object Output {
     Log(s"writing extracted type relations and call graph for project ${PluginArgs.projectName}...")
     
     dataOutputDir.writeOutputFile(PluginArgs.projectName, "symbols", 
-                    "implementation,name,kind,id,nonSynthetic,isParameter,isTypeParameter,isSetter,isGetter,codeLocation,qualifyingPath,signature\n" +
+                    "implementation,name,kind,id,nonSynthetic,isParameterAccessor,isParameter,isTypeParameter,isSetter,isGetter,codeLocation,qualifyingPath,signature\n" +
                     (extractedModel.graph.vertexIterator.map(_.data.toCsvRow)).mkString("\n"))
 
     dataOutputDir.writeOutputFile(PluginArgs.projectName, "relations", 

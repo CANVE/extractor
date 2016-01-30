@@ -4,7 +4,8 @@ import performance._
 import org.canve.simpleGraph._
 import org.canve.simpleGraph.algo.impl.GetPathsBetween
 import play.api.libs.json._
-      
+import TypeExtraction._
+
 /*
  * a class representing a single and complete model extracted for the project being compiled, 
  * comprising symbol details and symbol relations 
@@ -60,21 +61,24 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph with DataLog
         val isParameter = s.isGetter 
         
         val isTypeParameter = s.isTypeParameter
-        
+
         def symString(s: global.Symbol) = s"$s (${s.id})"
         var detectedProperties = 0
         if (s.isSetter) { dataLogSpecialProperty(symString(s), "setter"); detectedProperties+=1 } 
         if (s.isGetter) { dataLogSpecialProperty(symString(s), "getter"); detectedProperties+=1 }
         if (s.isParameter) { dataLogSpecialProperty(symString(s), "a parameter"); detectedProperties+=1 }
         if (s.isTypeParameter) { dataLogSpecialProperty(symString(s), "a type parameter"); detectedProperties+=1 }
-        
+        if (s.isParamAccessor) { dataLogSpecialProperty(symString(s), "a parameter accessor"); detectedProperties+=1 }
+
         if (detectedProperties > 1) 
           println(s"symbol ${symString(s)} sharing more than one special property (${s.isSetter} ${s.isGetter} ${s.isParameter} ${s.isTypeParameter})")
         if (s.isTypeParameter && !s.isParameter)
           println(s"symbol ${symString(s)} is marked by the compiler as a type parameter and not also as a parameter")      
         if (s.isSetter && s.isGetter)
           println("symbol ${symString(s)} is marked by the compiler as both setter and getter")
-        
+
+        //def printIfTrue(x: T): Unit = macro       
+  
         /*
          * add the symbol to the extracted model
          */
@@ -86,6 +90,7 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph with DataLog
             codeLocation = code.map(_.location), 
             qualifyingPath = qualifyingPath, 
             nonSynthetic = !(s.isSynthetic), 
+            isParameterAccessor = s.isParamAccessor,
             isParameter = s.isParameter,
             isTypeParameter = s.isTypeParameter,
             isSetter = s.isSetter,
@@ -106,6 +111,8 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph with DataLog
         ExtraTraversalRelations(global)(s)(this)
         
         normalization.CompleteOwnerChain(global)(extractedSymbol, s, this)
+        
+        getType(global)(s)(this)
         
         extractedSymbol
     }

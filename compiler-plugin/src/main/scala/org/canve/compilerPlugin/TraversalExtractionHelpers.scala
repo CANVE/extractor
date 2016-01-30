@@ -2,6 +2,7 @@ package org.canve.compilerPlugin
 import tools.nsc.Global
 import play.api.libs.json._
 import scala.annotation.tailrec
+import scala.reflect.internal.Types
 
 /*
  * Capturing relations which are expressed / extracted by symbol properties rather than

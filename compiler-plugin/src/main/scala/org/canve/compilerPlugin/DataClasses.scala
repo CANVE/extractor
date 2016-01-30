@@ -10,6 +10,7 @@ case class ExtractedSymbolPlus(e: ExtractedSymbol, val implementingProject: Stri
     e.qualifyingPath,
     e.signatureString,
     e.nonSynthetic,
+    e.isParameterAccessor,
     e.isParameter,
     e.isTypeParameter,
     e.isSetter,
@@ -49,10 +50,13 @@ class ExtractedSymbol(
    */
   val nonSynthetic: Boolean,
 
-  /* is the symbol a parameter */
+  /* is the symbol a class definition parameter */
+  val isParameterAccessor: Boolean,
+  
+  /* is the symbol a method definition parameter */
   val isParameter: Boolean,
   
-  /* is the symbol further a type parameter */
+  /* is the symbol not just a regular definition parameter but a type parameter */
   val isTypeParameter: Boolean,
   
   val isSetter: Boolean,
@@ -105,6 +109,7 @@ object ExtractedSymbol extends ExtractedSymbolDeserialization {
     qualifyingPath: QualifyingPath,
     signatureString: Option[String],   
     nonSynthetic: Boolean,
+    isParameterAccessor: Boolean,
     isParameter: Boolean,
     isTypeParameter: Boolean,
     isSetter: Boolean,
@@ -118,6 +123,7 @@ object ExtractedSymbol extends ExtractedSymbolDeserialization {
         qualifyingPath,
         signatureString,
         nonSynthetic,
+        isParameterAccessor,
         isParameter,
         isTypeParameter,
         isSetter,

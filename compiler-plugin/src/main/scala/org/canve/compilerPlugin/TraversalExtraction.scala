@@ -2,6 +2,7 @@ package org.canve.compilerPlugin
 import scala.tools.nsc.Global
 import org.canve.logging.loggers._
 import org.canve.compilerPlugin.Utility._
+import TypeExtraction._
 
 object TraversalExtractionWriter {
   def apply(global: Global)(unit: global.CompilationUnit, projectName: String, extractedModel: ExtractedModel): ExtractedModel = {
@@ -83,8 +84,6 @@ object TraversalExtraction {
             
             extractedModel.add(global)(symbol)
             if (defParent.get.id != symbol.owner.id) println("parent is not owner")
-            if (symbol.owner.id == 325220) println("found!")
-            if (defParent.get.id == 325220) println("found as parent!")
 
             extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
 
@@ -92,7 +91,7 @@ object TraversalExtraction {
             val valueType = symbol.tpe.typeSymbol // the type that this val instantiates.
 
             extractedModel.add(global)(valueType)
-            extractedModel.add(symbol.id, "is of type", valueType.id)
+            //extractedModel.add(symbol.id, "is of type", valueType.id)
 
           /* 
            * Capture defs of methods.
@@ -105,18 +104,31 @@ object TraversalExtraction {
             extractedModel.add(global)(symbol)
             if (defParent.get.id != symbol.owner.id) println("parent is not owner")
             extractedModel.addIfUnique(defParent.get.id, "declares member", symbol.id)
-            println
-            println(s"Method definition. Symbol owner chain: ${symbol.ownerChain.reverse}, \nParams: ${symbol.paramss}")
-            println("signatureString: " + symbol.signatureString)
-            println
 
-            val traverser = new ExtractionTraversal(Some(tree.symbol))
-            if (symbol.nameString == "get") {
-              //val tracer = new TraceTree
-              //tracer.traverse(tree)
-              //Log(Console.RED + Console.BOLD + showRaw(rhs))
-              //Log(symbol.tpe.typeSymbol)
+            /*
+            symbol.paramss.foreach { _.foreach { param =>
+              extractedModel.add(global)(param)
+              extractedModel.addIfUnique(symbol.id, "has parameter", param.id) 
+              //println(s"parameter type is: ${param.tpe.typeSymbol} with ${param.tpe.typeArgs}")
+            }}
+            */
+            
+            /*
+            symbol.typeParams.foreach { tparam =>
+              extractedModel.add(global)(tparam)
+              extractedModel.addIfUnique(symbol.id, "has type parameter", tparam.id)
+              val TypeBounds(low, high) = tparam.tpe.bounds
+              if (high.toString != "Nothing")
+                extractedModel.add(global)(high.typeSymbol)
+                println(s"has higher type bound ${high.typeSymbol.id}")
+              if (low.toString != "Nothing")
+                extractedModel.add(global)(low.typeSymbol)
+                println(s"has lower type bound ${low.typeSymbol.id}")               
+                //extractedModel.addIfUnique(tparam.id, "has lower type bound", low.toLongString)                
             }
+            */
+            
+            val traverser = new ExtractionTraversal(Some(tree.symbol))
             traverser.traverse(rhs)
 
           /* Capture type definitions (classes, traits, objects) */
@@ -125,23 +137,16 @@ object TraversalExtraction {
             val typeSymbol = tree.tpe.typeSymbol
 
             extractedModel.add(global)(typeSymbol)
-
+           
             val parentTypeSymbols = parents.map(parent => parent.tpe.typeSymbol).toSet
             parentTypeSymbols.foreach { s => extractedModel.add(global)(s) }
 
-            // This has actually been seen in the console one time, so keep it
-            if (defParent.isDefined)
-              if (defParent.get.id != typeSymbol.owner.id)
-                Warning.logParentNotOwner(global)(defParent.get, typeSymbol.owner)
-                
+            // This has actually been seen in the console one time, so keep it for now
+            if (defParent.isDefined && defParent.get.id != typeSymbol.owner.id)
+              Warning.logParentNotOwner(global)(defParent.get, typeSymbol.owner)
+              
             parentTypeSymbols.foreach(s => {
               extractedModel.add(typeSymbol.id, "extends", s.id)
-              println
-              println(s"Symbol ${typeSymbol.ownerChain.reverse}")
-              println(s"Performs Type extension of ${s.ownerChain.reverse}. TypeParams: ${s.typeParams}")
-              println("signatureString: " + s.signatureString)
-              println("typeSignature: " + s.typeSignature)
-              println
             })
 
             val traverser = new ExtractionTraversal(Some(tree.tpe.typeSymbol))

@@ -11,11 +11,11 @@ object Output {
   def write(implicit extractedModel: ExtractedModel) = {
     Log(s"writing extracted type relations and call graph for project ${PluginArgs.projectName}...")
     
-    dataOutputDir.writeOutputFile(PluginArgs.projectName, "symbols", 
+    dataOutputDir.writeOutputFile(PluginArgs.projectName, "symbols.csv", 
                     "implementation,name,kind,id,nonSynthetic,isParameterAccessor,isParameter,isTypeParameter,isSetter,isGetter,codeLocation,qualifyingPath,signature\n" +
                     (extractedModel.graph.vertexIterator.map(_.data.toCsvRow)).mkString("\n"))
 
-    dataOutputDir.writeOutputFile(PluginArgs.projectName, "relations", 
+    dataOutputDir.writeOutputFile(PluginArgs.projectName, "relations.csv", 
         "id1,relation,id2\n" +
         extractedModel.graph.edgeIterator.map ( e => 
           List(e.v1, e.data, e.v2).mkString(","))

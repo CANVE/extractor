@@ -23,12 +23,7 @@ object MyTestSuite extends TestSuite {
       
       "case class, with new keyword" - {  
         compiler.compileCodeSnippet("""
-          case class Bar(a:Int) 
-          object Foo {
-            def get(g: Int) = {
-              new Bar(g)
-            }
-          }
+          class A[T]
         """)
       }
     }
@@ -39,8 +34,6 @@ object MyTestSuite extends TestSuite {
 
 object MyTestSuite extends TestSuite {
   val compiler = InjectingCompilerFactory(InstantiationTester)
-  
-  assert(!compiler.reporter.hasErrors)
  
   val tests = TestSuite {
     
@@ -55,7 +48,6 @@ object MyTestSuite extends TestSuite {
             }
           }
         """)
-        assert(!compiler.reporter.hasErrors)
       }
       
       "case class, without new keyword" - {  
@@ -67,7 +59,6 @@ object MyTestSuite extends TestSuite {
             }
           }
           """)
-        assert(!compiler.reporter.hasErrors)
       }
 
       "non-case class" - {  
@@ -79,7 +70,6 @@ object MyTestSuite extends TestSuite {
             }
           }
           """)
-        assert(!compiler.reporter.hasErrors)
       }
     }
   }

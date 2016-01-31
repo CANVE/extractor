@@ -9,37 +9,10 @@ import org.canve.simpleGraph._
 import org.canve.simpleGraph.algo.impl._
 
 /*
- * Search functions
- *  
- * TODO: consider indexing later on
- * TODO: consider moving over to the simple-graph library if this trait grows much
+ * a compilation injectable that activates this compiler's core phase,
+ * running some graph connectivity tests on it ― not currently in use 
  */
-trait NodeSearch { 
-  def search(graph: ManagedExtractedGraph, name: String, kind: String) = {
-    graph.vertexIterator.filter(node => node.data.name.name == name && node.data.kind == kind).toList
-  }
-  
- def findUnique(graph: ManagedExtractedGraph, name: String, kind: String) = { 
-   val finds = search(graph, name, kind)
-   if (finds.size == 1) 
-     Some(finds.head)
-   else
-     None
- }
- 
- def findUniqueOrThrow(graph: ManagedExtractedGraph, name: String, kind: String) = {
-   findUnique(graph, name, kind) match {
-     case None => throw new Exception(s"graph $graph has ${search(graph, name, kind)} search results for name=$name, kind=$kind rather than exactly one.") 
-     case Some(found) => found
-   }
- }
-}
-
-/*
- * injectable that activates this compiler's core phase, and then
- * does some testing with its output
- */
-object InstantiationTester extends TraversalExtractionTester with NodeSearch {
+object InstantiationTester extends compilerPluginUnitTest.Injectable with NodeSearch {
   
   override def apply(global: Global)(body: global.Tree) = {
     
@@ -99,4 +72,31 @@ object InstantiationTester extends TraversalExtractionTester with NodeSearch {
     s"${symbol.kind} $shortenedQualifiedId (${symbol.symbolCompilerId})"      
   }
   
+}
+
+/*
+ * Search functions
+ *  
+ * TODO: consider indexing later on
+ * TODO: consider moving over to the simple-graph library if this trait grows much
+ */
+trait NodeSearch { 
+  def search(graph: ManagedExtractedGraph, name: String, kind: String) = {
+    graph.vertexIterator.filter(node => node.data.name.name == name && node.data.kind == kind).toList
+  }
+  
+ def findUnique(graph: ManagedExtractedGraph, name: String, kind: String) = { 
+   val finds = search(graph, name, kind)
+   if (finds.size == 1) 
+     Some(finds.head)
+   else
+     None
+ }
+ 
+ def findUniqueOrThrow(graph: ManagedExtractedGraph, name: String, kind: String) = {
+   findUnique(graph, name, kind) match {
+     case None => throw new Exception(s"graph $graph has ${search(graph, name, kind)} search results for name=$name, kind=$kind rather than exactly one.") 
+     case Some(found) => found
+   }
+ }
 }

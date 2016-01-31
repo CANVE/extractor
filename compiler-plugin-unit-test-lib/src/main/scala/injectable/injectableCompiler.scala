@@ -132,7 +132,7 @@ class InjectingCompiler(settings: scala.tools.nsc.Settings,
       def name : String = phaseName 
       override def run() {
         
-        println(Console.BLUE + Console.BOLD + "\ncanve unit test running" + Console.RESET)
+        //println(Console.BLUE + Console.BOLD + "\ncanve unit test running" + Console.RESET)
         
         def units = global.currentRun
                     .units
@@ -141,7 +141,7 @@ class InjectingCompiler(settings: scala.tools.nsc.Settings,
         
         units.foreach { unit =>
           injectable.apply(global)(unit.body)
-          println(Console.BLUE + "canve unit testing plugin examining source file" + unit.source.path + "..." + Console.RESET)
+          //println(Console.BLUE + "canve unit testing plugin examining source file" + unit.source.path + "..." + Console.RESET)
         }
       }
     }

@@ -62,23 +62,6 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph with DataLog
         
         val isTypeParameter = s.isTypeParameter
 
-        def symString(s: global.Symbol) = s"$s (${s.id})"
-        var detectedProperties = 0
-        if (s.isSetter) { dataLogSpecialProperty(symString(s), "setter"); detectedProperties+=1 } 
-        if (s.isGetter) { dataLogSpecialProperty(symString(s), "getter"); detectedProperties+=1 }
-        if (s.isParameter) { dataLogSpecialProperty(symString(s), "a parameter"); detectedProperties+=1 }
-        if (s.isTypeParameter) { dataLogSpecialProperty(symString(s), "a type parameter"); detectedProperties+=1 }
-        if (s.isParamAccessor) { dataLogSpecialProperty(symString(s), "a parameter accessor"); detectedProperties+=1 }
-
-        if (detectedProperties > 1) 
-          println(s"symbol ${symString(s)} sharing more than one special property (${s.isSetter} ${s.isGetter} ${s.isParameter} ${s.isTypeParameter})")
-        if (s.isTypeParameter && !s.isParameter)
-          println(s"symbol ${symString(s)} is marked by the compiler as a type parameter and not also as a parameter")      
-        if (s.isSetter && s.isGetter)
-          println("symbol ${symString(s)} is marked by the compiler as both setter and getter")
-
-        //def printIfTrue(x: T): Unit = macro       
-  
         /*
          * add the symbol to the extracted model
          */
@@ -151,3 +134,22 @@ class IsNoSymbol extends scala.reflect.internal.SymbolTable with scala.reflect.i
 }
 */
 
+object ExtraSymbolProperties extends DataLogger {
+  def apply(global: Global)(s: global.Symbol) {
+    def symString(s: global.Symbol) = s"$s (${s.id})"
+    var detectedProperties = 0
+    if (s.isSetter) { dataLogSpecialProperty(symString(s), "setter"); detectedProperties+=1 } 
+    if (s.isGetter) { dataLogSpecialProperty(symString(s), "getter"); detectedProperties+=1 }
+    if (s.isParameter) { dataLogSpecialProperty(symString(s), "a parameter"); detectedProperties+=1 }
+    if (s.isTypeParameter) { dataLogSpecialProperty(symString(s), "a type parameter"); detectedProperties+=1 }
+    if (s.isParamAccessor) { dataLogSpecialProperty(symString(s), "a parameter accessor"); detectedProperties+=1 }
+
+    if (detectedProperties > 1) 
+      println(s"symbol ${symString(s)} sharing more than one special property (${s.isSetter} ${s.isGetter} ${s.isParameter} ${s.isTypeParameter})")
+    if (s.isTypeParameter && !s.isParameter)
+      println(s"symbol ${symString(s)} is marked by the compiler as a type parameter and not also as a parameter")      
+    if (s.isSetter && s.isGetter)
+      println("symbol ${symString(s)} is marked by the compiler as both setter and getter")
+    //def printIfTrue(x: T): Unit = macro       
+  }
+}

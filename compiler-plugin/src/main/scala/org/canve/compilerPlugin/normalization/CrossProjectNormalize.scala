@@ -19,7 +19,7 @@ trait DataReader {
   /*
    * builds graph from a canve data directory
    */
-  def readCanveDirData(dir: File): ManagedExtractedGraph = {
+  def readCanveDirData(dir: File): ExtractedGraph = {
      
     val projectName = dir.getName
     

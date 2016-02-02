@@ -81,11 +81,11 @@ object InstantiationTester extends compilerPluginUnitTest.Injectable with NodeSe
  * TODO: consider moving over to the simple-graph library if this trait grows much
  */
 trait NodeSearch { 
-  def search(graph: ManagedExtractedGraph, name: String, kind: String) = {
+  def search(graph: ExtractedGraph, name: String, kind: String) = {
     graph.vertexIterator.filter(node => node.data.name.name == name && node.data.kind == kind).toList
   }
   
- def findUnique(graph: ManagedExtractedGraph, name: String, kind: String) = { 
+ def findUnique(graph: ExtractedGraph, name: String, kind: String) = { 
    val finds = search(graph, name, kind)
    if (finds.size == 1) 
      Some(finds.head)
@@ -93,7 +93,7 @@ trait NodeSearch {
      None
  }
  
- def findUniqueOrThrow(graph: ManagedExtractedGraph, name: String, kind: String) = {
+ def findUniqueOrThrow(graph: ExtractedGraph, name: String, kind: String) = {
    findUnique(graph, name, kind) match {
      case None => throw new Exception(s"graph $graph has ${search(graph, name, kind)} search results for name=$name, kind=$kind rather than exactly one.") 
      case Some(found) => found

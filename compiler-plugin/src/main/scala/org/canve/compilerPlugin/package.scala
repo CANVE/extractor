@@ -9,7 +9,7 @@ package object compilerPlugin {
   case class ExtractionException(errorText: String) extends Exception(errorText)
   case class DataNormalizationException(errorText: String) extends Exception(errorText)
   
-  type ExtractedSymbolRelation = String
+  type ExtractedSymbolRelation = String //(String, Option[TypeGraph])
   type SymbolCompilerId = Int
   type FurtherQualifiedID = String
   
@@ -17,14 +17,27 @@ package object compilerPlugin {
    * extracted graph type
    */
 
-  type ManagedExtractedGraph = SimpleGraph[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation]
+  type ExtractedGraph = SimpleGraph[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation]
   
   trait ContainsExtractedGraph { 
     val graph = 
-      new ManagedExtractedGraph
+      new ExtractedGraph
         with GetPathsBetween[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation] 
   }
 
+  /*
+   * Type graph type  
+  
+  type TypeID = Int
+  class Type(id: TypeID, name: String)
+  type TypeRelation = String
+  type TypeGraph = SimpleGraph[TypeID, Type, TypeRelation]
+   */
+  
+  /*
+   * not really in use right now
+   */
+  
   object DataWarning {
     def apply(warning: String) {
       println(s"[canve data warning] $warning")

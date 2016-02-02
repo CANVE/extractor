@@ -4,7 +4,6 @@ import performance._
 import org.canve.simpleGraph._
 import org.canve.simpleGraph.algo.impl.GetPathsBetween
 import play.api.libs.json._
-import TypeExtraction._
 
 /*
  * a class representing a single and complete model extracted for the project being compiled, 
@@ -95,7 +94,7 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph with DataLog
         
         normalization.CompleteOwnerChain(global)(extractedSymbol, s, this)
         
-        getType(global)(s)(this)
+        TypeExtractionSpike.getType(global)(s)(this)
         
         extractedSymbol
     }

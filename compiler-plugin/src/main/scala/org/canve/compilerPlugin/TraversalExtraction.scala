@@ -2,7 +2,7 @@ package org.canve.compilerPlugin
 import scala.tools.nsc.Global
 import org.canve.logging.loggers._
 import org.canve.compilerPlugin.Utility._
-import TypeExtraction._
+//import TypeExtraction._
 
 object TraversalExtractionWriter {
   def apply(global: Global)(unit: global.CompilationUnit, projectName: String, extractedModel: ExtractedModel): ExtractedModel = {
@@ -30,7 +30,7 @@ object TraversalExtraction {
         tree match {
 
           /* capture member usage */
-          case select: Select =>
+          case select: Select => // https://youtu.be/WxyyJyB_Ssc?t=1448
             select.symbol.kindString match {
               case "method" | "constructor" =>
                 if (defParent.isEmpty) Warning.logMemberParentLacking(global)(select.symbol)

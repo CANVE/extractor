@@ -13,8 +13,8 @@ import scala.util.{Try, Success, Failure}
 
 trait DataReader {
 
-  type LoadedGraph = SimpleGraph[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation]
-  type ReIndexedGraph = SimpleGraph[FQI, ExtractedSymbolPlus, ExtractedSymbolRelation]
+  type LoadedGraph = ExtractedGraph
+  class ReIndexedGraph extends SimpleGraph[FQI, ExtractedSymbolPlus, ExtractedSymbolRelation]((s: ExtractedSymbolPlus) => FQI(s))
   
   /*
    * builds graph from a canve data directory
@@ -42,7 +42,7 @@ trait DataReader {
         case Success(rows) =>   
           rows.allWithHeaders
           .map(inputRowMap => ExtractedSymbol(projectName, inputRowMap))
-          .map(s => graph.Vertex(s.symbolCompilerId, s)).toIterable
+          .map(s => graph.Vertex(s)).toIterable
       }
       
     }
@@ -93,7 +93,7 @@ object CrossProjectNormalizer extends DataReader with MergeStrategies {
       graph.vertexIterator.foreach { v => val symbol = ExtractedSymbolPlus(v.data, projectName)
         aggregateGraph.vertex(FQI(symbol)) match {
         
-          case None => aggregateGraph ++ aggregateGraph.Vertex(key = FQI(symbol), data = symbol)
+          case None => aggregateGraph ++ aggregateGraph.Vertex(symbol)
           
           case Some(v) => maybeMerge(aggregateGraph, aggregateGraphSymbol = v.data, sameKeyedSymbol = symbol)
           
@@ -124,7 +124,7 @@ object CrossProjectNormalizer extends DataReader with MergeStrategies {
       case (ExternallyDefined, ProjectDefined) => 
         // replace externally defined symbol with the new one, thus de-duplicating it
         aggregateGraph -- FQI(aggregateGraphSymbol) 
-        aggregateGraph ++ aggregateGraph.Vertex(key = FQI(sameKeyedSymbol), data = sameKeyedSymbol)
+        aggregateGraph ++ aggregateGraph.Vertex(sameKeyedSymbol)
         // TODO: handle the edges re-wire! 
         println(s"deduplicated one symbol: $aggregateGraphSymbol")
 

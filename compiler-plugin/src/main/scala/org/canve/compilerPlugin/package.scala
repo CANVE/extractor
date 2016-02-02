@@ -17,7 +17,9 @@ package object compilerPlugin {
    * extracted graph type
    */
 
-  type ExtractedGraph = SimpleGraph[SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation]
+  class ExtractedGraph extends 
+    SimpleGraph
+      [SymbolCompilerId, ExtractedSymbol, ExtractedSymbolRelation]((e: ExtractedSymbol) => e.symbolCompilerId)
   
   trait ContainsExtractedGraph { 
     val graph = 

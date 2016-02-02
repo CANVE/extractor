@@ -88,7 +88,7 @@ class ExtractedModel(global: Global) extends ContainsExtractedGraph with DataLog
         //if (s.setter(s).id.toString != "1") println(s"${s.id} has setter: ${s.setter(s).id} (${s.setter})")
         //if (s.getter(s).id.toString != "1") println(s"${symString(s)} has getter: ${s.getter(s).id} (${s.getter})")
         
-        graph ++ graph.Vertex(extractedSymbol.symbolCompilerId, extractedSymbol)
+        graph ++ graph.Vertex(extractedSymbol)
         
         ExtraTraversalRelations(global)(s)(this)
         

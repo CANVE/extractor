@@ -13,8 +13,8 @@ import collection.mutable.HashMap
 
 //@JSExport
 //@JSExportAll
-class SimpleGraph[VertexID, VertexData, EdgeData] 
-  extends AbstractGraph[VertexID, VertexData, EdgeData] {
+class SimpleGraph[VertexID, VertexData, EdgeData](idFunc: VertexData => VertexID)
+  extends AbstractGraph[VertexID, VertexData, EdgeData](idFunc) {
 
   private val vertexIndex        = new HashMap[VertexID, Vertex]   
   protected val edgeIndex        = new EdgeIndex

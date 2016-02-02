@@ -5,10 +5,13 @@ package org.canve.simpleGraph
  */
 
 trait GraphEntities[VertexID, VertexData, EdgeData] {
-  
+  self: AbstractGraph[VertexID, VertexData, EdgeData] =>
+    
   sealed abstract trait Addable
   
-  case class Vertex(key: VertexID, data: VertexData) extends Addable 
+  case class Vertex(data: VertexData) extends Addable {
+    val key: VertexID = idFunc(data)
+  }
   
   case class Edge(
     var v1: VertexID,
@@ -28,7 +31,7 @@ trait GraphEntities[VertexID, VertexData, EdgeData] {
 
 
 
-abstract class AbstractGraph[VertexID, VertexData, EdgeData]
+abstract class AbstractGraph[VertexID, VertexData, EdgeData](val idFunc: VertexData => VertexID)
   extends GraphEntities[VertexID, VertexData, EdgeData]
   with ExtraGraphAPI[VertexID, VertexData, EdgeData] {
   
@@ -44,11 +47,11 @@ abstract class AbstractGraph[VertexID, VertexData, EdgeData]
   
   def addIfNew (vertex: Vertex): This
 
-  def vertex(id: VertexID): Option[Vertex]
+  def vertex (id: VertexID): Option[Vertex]
   
-  def vertexEdges(id: VertexID): Set[Edge] 
+  def vertexEdges (id: VertexID): Set[Edge] 
   
-  def vertexEdgePeer(id: VertexID, edge: Edge): VertexID
+  def vertexEdgePeer (id: VertexID, edge: Edge): VertexID
   
   def vertexIterator: Iterator[Vertex] // returns a new iterator every time called
   
@@ -73,9 +76,9 @@ abstract class AbstractGraph[VertexID, VertexData, EdgeData]
   def -- (inputs: Addable*): This = this -= (inputs.toIterable)
   def ++ (inputs: Addable*): This = this ++ (inputs.toIterable)
 
-  def hasEdge(edge: Edge): Boolean
+  def hasEdge (edge: Edge): Boolean
   
-  def direction(id: VertexID, edge: Edge): EdgeDirection = { 
+  def direction (id: VertexID, edge: Edge): EdgeDirection = { 
     (id == edge.v1, id == edge.v2) match {
       case (true, true)   => SelfLoop
       case (true, false)  => Egress
